@@ -160,11 +160,23 @@
               <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
                 <span class="brand-icon small rounded-2 d-inline-flex align-items-center justify-content-center"><i class="fas fa-clock"></i></span>
                 <small class="text-muted">
-                  &copy; {% now "Y" %} {% trans "Personal Timebox" %}. {% trans "Built with Django & Bootstrap." %}
+                  &copy; {% now "Y" %} {% trans "Personal Timebox" %}. {% trans "Built with Django & Bootstrap by" %} <a href="https://www.araz.me" target="_blank" rel="noopener" class="text-decoration-none">Araz Shahkarami</a>.
                 </small>
               </div>
             </div>
             <div class="col-md-6 text-md-end">
+              <div class="footer-author mb-3">
+                <span class="text-muted">{% trans "Created by" %}</span>
+                <a href="https://www.araz.me" target="_blank" rel="noopener" class="text-decoration-none ms-2 me-3">
+                  <strong>Araz Shahkarami</strong>
+                </a>
+                <a href="https://www.araz.me" target="_blank" rel="noopener" class="text-decoration-none me-2" title="Website">
+                  <i class="fas fa-globe"></i>
+                </a>
+                <a href="https://t.me/arazshah" target="_blank" rel="noopener" class="text-decoration-none" title="Telegram">
+                  <i class="fab fa-telegram"></i>
+                </a>
+              </div>
               <div class="footer-links d-inline-flex gap-3">
                 <a href="{% url 'personal_timebox:about' %}" class="nav-link text-decoration-none">{% trans "About" %}</a>
                 <a href="{% url 'personal_timebox:docs' %}" class="nav-link text-decoration-none">{% trans "Docs" %}</a>

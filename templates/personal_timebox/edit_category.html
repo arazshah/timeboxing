@@ -4,76 +4,407 @@
 
 {% block title %}{% trans "Edit Category" %} - {% trans "Personal Timebox" %}{% endblock %}
 
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+/* Category Form Enhanced Styles */
+.category-form-enhanced {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  min-height: 100vh;
+  padding: 2rem 0;
+}
+
+.category-form-container {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 24px;
+  padding: 3rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  max-width: 700px;
+  margin: 0 auto;
+  animation: slideInUp 0.6s ease-out;
+}
+
+.form-header {
+  text-align: center;
+  margin-bottom: 2.5rem;
+  position: relative;
+}
+
+.form-header i {
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: pulse 2s infinite;
+}
+
+.form-header h2 {
+  background: linear-gradient(135deg, #2d3748, #4a5568);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  transition: all 0.3s ease;
+}
+
+.form-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
+}
+
+.form-section-title {
+  font-weight: 700;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-section-title i {
+  color: #667eea;
+  font-size: 1.2rem;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-label.required::after {
+  content: '*';
+  color: #f56565;
+  margin-left: 0.25rem;
+}
+
+.form-control, .form-select {
+  border: 2px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  background: #ffffff;
+}
+
+.form-control:focus, .form-select:focus {
+  border-color: #667eea;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.form-control.is-invalid {
+  border-color: #f56565;
+  background-image: none;
+}
+
+.form-control.is-valid {
+  border-color: #48bb78;
+  background-image: none;
+}
+
+.color-preview {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+  border: 2px solid #e2e8f0;
+  margin-left: 0.5rem;
+  display: inline-block;
+  transition: all 0.3s ease;
+}
+
+.icon-preview {
+  font-size: 1.5rem;
+  margin-left: 0.5rem;
+  color: #667eea;
+  transition: all 0.3s ease;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 2rem;
+  font-weight: 600;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  color: white;
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+.btn-submit::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+  transition: left 0.5s;
+}
+
+.btn-submit:hover::before {
+  left: 100%;
+}
+
+.back-link {
+  color: #667eea;
+  text-decoration: none;
+  font-weight: 500;
+  transition: all 0.3s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.back-link:hover {
+  color: #764ba2;
+  transform: translateX(-5px);
+}
+
+.alert-danger {
+  background: linear-gradient(135deg, #fed7d7 0%, #feb2b2 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1.5rem;
+  animation: shake 0.5s ease-in-out;
+}
+
+.alert-danger ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.alert-danger li {
+  margin-bottom: 0.25rem;
+  color: #742a2a;
+}
+
+.character-counter {
+  font-size: 0.875rem;
+  color: #718096;
+  text-align: right;
+  margin-top: 0.25rem;
+}
+
+.character-counter.warning {
+  color: #ed8936;
+}
+
+.character-counter.danger {
+  color: #f56565;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  25% {
+    transform: translateX(-5px);
+  }
+  75% {
+    transform: translateX(5px);
+  }
+}
+
+@media (max-width: 768px) {
+  .category-form-container {
+    padding: 2rem 1.5rem;
+    margin: 1rem;
+  }
+  
+  .form-header h2 {
+    font-size: 2rem;
+  }
+  
+  .form-section {
+    padding: 1rem;
+  }
+}
+</style>
+{% endblock %}
 
 {% block content %}
-<div class="container">
-  <div class="category-form-container">
-    <div class="form-header">
-      <i class="fas fa-tags fa-3x text-primary mb-3"></i>
-      <h2>{% trans "Edit Category" %}</h2>
-      <p class="text-muted">{% trans "Update this category's information" %}</p>
-    </div>
+<div class="category-form-enhanced">
+  <div class="container">
+    <div class="category-form-container">
+      <div class="form-header">
+        <i class="fas fa-edit fa-3x mb-3"></i>
+        <h2>{% trans "Edit Category" %}</h2>
+        <p class="text-muted">{% trans "Update this category's information" %}</p>
+      </div>
 
     {% if form.errors %}
     <div class="alert alert-danger" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      <strong>{% trans "Please fix the following errors:" %}</strong>
-      <ul class="mb-0 mt-2">
-        {% for field in form %}
-          {% for error in field.errors %}
-            <li>{{ field.label }}: {{ error }}</li>
-          {% endfor %}
-        {% endfor %}
-        {% for error in form.non_field_errors %}
-          <li>{{ error }}</li>
-        {% endfor %}
-      </ul>
+      <div class="d-flex align-items-start">
+        <i class="fas fa-exclamation-triangle me-3 mt-1"></i>
+        <div>
+          <strong class="d-block mb-2">{% trans "Please fix the following errors:" %}</strong>
+          <ul class="mb-0">
+            {% for field in form %}
+              {% for error in field.errors %}
+                <li><strong>{{ field.label }}:</strong> {{ error }}</li>
+              {% endfor %}
+            {% endfor %}
+            {% for error in form.non_field_errors %}
+              <li>{{ error }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
     </div>
     {% endif %}
 
-    <form method="post" id="categoryForm">
+    <form method="post" id="categoryForm" novalidate>
       {% csrf_token %}
 
-      <div class="mb-3">
-        <label for="{{ form.name.id_for_label }}" class="form-label">{% trans "Category Name" %} *</label>
-        {{ form.name }}
+      <!-- Basic Information Section -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="fas fa-info-circle"></i>
+          {% trans "Basic Information" %}
+        </h3>
+        
+        <div class="mb-3">
+          <label for="{{ form.name.id_for_label }}" class="form-label required">
+            {% trans "Category Name" %}
+          </label>
+          {{ form.name }}
+          <div class="character-counter" id="nameCounter">0/50</div>
+          <div class="invalid-feedback" id="nameError"></div>
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}" class="form-label">
+            {% trans "Description" %}
+          </label>
+          {{ form.description }}
+          <div class="character-counter" id="descriptionCounter">0/200</div>
+          <div class="form-text">{% trans "Optional description for this category" %}</div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="{{ form.category_type.id_for_label }}" class="form-label">{% trans "Category Type" %}</label>
-        {{ form.category_type }}
+      <!-- Categorization Section -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="fas fa-layer-group"></i>
+          {% trans "Categorization" %}
+        </h3>
+        
+        <div class="mb-3">
+          <label for="{{ form.category_type.id_for_label }}" class="form-label">
+            {% trans "Category Type" %}
+          </label>
+          {{ form.category_type }}
+          <div class="form-text">{% trans "Select the type of category" %}</div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="{{ form.description.id_for_label }}" class="form-label">{% trans "Description" %}</label>
-        {{ form.description }}
+      <!-- Appearance Section -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="fas fa-palette"></i>
+          {% trans "Appearance" %}
+        </h3>
+        
+        <div class="mb-3">
+          <label for="{{ form.color.id_for_label }}" class="form-label">
+            {% trans "Color" %}
+          </label>
+          <div class="d-flex align-items-center">
+            {{ form.color }}
+            <div class="color-preview" id="colorPreview"></div>
+          </div>
+          <div class="form-text">{% trans "Choose a color to represent this category" %}</div>
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.icon.id_for_label }}" class="form-label">
+            {% trans "Icon (from Font Awesome)" %}
+          </label>
+          <div class="d-flex align-items-center">
+            {{ form.icon }}
+            <div class="icon-preview" id="iconPreview">
+              <i class="fas fa-tag"></i>
+            </div>
+          </div>
+          <div class="form-text">{% trans "Example: fas fa-book, fas fa-work, fas fa-home" %}</div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="{{ form.color.id_for_label }}" class="form-label">{% trans "Color" %}</label>
-        {{ form.color }}
+      <!-- Settings Section -->
+      <div class="form-section">
+        <h3 class="form-section-title">
+          <i class="fas fa-cog"></i>
+          {% trans "Settings" %}
+        </h3>
+        
+        <div class="form-check form-switch">
+          {{ form.is_active }}
+          <label class="form-check-label" for="{{ form.is_active.id_for_label }}">
+            {% trans "Active" %}
+          </label>
+          <div class="form-text">{% trans "Inactive categories won't appear in task creation" %}</div>
+        </div>
       </div>
 
-      <div class="mb-3">
-        <label for="{{ form.icon.id_for_label }}" class="form-label">{% trans "Icon (from Font Awesome)" %}</label>
-        {{ form.icon }}
-        <div class="form-text">{% trans "Example: fas fa-book" %}</div>
-      </div>
-
-      <div class="form-check mb-3">
-        {{ form.is_active }}
-        <label class="form-check-label" for="{{ form.is_active.id_for_label }}">{% trans "Active" %}</label>
-      </div>
-
-      <button type="submit" class="btn btn-submit w-100">
-        <i class="fas fa-save me-2"></i>{% trans "Save Changes" %}
+      <button type="submit" class="btn btn-submit w-100" id="submitBtn">
+        <i class="fas fa-save me-2"></i>
+        <span id="submitText">{% trans "Save Changes" %}</span>
       </button>
     </form>
 
-    <div class="text-center mt-3">
-      <a href="{% url 'personal_timebox:manage_categories' %}" class="text-decoration-none">
-        <i class="fas fa-arrow-left me-1"></i>{% trans "Back to manage categories" %}
+    <div class="text-center mt-4">
+      <a href="{% url 'personal_timebox:manage_categories' %}" class="back-link">
+        <i class="fas fa-arrow-left"></i>
+        {% trans "Back to manage categories" %}
       </a>
     </div>
   </div>
@@ -83,7 +414,153 @@
 {% block extra_js %}
 <script>
   document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("id_name").focus();
+    // Auto-focus on name field
+    const nameField = document.getElementById("id_name");
+    nameField.focus();
+
+    // Form validation and enhancements
+    const form = document.getElementById("categoryForm");
+    const colorField = document.getElementById("id_color");
+    const iconField = document.getElementById("id_icon");
+    const descriptionField = document.getElementById("id_description");
+    const submitBtn = document.getElementById("submitBtn");
+    const submitText = document.getElementById("submitText");
+
+    // Character counters
+    function setupCharacterCounter(field, counterId, maxLength) {
+      const counter = document.getElementById(counterId);
+      
+      function updateCounter() {
+        const length = field.value.length;
+        counter.textContent = `${length}/${maxLength}`;
+        
+        if (length > maxLength * 0.9) {
+          counter.className = 'character-counter danger';
+        } else if (length > maxLength * 0.7) {
+          counter.className = 'character-counter warning';
+        } else {
+          counter.className = 'character-counter';
+        }
+      }
+      
+      field.addEventListener('input', updateCounter);
+      updateCounter();
+    }
+
+    setupCharacterCounter(nameField, 'nameCounter', 50);
+    setupCharacterCounter(descriptionField, 'descriptionCounter', 200);
+
+    // Color preview
+    function updateColorPreview() {
+      const preview = document.getElementById('colorPreview');
+      const color = colorField.value || '#667eea';
+      preview.style.backgroundColor = color;
+    }
+
+    colorField.addEventListener('input', updateColorPreview);
+    updateColorPreview();
+
+    // Icon preview
+    function updateIconPreview() {
+      const preview = document.getElementById('iconPreview');
+      const iconClass = iconField.value.trim();
+      
+      if (iconClass) {
+        preview.innerHTML = `<i class="${iconClass}"></i>`;
+      } else {
+        preview.innerHTML = '<i class="fas fa-tag"></i>';
+      }
+    }
+
+    iconField.addEventListener('input', updateIconPreview);
+    updateIconPreview();
+
+    // Real-time validation
+    function validateField(field) {
+      const value = field.value.trim();
+      let isValid = true;
+      let errorMessage = '';
+
+      if (field === nameField) {
+        if (!value) {
+          isValid = false;
+          errorMessage = '{% trans "Category name is required" %}';
+        } else if (value.length < 2) {
+          isValid = false;
+          errorMessage = '{% trans "Category name must be at least 2 characters" %}';
+        } else if (value.length > 50) {
+          isValid = false;
+          errorMessage = '{% trans "Category name must be less than 50 characters" %}';
+        }
+      }
+
+      // Update field appearance
+      if (isValid) {
+        field.classList.remove('is-invalid');
+        field.classList.add('is-valid');
+      } else {
+        field.classList.remove('is-valid');
+        field.classList.add('is-invalid');
+      }
+
+      // Update error message
+      const errorDiv = document.getElementById(field.id.replace('id_', '') + 'Error');
+      if (errorDiv) {
+        errorDiv.textContent = errorMessage;
+      }
+
+      return isValid;
+    }
+
+    // Add validation listeners
+    nameField.addEventListener('blur', () => validateField(nameField));
+    nameField.addEventListener('input', () => {
+      if (nameField.classList.contains('is-invalid')) {
+        validateField(nameField);
+      }
+    });
+
+    // Form submission
+    form.addEventListener("submit", function (e) {
+      const isNameValid = validateField(nameField);
+      
+      if (!isNameValid) {
+        e.preventDefault();
+        nameField.focus();
+        return;
+      }
+
+      // Show loading state
+      submitBtn.disabled = true;
+      submitText.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>{% trans "Saving Changes..." %}';
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function (e) {
+      // Ctrl/Cmd + Enter to submit
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        e.preventDefault();
+        form.submit();
+      }
+      
+      // Escape to cancel
+      if (e.key === 'Escape') {
+        window.location.href = '{% url "personal_timebox:manage_categories" %}';
+      }
+    });
+
+    // Add field animations
+    const formControls = document.querySelectorAll('.form-control, .form-select');
+    formControls.forEach((control, index) => {
+      control.style.opacity = '0';
+      control.style.transform = 'translateY(20px)';
+      
+      setTimeout(() => {
+        control.style.transition = 'all 0.5s ease';
+        control.style.opacity = '1';
+        control.style.transform = 'translateY(0)';
+      }, 100 * (index + 1));
+    });
   });
 </script>
 {% endblock %}

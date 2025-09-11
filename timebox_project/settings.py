@@ -4,6 +4,11 @@ from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Author Information
+AUTHOR_NAME = 'Araz Shahkarami'
+AUTHOR_WEBSITE = 'https://www.araz.me'
+AUTHOR_TELEGRAM = '@arazshah'
+
 SECRET_KEY = config('SECRET_KEY', default='django-insecure-change-this-in-production')
 DEBUG = config('DEBUG', default=True, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1').split(',')

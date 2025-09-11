@@ -5,44 +5,425 @@
 
 {% block extra_css %}
 <style>
-  .goal-progress-bar {
-    transition: width 0.6s ease;
+  /* Enhanced Header Styles */
+  .goals-header {
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    padding: 2rem 2.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    position: relative;
+    overflow: hidden;
   }
+  
+  .goals-header::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary), var(--success), var(--info));
+    background-size: 400% 100%;
+    animation: gradientShift 8s ease infinite;
+  }
+  
+  @keyframes gradientShift {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  
+  /* Enhanced Goal Cards */
   .goal-card {
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06), 0 1px 3px rgba(0, 0, 0, 0.08);
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .goal-card:hover {
+    transform: translateY(-8px) scale(1.02);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12), 0 8px 16px rgba(0, 0, 0, 0.08);
+  }
+  
+  .goal-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary), var(--secondary));
+    opacity: 0.8;
+  }
+  
+  /* Enhanced Progress Bars */
+  .goal-progress {
+    height: 12px;
+    border-radius: 12px;
+    background: rgba(0, 0, 0, 0.05);
+    overflow: hidden;
+    position: relative;
+  }
+  
+  .goal-progress.low {
+    background: linear-gradient(90deg, #fee2e2, #fecaca);
+  }
+  
+  .goal-progress.medium {
+    background: linear-gradient(90deg, #fef3c7, #fde68a);
+  }
+  
+  .goal-progress.high {
+    background: linear-gradient(90deg, #d1fae5, #a7f3d0);
+  }
+  
+  .goal-progress-bar {
+    height: 100%;
+    border-radius: 12px;
+    transition: width 1s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+  }
+  
+  .goal-progress.low .goal-progress-bar {
+    background: linear-gradient(90deg, var(--danger), #ef4444);
+  }
+  
+  .goal-progress.medium .goal-progress-bar {
+    background: linear-gradient(90deg, var(--warning), #f59e0b);
+  }
+  
+  .goal-progress.high .goal-progress-bar {
+    background: linear-gradient(90deg, var(--success), #10b981);
+  }
+  
+  .goal-progress-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+  }
+  
+  @keyframes shimmer {
+    0% { left: -100%; }
+    100% { left: 100%; }
+  }
+  
+  /* Enhanced Goal Meta */
+  .goal-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    margin-top: 1rem;
+  }
+  
+  .goal-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    font-weight: 500;
+  }
+  
+  .goal-meta-item i {
+    color: var(--primary);
+    font-size: 1rem;
+  }
+  
+  /* Enhanced Goal Status */
+  .goal-status {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+  }
+  
+  .goal-status.active {
+    color: var(--success);
+  }
+  
+  .goal-status.inactive {
+    color: var(--gray-500);
+  }
+  
+  /* Enhanced Goal Actions */
+  .goal-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--gray-200);
+  }
+  
+  .goal-actions .btn {
+    border-radius: 8px;
+    font-weight: 600;
+    padding: 0.5rem 1rem;
+    font-size: 0.85rem;
     transition: all 0.3s ease;
   }
-  .goal-card:hover {
-    transform: translateY(-5px);
+  
+  .goal-actions .btn-outline-primary:hover {
+    background: var(--primary);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+  
+  .goal-actions .btn-outline-danger:hover {
+    background: var(--danger);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+  }
+  
+  /* Enhanced Period Badges */
+  .goal-period-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .goal-period-badge.daily {
+    background: linear-gradient(135deg, #dbeafe, #bfdbfe);
+    color: #1e40af;
+  }
+  
+  .goal-period-badge.weekly {
+    background: linear-gradient(135deg, #dcfce7, #bbf7d0);
+    color: #166534;
+  }
+  
+  .goal-period-badge.monthly {
+    background: linear-gradient(135deg, #fef3c7, #fde68a);
+    color: #92400e;
+  }
+  
+  .goal-period-badge.yearly {
+    background: linear-gradient(135deg, #fce7f3, #fbcfe8);
+    color: #9f1239;
+  }
+  
+  /* Enhanced Category Icon */
+  .goal-category-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+    margin-right: 1rem;
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+  }
+  
+  /* Enhanced Empty State */
+  .goal-empty-state {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+    border-radius: 20px;
+    border: 2px dashed var(--gray-300);
+    animation: fadeIn 0.8s ease-out;
+  }
+  
+  .goal-empty-state i {
+    font-size: 4rem;
+    color: var(--gray-400);
+    margin-bottom: 1.5rem;
+    opacity: 0.7;
+  }
+  
+  .goal-empty-state h4 {
+    color: var(--gray-700);
+    font-weight: 700;
+    margin-bottom: 1rem;
+    font-size: 1.5rem;
+  }
+  
+  .goal-empty-state p {
+    color: var(--gray-600);
+    font-size: 1.1rem;
+    margin-bottom: 2rem;
+    opacity: 0.9;
+  }
+  
+  .goal-empty-state .btn {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    padding: 1rem 2rem;
+    font-weight: 700;
+    border-radius: 50px;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .goal-empty-state .btn:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+  }
+  
+  /* Enhanced Export Dropdown */
+  .export-dropdown .dropdown-toggle {
+    border-radius: 12px;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--gray-300);
+    background: rgba(255, 255, 255, 0.9);
+    transition: all 0.3s ease;
+  }
+  
+  .export-dropdown .dropdown-toggle:hover {
+    border-color: var(--success);
+    background: rgba(34, 197, 94, 0.1);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(34, 197, 94, 0.2);
+  }
+  
+  .export-dropdown .dropdown-menu {
+    border-radius: 12px;
+    border: 1px solid var(--gray-200);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    padding: 0.5rem;
+  }
+  
+  .export-dropdown .dropdown-item {
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+  }
+  
+  .export-dropdown .dropdown-item:hover {
+    background: var(--gray-100);
+    transform: translateX(4px);
+  }
+  
+  /* Enhanced Add Button */
+  .btn-primary {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-weight: 700;
+    border-radius: 12px;
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+  }
+  
+  .btn-primary:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(102, 126, 234, 0.4);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .goals-header {
+      padding: 1.5rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .goal-card {
+      margin-bottom: 1.5rem;
+    }
+    
+    .goal-meta {
+      flex-direction: row;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    
+    .goal-actions {
+      flex-direction: column;
+    }
+    
+    .goal-actions .btn {
+      width: 100%;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .goals-header {
+      padding: 1rem;
+      border-radius: 16px;
+    }
+    
+    .d-flex.justify-content-between {
+      flex-direction: column;
+      gap: 1rem;
+      align-items: stretch;
+    }
+    
+    .d-flex.gap-2 {
+      flex-direction: column;
+    }
+    
+    .goal-empty-state {
+      padding: 2rem 1rem;
+    }
+    
+    .goal-empty-state i {
+      font-size: 3rem;
+    }
   }
 </style>
 {% endblock %}
 
 {% block content %}
 <div class="container">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="h2 mb-1">
-        <i class="fas fa-bullseye text-primary me-2"></i>
-        {% trans "Personal Goals" %}
-      </h1>
-      <p class="text-muted mb-0">{% trans "Define and track time goals by category and period" %}</p>
-    </div>
-    <div class="d-flex gap-2">
-      <div class="export-dropdown">
-        <div class="dropdown">
-          <button class="btn btn-success dropdown-toggle" type="button" id="exportGoalsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-download me-1"></i>
-            {% trans "Export" %}
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="exportGoalsDropdown">
-            <li><a class="dropdown-item" href="{% url 'personal_timebox:export_goals_csv' %}"><i class="fas fa-file-csv me-2"></i>{% trans "CSV Format" %}</a></li>
-            <li><a class="dropdown-item" href="{% url 'personal_timebox:export_goals_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
-          </ul>
-        </div>
+  <div class="goals-header">
+    <div class="d-flex justify-content-between align-items-center">
+      <div>
+        <h1 class="h2 mb-1">
+          <i class="fas fa-bullseye text-primary me-2"></i>
+          {% trans "Personal Goals" %}
+        </h1>
+        <p class="text-muted mb-0">{% trans "Define and track time goals by category and period" %}</p>
       </div>
-      <a href="{% url 'personal_timebox:add_goal' %}" class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i> {% trans "Add Goal" %}
-      </a>
+      <div class="d-flex gap-2">
+        <div class="export-dropdown">
+          <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" id="exportGoalsDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-download me-1"></i>
+              {% trans "Export" %}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="exportGoalsDropdown">
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_goals_csv' %}"><i class="fas fa-file-csv me-2"></i>{% trans "CSV Format" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_goals_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
+            </ul>
+          </div>
+        </div>
+        <a href="{% url 'personal_timebox:add_goal' %}" class="btn btn-primary">
+          <i class="fas fa-plus me-1"></i> {% trans "Add Goal" %}
+        </a>
+      </div>
     </div>
   </div>
 
@@ -58,8 +439,8 @@
                 <i class="fas fa-folder"></i>
               </div>
               <div>
-                <h5 class="card-title mb-1">{{ goal.title }}</h5>
-                <small class="text-muted">
+                <h5 class="card-title mb-1 fw-bold">{{ goal.title }}</h5>
+                <small class="text-muted fw-medium">
                   {{ goal.category.name }}
                 </small>
               </div>
@@ -75,7 +456,7 @@
               <span class="fw-bold text-primary">{{ goal.progress|floatformat:0 }}%</span>
             </div>
             <div class="progress goal-progress {% if goal.progress < 33 %}low{% elif goal.progress < 66 %}medium{% else %}high{% endif %}">
-              <div class="progress-bar goal-progress-bar" role="progressbar" style="width: {{ goal.progress }}%" aria-valuenow="{{ goal.progress|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
+              <div class="progress-bar goal-progress-bar" role="progressbar" style="width: 0%" aria-valuenow="{{ goal.progress|floatformat:0 }}" aria-valuemin="0" aria-valuemax="100"></div>
             </div>
           </div>
 
@@ -96,7 +477,7 @@
             <a href="{% url 'personal_timebox:edit_goal' goal.id %}" class="btn btn-outline-primary btn-sm">
               <i class="fas fa-edit"></i> {% trans "Edit" %}
             </a>
-            <form method="post" action="{% url 'personal_timebox:delete_goal' goal.id %}" onsubmit="return confirm('{% trans 'Are you sure you want to delete this goal?' %}')" class="d-inline">
+            <form method="post" action="{% url 'personal_timebox:delete_goal' goal.id %}" class="d-inline delete-goal-form" data-confirm-message="{% trans 'Are you sure you want to delete this goal?' %}">
               {% csrf_token %}
               <button type="submit" class="btn btn-outline-danger btn-sm">
                 <i class="fas fa-trash"></i> {% trans "Delete" %}
@@ -121,15 +502,132 @@
 </div>
 
 <script>
-// Animate progress bars on page load
+// Enhanced animations and interactions
 document.addEventListener('DOMContentLoaded', function() {
+  // Animate progress bars on page load with staggered timing
   const progressBars = document.querySelectorAll('.goal-progress-bar');
-  progressBars.forEach(bar => {
+  progressBars.forEach((bar, index) => {
     const width = bar.getAttribute('aria-valuenow');
     setTimeout(() => {
       bar.style.width = width + '%';
-    }, 100);
+    }, 100 + (index * 150)); // Stagger the animations
+  });
+  
+  // Add hover effects to goal cards
+  const goalCards = document.querySelectorAll('.goal-card');
+  goalCards.forEach(card => {
+    card.addEventListener('mouseenter', function() {
+      this.style.transform = 'translateY(-8px) scale(1.02)';
+    });
+    
+    card.addEventListener('mouseleave', function() {
+      this.style.transform = 'translateY(0) scale(1)';
+    });
+  });
+  
+  // Add click feedback to buttons
+  const buttons = document.querySelectorAll('.goal-actions .btn');
+  buttons.forEach(button => {
+    button.addEventListener('click', function(e) {
+      // Create ripple effect
+      const ripple = document.createElement('span');
+      const rect = this.getBoundingClientRect();
+      const size = Math.max(rect.width, rect.height);
+      const x = e.clientX - rect.left - size / 2;
+      const y = e.clientY - rect.top - size / 2;
+      
+      ripple.style.width = ripple.style.height = size + 'px';
+      ripple.style.left = x + 'px';
+      ripple.style.top = y + 'px';
+      ripple.classList.add('ripple');
+      
+      this.appendChild(ripple);
+      
+      setTimeout(() => {
+        ripple.remove();
+      }, 600);
+    });
+  });
+  
+  // Add smooth scroll behavior for internal links
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+      }
+    });
+  });
+  
+  // Add keyboard navigation
+  document.addEventListener('keydown', function(e) {
+    // Ctrl+N or Cmd+N for new goal
+    if ((e.ctrlKey || e.metaKey) && e.key === 'n') {
+      e.preventDefault();
+      window.location.href = '{% url "personal_timebox:add_goal" %}';
+    }
+  });
+  
+  // Add intersection observer for fade-in animations
+  const observerOptions = {
+    threshold: 0.1,
+    rootMargin: '0px 0px -50px 0px'
+  };
+  
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, observerOptions);
+  
+  // Observe all goal cards
+  goalCards.forEach(card => {
+    card.style.opacity = '0';
+    card.style.transform = 'translateY(30px)';
+    card.style.transition = 'opacity 0.6s ease, transform 0.6s ease';
+    observer.observe(card);
+  });
+  
+  // Handle delete form confirmations
+  const deleteForms = document.querySelectorAll('.delete-goal-form');
+  deleteForms.forEach(form => {
+    form.addEventListener('submit', function(e) {
+      const message = this.getAttribute('data-confirm-message');
+      if (!confirm(message)) {
+        e.preventDefault();
+      }
+    });
   });
 });
 </script>
+
+<style>
+/* Ripple effect for buttons */
+.goal-actions .btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.ripple {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.6);
+  transform: scale(0);
+  animation: ripple-animation 0.6s ease-out;
+}
+
+@keyframes ripple-animation {
+  to {
+    transform: scale(4);
+    opacity: 0;
+  }
+}
+</style>
 {% endblock %}

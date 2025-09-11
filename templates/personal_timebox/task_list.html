@@ -4,51 +4,457 @@
 
 {% block title %}{% trans "Task List" %} - {% trans "Personal Timebox" %}{% endblock %}
 
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+/* Enhanced Task List Styles */
+.task-list-header {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  border-radius: 20px;
+  padding: 2.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-list-header::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  right: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+.task-list-header .header-content {
+  position: relative;
+  z-index: 2;
+}
+
+.task-list-header h1 {
+  color: white;
+  font-weight: 800;
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.2);
+  animation: slideInLeft 0.6s ease-out;
+}
+
+.task-list-header p {
+  color: rgba(255,255,255,0.9);
+  font-size: 1.1rem;
+  font-weight: 400;
+  animation: slideInLeft 0.8s ease-out;
+}
+
+.task-list-header .header-actions {
+  animation: slideInRight 0.8s ease-out;
+}
+
+/* Enhanced Filter Container */
+.task-filter-container {
+  background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+  border-radius: 20px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+
+.task-filter-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+}
+
+.task-filter-toolbar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.task-filter-toolbar .form-control,
+.task-filter-toolbar .form-select {
+  border-radius: 12px;
+  border: 2px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  background: white;
+}
+
+.task-filter-toolbar .form-control:focus,
+.task-filter-toolbar .form-select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  transform: translateY(-2px);
+}
+
+.task-filter-toolbar .form-label {
+  font-weight: 700;
+  color: #4a5568;
+  margin-bottom: 0.5rem;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Enhanced Active Filters */
+.active-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.filter-pill {
+  background: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+  animation: slideInUp 0.3s ease-out;
+}
+
+.filter-pill .remove-filter {
+  background: rgba(255,255,255,0.3);
+  border: none;
+  border-radius: 50%;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.filter-pill .remove-filter:hover {
+  background: rgba(255,255,255,0.5);
+  transform: scale(1.1);
+}
+
+.clear-filters-btn {
+  background: linear-gradient(135deg, #f56565 0%, #e53e3e 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(245, 101, 101, 0.3);
+}
+
+.clear-filters-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(245, 101, 101, 0.4);
+}
+
+/* Enhanced Task Cards */
+.task-card {
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 1.5rem;
+  animation: slideInUp 0.5s ease-out;
+}
+
+.task-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+  border-color: var(--primary-light);
+}
+
+.task-card:hover::before {
+  transform: scaleX(1);
+}
+
+.task-card .card-body {
+  padding: 2rem;
+}
+
+.task-headline {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.task-card .card-title {
+  font-weight: 800;
+  font-size: 1.4rem;
+  color: #2d3748;
+  margin-bottom: 0.5rem;
+  transition: color 0.3s ease;
+}
+
+.task-card .card-title:hover {
+  color: var(--primary);
+}
+
+.meta-inline {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.meta-inline small {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-weight: 600;
+  color: #4a5568;
+  padding: 0.25rem 0.75rem;
+  background: rgba(102, 126, 234, 0.1);
+  border-radius: 20px;
+  font-size: 0.8rem;
+}
+
+.category-pill {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  padding: 0.25rem 0.75rem;
+  border-radius: 15px;
+  font-weight: 600;
+  font-size: 0.8rem;
+  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
+}
+
+/* Enhanced Empty State */
+.empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  border-radius: 20px;
+  margin: 2rem 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.empty-state::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(102, 126, 234, 0.05) 0%, transparent 70%);
+  animation: rotate 20s linear infinite;
+}
+
+.empty-state .empty-icon {
+  font-size: 5rem;
+  color: var(--primary);
+  margin-bottom: 1.5rem;
+  animation: float 3s ease-in-out infinite;
+}
+
+.empty-state h4 {
+  color: #2d3748;
+  font-weight: 700;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+}
+
+.empty-state p {
+  color: #4a5568;
+  font-size: 1.1rem;
+  margin-bottom: 2rem;
+}
+
+/* Enhanced Buttons */
+.btn-gradient-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  color: white;
+  border: none;
+  padding: 0.75rem 1.5rem;
+  border-radius: 12px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-gradient-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.btn-gradient-success {
+  background: linear-gradient(135deg, var(--success) 0%, #38a169 100%);
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 10px rgba(72, 187, 120, 0.3);
+}
+
+.btn-gradient-success:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(72, 187, 120, 0.4);
+}
+
+/* Animations */
+@keyframes shimmer {
+  0%, 100% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+  50% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+}
+
+@keyframes slideInLeft {
+  from { transform: translateX(-50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInRight {
+  from { transform: translateX(50px); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
+}
+
+@keyframes slideInUp {
+  from { transform: translateY(30px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .task-list-header {
+    padding: 1.5rem;
+    border-radius: 15px;
+  }
+  
+  .task-list-header h1 {
+    font-size: 2rem;
+  }
+  
+  .task-filter-toolbar {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+  
+  .task-card .card-body {
+    padding: 1.5rem;
+  }
+  
+  .task-headline {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+  
+  .meta-inline {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .task-actions {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .task-actions .btn {
+    width: 100%;
+  }
+}
+</style>
+{% endblock %}
 
 {% block content %}
 <div class="container">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <div>
-      <h1 class="h2 mb-1">
-        <i class="fas fa-tasks text-primary me-2"></i>
-        {% trans "Task List" %}
-      </h1>
-      <p class="text-muted mb-0">{% trans "Manage and view all your tasks" %}</p>
-    </div>
-    <div class="d-flex gap-2">
-      <div class="export-dropdown">
-        <div class="dropdown">
-          <button class="btn btn-success dropdown-toggle" type="button" id="exportTasksDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-            <i class="fas fa-download me-1"></i>
-            {% trans "Export" %}
-          </button>
-          <ul class="dropdown-menu" aria-labelledby="exportTasksDropdown">
-            <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_csv' %}"><i class="fas fa-file-csv me-2"></i>{% trans "CSV Format" %}</a></li>
-            <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
-          </ul>
+  <!-- Enhanced Header -->
+  <div class="task-list-header">
+    <div class="header-content">
+      <div class="row align-items-center">
+        <div class="col-md-8">
+          <h1>
+            <i class="fas fa-tasks me-3"></i>
+            {% trans "Task List" %}
+          </h1>
+          <p class="mb-0">{% trans "Manage and view all your tasks" %}</p>
+        </div>
+        <div class="col-md-4 text-md-end header-actions">
+          <div class="d-flex gap-2 justify-content-md-end mt-3 mt-md-0">
+            <div class="export-dropdown">
+              <div class="dropdown">
+                <button class="btn btn-light dropdown-toggle" type="button" id="exportTasksDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  <i class="fas fa-download me-1"></i>
+                  {% trans "Export" %}
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="exportTasksDropdown">
+                  <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_csv' %}"><i class="fas fa-file-csv me-2"></i>{% trans "CSV Format" %}</a></li>
+                  <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
+                </ul>
+              </div>
+            </div>
+            <a href="{% url 'personal_timebox:add_task' %}"
+               class="btn btn-gradient-primary">
+              <i class="fas fa-plus me-2"></i>{% trans "Add New Task" %}
+            </a>
+          </div>
         </div>
       </div>
-      <a href="{% url 'personal_timebox:add_task' %}"
-         class="btn btn-primary">
-        <i class="fas fa-plus me-1"></i>{% trans "Add New Task" %}
-      </a>
     </div>
   </div>
 
-  <!-- Filters and Search -->
-  <div class="task-filter-container card mb-4">
+  <!-- Enhanced Filters and Search -->
+  <div class="task-filter-container">
     <div class="card-body">
       <form id="filterForm" class="task-filter-toolbar">
         <div>
-          <label for="searchInput" class="form-label">{% trans "Search" %}</label>
+          <label for="searchInput" class="form-label">
+            <i class="fas fa-search me-2"></i>{% trans "Search" %}
+          </label>
           <div class="search-input-wrapper">
             <input type="text" id="searchInput" class="form-control" placeholder="{% trans "Title or description..." %}">
           </div>
         </div>
         <div>
-          <label for="statusFilter" class="form-label">{% trans "Status" %}</label>
+          <label for="statusFilter" class="form-label">
+            <i class="fas fa-filter me-2"></i>{% trans "Status" %}
+          </label>
           <select id="statusFilter" class="form-select">
             <option value="">{% trans "All" %}</option>
             <option value="pending">{% trans "Pending" %}</option>
@@ -57,7 +463,9 @@
           </select>
         </div>
         <div>
-          <label for="priorityFilter" class="form-label">{% trans "Priority" %}</label>
+          <label for="priorityFilter" class="form-label">
+            <i class="fas fa-exclamation-triangle me-2"></i>{% trans "Priority" %}
+          </label>
           <select id="priorityFilter" class="form-select">
             <option value="">{% trans "All" %}</option>
             <option value="1">{% trans "Critical" %}</option>
@@ -67,7 +475,9 @@
           </select>
         </div>
         <div>
-          <label for="categoryFilter" class="form-label">{% trans "Category" %}</label>
+          <label for="categoryFilter" class="form-label">
+            <i class="fas fa-folder me-2"></i>{% trans "Category" %}
+          </label>
           <select id="categoryFilter" class="form-select">
             <option value="">{% trans "All" %}</option>
             {% for category in categories %}
@@ -78,18 +488,18 @@
       </form>
       <div class="d-flex justify-content-between align-items-center mt-3">
         <div class="active-filters" id="activeFilters"></div>
-        <button type="button" id="clearFiltersBtn" class="btn clear-filters-btn">
-          <i class="fas fa-times-circle me-1"></i>{% trans "Clear Filters" %}
+        <button type="button" id="clearFiltersBtn" class="clear-filters-btn">
+          <i class="fas fa-times-circle me-2"></i>{% trans "Clear Filters" %}
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Task List -->
+  <!-- Enhanced Task List -->
   <div id="taskList">
     {% if tasks %}
     {% for task in tasks %}
-    <div class="card task-card compact ultra-compact priority-{{ task.priority }} mb-3 {% if task.status == 'completed' %}completed{% endif %}"
+    <div class="task-card priority-{{ task.priority }} {% if task.status == 'completed' %}completed{% endif %}"
          id="task-card-{{ task.id }}"
          data-status="{{ task.status }}"
          data-priority="{{ task.priority }}"
@@ -97,72 +507,74 @@
          data-delete-url="{% url 'personal_timebox:delete_task' task.id %}"
          data-toggle-url="{% url 'personal_timebox:toggle_task_completion' task.id %}">
       <div class="card-body">
-        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 task-headline">
-          <div class="d-inline-flex align-items-center gap-2 flex-wrap">
-            <h5 class="card-title mb-0">
-              <a href="{% url 'personal_timebox:task_detail' task.id %}" class="text-decoration-none">{{ task.title }}</a>
-            </h5>
-            <div class="meta-inline d-inline-flex align-items-center flex-wrap">
-              <small class="me-2">
-                <i class="fas fa-folder me-1"></i>
-                <span class="category-pill" data-color="{{ task.category.color }}">{{ task.category.name }}</span>
-              </small>
-              <small class="me-2">
-                <i class="fas fa-clock me-1"></i>{{ task.estimated_minutes }} {% trans "minutes" %}
-              </small>
-              <small class="me-2 {% if task.is_overdue %}due-overdue{% else %}due-normal{% endif %}">
-                <i class="fas fa-calendar-alt me-1"></i>{{ task.due_date|date:"Y-m-d" }}
-              </small>
-              <small class="me-2">
-                {% with s=task.status %}
-                  <span class="status-badge {% if task.is_overdue %}status-overdue{% elif s == 'completed' %}status-complete{% elif s == 'in_progress' %}status-inprogress{% else %}status-pending{% endif %}">
-                    {% if task.is_overdue %}
-                      <i class="fas fa-exclamation-circle me-1"></i>
-                    {% elif s == 'completed' %}
-                      <i class="fas fa-check-circle me-1"></i>
-                    {% elif s == 'in_progress' %}
-                      <i class="fas fa-hourglass-half me-1"></i>
-                    {% else %}
-                      <i class="fas fa-clock me-1"></i>
-                    {% endif %}
-                    <span class="status-label">{{ task.get_status_display }}</span>
-                  </span>
-                {% endwith %}
-              </small>
+        <div class="task-headline">
+          <div class="d-flex flex-wrap align-items-center justify-content-between gap-3">
+            <div class="flex-grow-1">
+              <h5 class="card-title mb-2">
+                <a href="{% url 'personal_timebox:task_detail' task.id %}" class="text-decoration-none">
+                  {{ task.title }}
+                </a>
+              </h5>
+              <div class="meta-inline">
+                <span class="meta-item">
+                  <i class="fas fa-folder me-1"></i>
+                  <span class="category-pill" data-color="{{ task.category.color }}">{{ task.category.name }}</span>
+                </span>
+                <span class="meta-item">
+                  <i class="fas fa-clock me-1"></i>{{ task.estimated_minutes }} {% trans "min" %}
+                </span>
+                <span class="meta-item {% if task.is_overdue %}due-overdue{% else %}due-normal{% endif %}">
+                  <i class="fas fa-calendar-alt me-1"></i>{{ task.due_date|date:"Y-m-d" }}
+                </span>
+                <span class="meta-item">
+                  {% with s=task.status %}
+                    <span class="status-badge {% if task.is_overdue %}status-overdue{% elif s == 'completed' %}status-complete{% elif s == 'in_progress' %}status-inprogress{% else %}status-pending{% endif %}">
+                      {% if task.is_overdue %}
+                        <i class="fas fa-exclamation-circle me-1"></i>
+                      {% elif s == 'completed' %}
+                        <i class="fas fa-check-circle me-1"></i>
+                      {% elif s == 'in_progress' %}
+                        <i class="fas fa-hourglass-half me-1"></i>
+                      {% else %}
+                        <i class="fas fa-clock me-1"></i>
+                      {% endif %}
+                      <span class="status-label">{{ task.get_status_display }}</span>
+                    </span>
+                  {% endwith %}
+                </span>
+              </div>
             </div>
-          </div>
-          <div class="d-inline-flex align-items-center gap-2">
-            <span class="priority-badge priority-{{ task.priority }}">
-              {% if task.priority == 1 %}<i class="fas fa-bolt me-1"></i>{% endif %}
-              {% if task.priority == 2 %}<i class="fas fa-arrow-up me-1"></i>{% endif %}
-              {% if task.priority == 3 %}<i class="fas fa-equals me-1"></i>{% endif %}
-              {% if task.priority == 4 %}<i class="fas fa-arrow-down me-1"></i>{% endif %}
-              {{ task.get_priority_display }}
-            </span>
-            <div class="energy-indicator">
-              <span class="energy-dot energy-{{ task.energy_level }}"></span>
-              <small>{{ task.get_energy_level_display }}</small>
+            <div class="d-flex flex-column align-items-end gap-2">
+              <span class="priority-badge priority-{{ task.priority }}">
+                {% if task.priority == 1 %}<i class="fas fa-bolt me-1"></i>{% endif %}
+                {% if task.priority == 2 %}<i class="fas fa-arrow-up me-1"></i>{% endif %}
+                {% if task.priority == 3 %}<i class="fas fa-equals me-1"></i>{% endif %}
+                {% if task.priority == 4 %}<i class="fas fa-arrow-down me-1"></i>{% endif %}
+                {{ task.get_priority_display }}
+              </span>
+              <div class="energy-indicator">
+                <span class="energy-dot energy-{{ task.energy_level }}"></span>
+                <small>{{ task.get_energy_level_display }}</small>
+              </div>
             </div>
           </div>
         </div>
 
-        <p class="card-text text-muted small">{{ task.description|truncatechars:100 }}</p>
+        <p class="card-text text-muted">{{ task.description|truncatechars:150 }}</p>
 
-        {# Optional completion overlay, revealed via CSS when completed #}
         <div class="task-completion-overlay">
           <i class="fas fa-check-circle task-completion-icon"></i>
         </div>
 
-        <div class="d-flex justify-content-end mt-3 task-actions">
+        <div class="task-actions">
           <a href="{% url 'personal_timebox:edit_task' task.id %}"
              class="btn btn-outline-primary btn-sm me-2">
             <i class="fas fa-edit"></i> {% trans "Edit" %}
           </a>
 
-          <!-- Delete: works with or without JS -->
           <form method="post"
                 action="{% url 'personal_timebox:delete_task' task.id %}"
-                class="me-2"
+                class="d-inline-block me-2"
                 data-task-id="{{ task.id }}"
                 onsubmit="event.preventDefault(); if (window.confirmDelete) { window.confirmDelete(this.dataset.taskId); } else { this.submit(); }">
             {% csrf_token %}
@@ -171,10 +583,9 @@
             </button>
           </form>
 
-          <!-- Toggle Complete: works with or without JS -->
           <form method="post"
                 action="{% url 'personal_timebox:toggle_task_completion' task.id %}"
-                class="me-2"
+                class="d-inline-block me-2"
                 data-task-id="{{ task.id }}"
                 onsubmit="event.preventDefault(); if (window.toggleComplete) { window.toggleComplete(this.dataset.taskId); } else { this.submit(); }">
             {% csrf_token %}
@@ -185,7 +596,7 @@
 
           {% if not active_session and task.status != 'completed' %}
           <a href="{% url 'personal_timebox:start_task' task.id %}"
-             class="btn btn-success btn-sm me-2">
+             class="btn btn-gradient-success btn-sm">
             <i class="fas fa-play"></i> {% trans "Start" %}
           </a>
           {% endif %}
@@ -194,14 +605,16 @@
     </div>
     {% endfor %}
     {% else %}
-    <div class="text-center py-5">
-      <i class="fas fa-tasks fa-4x text-muted mb-3"></i>
-      <h4 class="text-muted">{% trans "No tasks found" %}</h4>
-      <p class="text-muted">{% trans "Create a new task to get started!" %}</p>
-      <a href="{% url 'personal_timebox:add_task' %}"
-         class="btn btn-primary">
-        <i class="fas fa-plus ms-1"></i>{% trans "Create first task" %}
-      </a>
+    <div class="empty-state">
+      <div class="empty-content">
+        <i class="fas fa-tasks empty-icon"></i>
+        <h4>{% trans "No tasks found" %}</h4>
+        <p>{% trans "Create a new task to get started!" %}</p>
+        <a href="{% url 'personal_timebox:add_task' %}"
+           class="btn btn-gradient-primary">
+          <i class="fas fa-plus me-2"></i>{% trans "Create first task" %}
+        </a>
+      </div>
     </div>
     {% endif %}
   </div>
@@ -216,14 +629,31 @@
     const activeFiltersWrap = document.getElementById('activeFilters');
     const clearBtn = document.getElementById('clearFiltersBtn');
 
-    // Filter function
+    // Add loading state management
+    function showLoading(element) {
+      element.style.opacity = '0.6';
+      element.style.pointerEvents = 'none';
+      const loader = document.createElement('div');
+      loader.className = 'loading-spinner';
+      loader.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+      element.appendChild(loader);
+    }
+
+    function hideLoading(element) {
+      element.style.opacity = '1';
+      element.style.pointerEvents = 'auto';
+      const loader = element.querySelector('.loading-spinner');
+      if (loader) loader.remove();
+    }
+
+    // Enhanced filter function with smooth transitions
     function applyFilters() {
       const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
       const status = document.getElementById('statusFilter')?.value || '';
       const priority = document.getElementById('priorityFilter')?.value || '';
       const category = document.getElementById('categoryFilter')?.value || '';
 
-      taskItems.forEach(item => {
+      taskItems.forEach((item, index) => {
         const title = item.querySelector('.card-title')?.textContent.toLowerCase() || '';
         const desc = item.querySelector('.card-text')?.textContent.toLowerCase() || '';
         const matchesSearch = title.includes(search) || desc.includes(search);
@@ -231,7 +661,20 @@
         const matchesPriority = !priority || item.dataset.priority === priority;
         const matchesCategory = !category || item.dataset.category === category;
 
-        item.style.display = (matchesSearch && matchesStatus && matchesPriority && matchesCategory) ? '' : 'none';
+        const shouldShow = matchesSearch && matchesStatus && matchesPriority && matchesCategory;
+        
+        // Add smooth transition
+        if (shouldShow && item.style.display === 'none') {
+          setTimeout(() => {
+            item.style.display = '';
+            item.style.animation = 'slideInUp 0.4s ease-out';
+          }, index * 50);
+        } else if (!shouldShow && item.style.display !== 'none') {
+          item.style.animation = 'slideOutUp 0.3s ease-in';
+          setTimeout(() => {
+            item.style.display = 'none';
+          }, 300);
+        }
       });
 
       renderActiveFilters();
@@ -270,8 +713,13 @@
       }
     }
 
-    // Add event listeners
-    document.getElementById('searchInput')?.addEventListener('input', applyFilters);
+    // Enhanced event listeners with debounce
+    let searchTimeout;
+    document.getElementById('searchInput')?.addEventListener('input', function() {
+      clearTimeout(searchTimeout);
+      searchTimeout = setTimeout(applyFilters, 300);
+    });
+    
     document.getElementById('statusFilter')?.addEventListener('change', applyFilters);
     document.getElementById('priorityFilter')?.addEventListener('change', applyFilters);
     document.getElementById('categoryFilter')?.addEventListener('change', applyFilters);
@@ -288,22 +736,28 @@
       applyFilters();
     });
 
-    // Initial filter
-    applyFilters();
+    // Initial filter with staggered animation
+    setTimeout(() => {
+      applyFilters();
+    }, 100);
   });
 
-  // CSRF helper (fallback if not globally defined)
+  // Enhanced CSRF helper
   function getCookie(name) {
     const value = `; ${document.cookie}`;
     const parts = value.split(`; ${name}=`);
     if (parts.length === 2) return parts.pop().split(';').shift();
   }
 
+  // Enhanced delete function with loading animation
   window.confirmDelete = function(taskId) {
     if (confirm('{% trans "Are you sure you want to delete this task?" %}')) {
       const el = document.getElementById(`task-card-${taskId}`);
       const url = el?.dataset.deleteUrl;
       if (!url) { alert('{% trans "Error deleting task" %}'); return; }
+      
+      showLoading(el);
+      
       fetch(url, {
         method: 'POST',
         headers: {
@@ -312,18 +766,31 @@
         }
       }).then(response => {
         if (response.ok) {
-          if (el) el.remove();
+          // Add fade out animation
+          el.style.animation = 'slideOutUp 0.4s ease-in';
+          setTimeout(() => {
+            if (el) el.remove();
+          }, 400);
         } else {
+          hideLoading(el);
           alert('{% trans "Error deleting task" %}');
         }
-      }).catch(() => alert('{% trans "Network error" %}'));
+      }).catch(() => {
+        hideLoading(el);
+        alert('{% trans "Network error" %}');
+      });
     }
   }
 
+  // Enhanced toggle complete function with smooth transitions
   window.toggleComplete = function(taskId) {
     const card = document.getElementById(`task-card-${taskId}`);
     const url = card?.dataset.toggleUrl;
     if (!url) { alert('{% trans "Error updating status" %}'); return; }
+    
+    showLoading(card);
+    card.classList.add('status-transitioning');
+    
     fetch(url, {
       method: 'POST',
       headers: {
@@ -333,19 +800,26 @@
     }).then(res => res.json())
       .then(data => {
         if (!data.success) throw new Error('failed');
+        
+        hideLoading(card);
         if (!card) return;
+        
         const wasCompleted = card.dataset.status === 'completed';
         const newStatus = data.completed ? 'completed' : 'in_progress';
         card.dataset.status = newStatus;
+        
         const statusLabel = card.querySelector('.status-label');
         if (statusLabel) statusLabel.textContent = data.completed ? '{% trans "Completed" %}' : '{% trans "In Progress" %}';
-        // toggle completed class to trigger overlay and styles
+        
+        // Toggle completed class with animation
         if (data.completed) {
           card.classList.add('completed');
+          card.style.animation = 'taskComplete 0.6s ease-in-out';
         } else {
           card.classList.remove('completed');
         }
-        // update status badge classes and icon
+        
+        // Update status badge classes and icon
         const badge = card.querySelector('.status-badge');
         if (badge) {
           badge.classList.remove('status-complete', 'status-inprogress', 'status-pending', 'status-overdue');
@@ -355,16 +829,88 @@
             icon.className = data.completed ? 'fas fa-check-circle me-1' : 'fas fa-hourglass-half me-1';
           }
         }
-        // Hide start button if completed; show if reopened
-        const startBtn = card.querySelector('a.btn.btn-success');
+        
+        // Hide/show start button
+        const startBtn = card.querySelector('a.btn-gradient-success');
         if (startBtn) {
-          if (data.completed) startBtn.style.display = 'none'; else startBtn.style.display = '';
+          if (data.completed) {
+            startBtn.style.display = 'none';
+          } else {
+            startBtn.style.display = '';
+            startBtn.style.animation = 'slideInUp 0.3s ease-out';
+          }
         }
+        
+        // Remove transition class after animation
+        setTimeout(() => {
+          card.classList.remove('status-transitioning');
+        }, 800);
+        
         // Re-apply filters after status change
         const evt = new Event('change');
         document.getElementById('statusFilter')?.dispatchEvent(evt);
       })
-      .catch(() => alert('{% trans "Error updating status" %}'));
+      .catch(() => {
+        hideLoading(card);
+        card.classList.remove('status-transitioning');
+        alert('{% trans "Error updating status" %}');
+      });
   }
 </script>
+
+<style>
+/* Additional animations for enhanced interactions */
+@keyframes slideOutUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-30px);
+    opacity: 0;
+  }
+}
+
+.loading-spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 1.5rem;
+  color: var(--primary);
+  z-index: 10;
+}
+
+.task-card.status-transitioning {
+  pointer-events: none;
+}
+
+/* Enhanced button hover effects */
+.btn-gradient-primary:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
+.btn-gradient-success:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 6px 20px rgba(72, 187, 120, 0.4);
+}
+
+/* Enhanced filter pill hover effects */
+.filter-pill:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+}
+
+/* Enhanced task card hover effects */
+.task-card:hover {
+  transform: translateY(-8px) scale(1.01);
+}
+
+/* Enhanced meta item hover effects */
+.meta-item:hover {
+  background: rgba(102, 126, 234, 0.2);
+  transform: translateY(-1px);
+}
+</style>
 {% endblock %}

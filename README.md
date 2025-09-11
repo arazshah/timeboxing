@@ -49,7 +49,7 @@ A comprehensive Django-based personal time management application that implement
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/timeboxing.git
+   git clone https://github.com/arazshah/timeboxing.git
    cd timeboxing
    ```
 
@@ -360,3 +360,10 @@ For support, please open an issue on GitHub or contact the development team.
 ---
 
 **Built with ❤️ using Django and modern web technologies**
+
+## 👨‍💻 Author
+
+**Araz Shahkarami**
+
+- 🌐 Website: [www.araz.me](https://www.araz.me)
+- 📱 Telegram: [@arazshah](https://t.me/arazshah)

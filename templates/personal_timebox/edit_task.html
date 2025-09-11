@@ -1,5 +1,326 @@
 {% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Edit Task" %} - {% trans "Personal Timebox" %}{% endblock %}
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+/* Enhanced Form Styles */
+.task-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.form-section {
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.form-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-light);
+}
+
+.form-section:hover::before {
+  transform: scaleX(1);
+}
+
+.form-section h5 {
+  color: var(--gray-800);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-section h5 i {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 1rem;
+  color: var(--gray-400);
+  z-index: 2;
+  transition: color 0.2s ease;
+}
+
+.input-with-icon input,
+.input-with-icon textarea,
+.input-with-icon select {
+  padding-left: 2.5rem !important;
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: var(--gray-50);
+}
+
+.input-with-icon input:focus,
+.input-with-icon textarea:focus,
+.input-with-icon select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: white;
+  outline: none;
+}
+
+.input-with-icon:focus-within i {
+  color: var(--primary);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.form-label i {
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+/* Enhanced Button Styles */
+.btn {
+  border-radius: 10px;
+  font-weight: 600;
+  padding: 0.625rem 1.25rem;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  border: none;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: white;
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
+}
+
+.btn-outline-secondary {
+  border: 2px solid var(--gray-300);
+  color: var(--gray-600);
+  background: white;
+}
+
+.btn-outline-secondary:hover {
+  border-color: var(--gray-400);
+  color: var(--gray-800);
+  background: var(--gray-50);
+  transform: translateY(-1px);
+}
+
+.btn-outline-danger {
+  border: 2px solid var(--danger);
+  color: var(--danger);
+  background: white;
+}
+
+.btn-outline-danger:hover {
+  border-color: var(--danger-dark);
+  color: white;
+  background: var(--danger);
+  transform: translateY(-1px);
+}
+
+.btn-danger {
+  background: linear-gradient(135deg, var(--danger), var(--danger-dark));
+  color: white;
+  box-shadow: 0 4px 15px rgba(220, 53, 69, 0.3);
+}
+
+.btn-danger:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(220, 53, 69, 0.4);
+}
+
+/* Enhanced Alert Styles */
+.alert {
+  border-radius: 12px;
+  border: none;
+  padding: 1rem 1.5rem;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.alert-info {
+  background: linear-gradient(135deg, #e3f2fd, #f3f4f6);
+  color: var(--info-dark);
+}
+
+.alert-warning {
+  background: linear-gradient(135deg, #fff3cd, #fef3c7);
+  color: var(--warning-dark);
+}
+
+/* Enhanced Form Validation */
+.text-danger {
+  color: var(--danger-dark) !important;
+  font-weight: 500;
+}
+
+.field-error {
+  border-color: var(--danger) !important;
+  background: rgba(220, 53, 69, 0.05) !important;
+}
+
+.field-error:focus {
+  box-shadow: 0 0 0 3px rgba(220, 53, 69, 0.1) !important;
+}
+
+.error-message {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background: rgba(220, 53, 69, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid var(--danger);
+}
+
+.error-message i {
+  color: var(--danger);
+}
+
+/* Character Counter */
+.char-counter {
+  font-size: 0.8rem;
+  color: var(--gray-500);
+  text-align: right;
+  margin-top: 0.25rem;
+  transition: color 0.2s ease;
+}
+
+.char-counter.warning {
+  color: var(--warning);
+}
+
+.char-counter.danger {
+  color: var(--danger);
+}
+
+/* Energy Level Indicator */
+.energy-indicator {
+  margin-top: 0.5rem;
+  padding: 0.5rem;
+  background: var(--gray-50);
+  border-radius: 8px;
+  border: 1px solid var(--gray-200);
+}
+
+.energy-bar {
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+}
+
+.energy-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.energy-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -100%; }
+  100% { left: 100%; }
+}
+
+.energy-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin-top: 0.25rem;
+  text-align: center;
+}
+
+/* Loading Animation */
+.btn.loading {
+  pointer-events: none;
+  opacity: 0.8;
+}
+
+.btn.loading .fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .task-form-container {
+    padding: 1rem 0;
+  }
+  
+  .form-section {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .btn-group {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  
+  .btn-group .btn {
+    width: 100%;
+  }
+}
+</style>
+{% endblock %}
 {% block content %}
 <div class="container">
   <div class="task-form-container">
@@ -64,9 +385,11 @@
             <i class="fas fa-heading"></i>
             {{ form.title }}
           </div>
+          <div class="char-counter" id="titleCharCounter">0 / 100</div>
           {% if form.title.errors %}
-          <div class="text-danger small mt-1">
-            {% for error in form.title.errors %}{{ error }}{% endfor %}
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{% for error in form.title.errors %}{{ error }}{% endfor %}</span>
           </div>
           {% endif %}
         </div>
@@ -80,8 +403,9 @@
             {{ form.description }}
           </div>
           {% if form.description.errors %}
-          <div class="text-danger small mt-1">
-            {% for error in form.description.errors %}{{ error }}{% endfor %}
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{% for error in form.description.errors %}{{ error }}{% endfor %}</span>
           </div>
           {% endif %}
         </div>
@@ -102,8 +426,9 @@
                 {{ form.category }}
               </div>
               {% if form.category.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.category.errors %}{{ error }}{% endfor %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{% for error in form.category.errors %}{{ error }}{% endfor %}</span>
               </div>
               {% endif %}
             </div>
@@ -119,8 +444,9 @@
                 {{ form.goal }}
               </div>
               {% if form.goal.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.goal.errors %}{{ error }}{% endfor %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{% for error in form.goal.errors %}{{ error }}{% endfor %}</span>
               </div>
               {% endif %}
             </div>
@@ -143,8 +469,9 @@
                 {{ form.priority }}
               </div>
               {% if form.priority.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.priority.errors %}{{ error }}{% endfor %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{% for error in form.priority.errors %}{{ error }}{% endfor %}</span>
               </div>
               {% endif %}
             </div>
@@ -163,11 +490,16 @@
                 <i class="fas fa-battery-three-quarters"></i>
                 {{ form.energy_level }}
               </div>
+              <div class="energy-indicator" id="energyIndicator">
+                <div class="energy-bar">
+                  <div class="energy-fill" id="energyFill"></div>
+                </div>
+                <div class="energy-label" id="energyLabel">Low Energy</div>
+              </div>
               {% if form.energy_level.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.energy_level.errors %}
-                {{ error }}
-                {% endfor %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{% for error in form.energy_level.errors %}{{ error }}{% endfor %}</span>
               </div>
               {% endif %}
             </div>
@@ -186,10 +518,9 @@
                 {{ form.estimated_minutes }}
               </div>
               {% if form.estimated_minutes.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.estimated_minutes.errors %}
-                {{ error }}
-                {% endfor %}
+              <div class="error-message">
+                <i class="fas fa-exclamation-circle"></i>
+                <span>{% for error in form.estimated_minutes.errors %}{{ error }}{% endfor %}</span>
               </div>
               {% endif %}
             </div>
@@ -210,8 +541,9 @@
             {{ form.due_date }}
           </div>
           {% if form.due_date.errors %}
-          <div class="text-danger small mt-1">
-            {% for error in form.due_date.errors %}{{ error }}{% endfor %}
+          <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <span>{% for error in form.due_date.errors %}{{ error }}{% endfor %}</span>
           </div>
           {% endif %}
         </div>
@@ -298,11 +630,196 @@
 {% endblock %} {% block extra_js %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-      // Form validation and submission
       const form = document.getElementById('taskForm');
       const markCompletedCheckbox = document.getElementById('markCompleted');
+      const titleInput = document.getElementById('{{ form.title.id_for_label }}');
+      const energySelect = document.getElementById('{{ form.energy_level.id_for_label }}');
+      const titleCharCounter = document.getElementById('titleCharCounter');
+      const energyFill = document.getElementById('energyFill');
+      const energyLabel = document.getElementById('energyLabel');
 
+      // Character counter for title field
+      function updateCharCount() {
+          const currentLength = titleInput.value.length;
+          const maxLength = 100;
+          const remaining = maxLength - currentLength;
+          
+          titleCharCounter.textContent = `${currentLength} / ${maxLength}`;
+          
+          // Update counter color based on remaining characters
+          titleCharCounter.classList.remove('warning', 'danger');
+          if (remaining <= 10) {
+              titleCharCounter.classList.add('danger');
+          } else if (remaining <= 20) {
+              titleCharCounter.classList.add('warning');
+          }
+      }
+
+      // Enhanced energy level indicator
+      function updateEnergyIndicator() {
+          const value = parseInt(energySelect.value);
+          const percentage = (value / 5) * 100;
+          
+          // Update fill width
+          energyFill.style.width = percentage + '%';
+          
+          // Update color and label based on energy level
+          let color, label;
+          switch(value) {
+              case 1:
+                  color = '#ef4444'; // red
+                  label = '{% trans "Very Low Energy" %}';
+                  break;
+              case 2:
+                  color = '#f97316'; // orange
+                  label = '{% trans "Low Energy" %}';
+                  break;
+              case 3:
+                  color = '#eab308'; // yellow
+                  label = '{% trans "Medium Energy" %}';
+                  break;
+              case 4:
+                  color = '#22c55e'; // green
+                  label = '{% trans "High Energy" %}';
+                  break;
+              case 5:
+                  color = '#3b82f6'; // blue
+                  label = '{% trans "Very High Energy" %}';
+                  break;
+              default:
+                  color = '#6b7280'; // gray
+                  label = '{% trans "Select Energy Level" %}';
+          }
+          
+          energyFill.style.background = `linear-gradient(90deg, ${color}, ${color}dd)`;
+          energyLabel.textContent = label;
+          energyLabel.style.color = color;
+      }
+
+      // Real-time form validation
+      function validateField(field) {
+          const value = field.value.trim();
+          const fieldName = field.name;
+          let isValid = true;
+          let errorMessage = '';
+
+          // Remove existing error styling
+          field.classList.remove('field-error');
+          const existingError = field.parentNode.parentNode.querySelector('.error-message');
+          if (existingError && existingError.dataset.dynamic === 'true') {
+              existingError.remove();
+          }
+
+          // Field-specific validation
+          switch(fieldName) {
+              case 'title':
+                  if (!value) {
+                      isValid = false;
+                      errorMessage = '{% trans "Task title is required." %}';
+                  } else if (value.length < 3) {
+                      isValid = false;
+                      errorMessage = '{% trans "Task title must be at least 3 characters long." %}';
+                  } else if (value.length > 100) {
+                      isValid = false;
+                      errorMessage = '{% trans "Task title cannot exceed 100 characters." %}';
+                  }
+                  break;
+              case 'category':
+                  if (!value || value === '') {
+                      isValid = false;
+                      errorMessage = '{% trans "Please select a category." %}';
+                  }
+                  break;
+              case 'priority':
+                  if (!value || value === '') {
+                      isValid = false;
+                      errorMessage = '{% trans "Please select a priority level." %}';
+                  }
+                  break;
+              case 'energy_level':
+                  if (!value || value === '') {
+                      isValid = false;
+                      errorMessage = '{% trans "Please select an energy level." %}';
+                  }
+                  break;
+              case 'estimated_minutes':
+                  if (!value || value === '') {
+                      isValid = false;
+                      errorMessage = '{% trans "Estimated duration is required." %}';
+                  } else if (parseInt(value) <= 0) {
+                      isValid = false;
+                      errorMessage = '{% trans "Estimated duration must be greater than 0." %}';
+                  } else if (parseInt(value) > 480) {
+                      isValid = false;
+                      errorMessage = '{% trans "Estimated duration cannot exceed 8 hours (480 minutes)." %}';
+                  }
+                  break;
+          }
+
+          if (!isValid) {
+              showFieldError(field, errorMessage);
+          }
+
+          return isValid;
+      }
+
+      function showFieldError(field, message) {
+          field.classList.add('field-error');
+          
+          const errorDiv = document.createElement('div');
+          errorDiv.className = 'error-message';
+          errorDiv.dataset.dynamic = 'true';
+          errorDiv.innerHTML = `
+              <i class="fas fa-exclamation-circle"></i>
+              <span>${message}</span>
+          `;
+          
+          field.parentNode.parentNode.appendChild(errorDiv);
+      }
+
+      function removeFieldError(field) {
+          field.classList.remove('field-error');
+          const existingError = field.parentNode.parentNode.querySelector('.error-message[data-dynamic="true"]');
+          if (existingError) {
+              existingError.remove();
+          }
+      }
+
+      // Add event listeners for real-time validation
+      const requiredFields = form.querySelectorAll('input[required], select[required], textarea[required]');
+      requiredFields.forEach(field => {
+          field.addEventListener('blur', () => validateField(field));
+          field.addEventListener('input', () => {
+              if (field.classList.contains('field-error')) {
+                  validateField(field);
+              }
+          });
+      });
+
+      // Form submission validation
       form.addEventListener('submit', function(e) {
+          let isFormValid = true;
+          
+          // Validate all required fields
+          requiredFields.forEach(field => {
+              if (!validateField(field)) {
+                  isFormValid = false;
+              }
+          });
+          
+          if (!isFormValid) {
+              e.preventDefault();
+              
+              // Scroll to first error
+              const firstError = form.querySelector('.field-error');
+              if (firstError) {
+                  firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                  firstError.focus();
+              }
+              
+              return;
+          }
+
           // Add completion status to form data
           const initialCompleted = (form.dataset.initialCompleted === 'true');
           if (markCompletedCheckbox.checked !== initialCompleted) {
@@ -316,6 +833,7 @@
           // Show loading state
           const submitBtn = form.querySelector('button[type="submit"]');
           submitBtn.disabled = true;
+          submitBtn.classList.add('loading');
           submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>{% trans "Updating Task..." %}';
       });
 
@@ -324,7 +842,12 @@
           // Ctrl/Cmd + Enter to submit
           if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
               e.preventDefault();
-              form.submit();
+              if (form.checkValidity()) {
+                  form.dispatchEvent(new Event('submit'));
+              } else {
+                  // Trigger validation
+                  requiredFields.forEach(field => validateField(field));
+              }
           }
 
           // Escape to cancel
@@ -333,6 +856,30 @@
                   window.location.href = "{% url 'personal_timebox:task_list' %}";
               }
           }
+      });
+
+      // Initialize dynamic elements
+      if (titleInput) {
+          titleInput.addEventListener('input', updateCharCount);
+          updateCharCount();
+      }
+
+      if (energySelect) {
+          energySelect.addEventListener('change', updateEnergyIndicator);
+          updateEnergyIndicator();
+      }
+
+      // Add field entry animations
+      const formSections = document.querySelectorAll('.form-section');
+      formSections.forEach((section, index) => {
+          section.style.opacity = '0';
+          section.style.transform = 'translateY(20px)';
+          
+          setTimeout(() => {
+              section.style.transition = 'all 0.6s cubic-bezier(0.25, 0.8, 0.25, 1)';
+              section.style.opacity = '1';
+              section.style.transform = 'translateY(0)';
+          }, index * 100);
       });
   });
 </script>

@@ -392,7 +392,6 @@ def start_task(request, task_id):
         task=task,
         planned_minutes=preferences.default_work_duration if preferences else 25,
         start_time=timezone.now(),
-        outcome='completed',  # default outcome; will be finalized on completion
     )
     messages.success(request, f'Session started for "{task.title}"')
     next_url = request.GET.get('next')

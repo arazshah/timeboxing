@@ -1,273 +1,607 @@
 {% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Add Task" %} - {% trans "Personal Timebox" %}{% endblock %}
-{% block extra_css %}{% endblock %}
+{% block extra_css %}
+<style>
+/* Enhanced Form Styles */
+.task-form-container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 2rem 0;
+}
+
+.form-section {
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border-radius: 16px;
+  padding: 2rem;
+  margin-bottom: 2rem;
+  border: 1px solid rgba(102, 126, 234, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.form-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s ease;
+}
+
+.form-section:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: var(--primary-light);
+}
+
+.form-section:hover::before {
+  transform: scaleX(1);
+}
+
+.form-section h5 {
+  color: var(--gray-800);
+  font-weight: 700;
+  font-size: 1.1rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-section h5 i {
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.input-with-icon {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.input-with-icon i {
+  position: absolute;
+  left: 1rem;
+  color: var(--gray-400);
+  z-index: 2;
+  transition: color 0.2s ease;
+}
+
+.input-with-icon input,
+.input-with-icon textarea,
+.input-with-icon select {
+  padding-left: 2.5rem !important;
+  border: 2px solid var(--gray-200);
+  border-radius: 12px;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  background: var(--gray-50);
+}
+
+.input-with-icon input:focus,
+.input-with-icon textarea:focus,
+.input-with-icon select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  background: white;
+  outline: none;
+}
+
+.input-with-icon:focus-within i {
+  color: var(--primary);
+}
+
+.form-label {
+  font-weight: 600;
+  color: var(--gray-700);
+  margin-bottom: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-label i {
+  color: var(--primary);
+  font-size: 0.9rem;
+}
+
+/* Enhanced Energy Level Indicator */
+.energy-indicator {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, var(--gray-50) 0%, var(--gray-100) 100%);
+  border-radius: 12px;
+  border: 1px solid var(--gray-200);
+}
+
+.energy-bar {
+  height: 8px;
+  background: var(--gray-200);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 0.5rem;
+}
+
+.energy-fill {
+  height: 100%;
+  border-radius: 4px;
+  transition: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+  position: relative;
+}
+
+.energy-fill::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 2s infinite;
+}
+
+.energy-low {
+  background: linear-gradient(90deg, var(--warning) 0%, var(--warning-light) 100%);
+}
+
+.energy-medium {
+  background: linear-gradient(90deg, var(--info) 0%, var(--info-light) 100%);
+}
+
+.energy-high {
+  background: linear-gradient(90deg, var(--success) 0%, var(--success-light) 100%);
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Enhanced Buttons */
+.btn-primary {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border: none;
+  border-radius: 12px;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+}
+
+.btn-primary:active {
+  transform: translateY(0);
+}
+
+.btn-outline-secondary {
+  border: 2px solid var(--gray-300);
+  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  font-weight: 600;
+  transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+.btn-outline-secondary:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: rgba(102, 126, 234, 0.05);
+  transform: translateY(-2px);
+}
+
+/* Enhanced Form Validation */
+.alert-danger {
+  border: none;
+  border-radius: 12px;
+  padding: 1rem 1.5rem;
+  background: linear-gradient(135deg, #fff5f5 0%, #ffe6e6 100%);
+  border-left: 4px solid var(--danger);
+  box-shadow: 0 4px 15px rgba(245, 101, 101, 0.1);
+}
+
+.alert-danger ul {
+  margin: 0;
+  padding-left: 1.5rem;
+}
+
+.alert-danger li {
+  margin-bottom: 0.25rem;
+  color: var(--danger-dark);
+}
+
+.text-danger {
+  color: var(--danger-dark) !important;
+  font-weight: 500;
+}
+
+/* Enhanced Form Text */
+.form-text {
+  color: var(--gray-600);
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.form-text i {
+  color: var(--info);
+}
+
+/* Enhanced Header */
+.task-form-container .h2 {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: 800;
+  font-size: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+.task-form-container .text-muted {
+  color: var(--gray-600) !important;
+  font-size: 1.1rem;
+}
+
+/* Enhanced Checkbox */
+.form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--gray-300);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.form-check-input:checked {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  border-color: var(--primary);
+}
+
+.form-check-input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-check-label {
+  font-weight: 500;
+  color: var(--gray-700);
+  margin-left: 0.5rem;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .task-form-container {
+    padding: 1rem 0;
+  }
+  
+  .form-section {
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+  
+  .task-form-container .h2 {
+    font-size: 1.5rem;
+  }
+  
+  .btn-primary,
+  .btn-outline-secondary {
+    padding: 0.75rem 1.5rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Loading Animation */
+.btn:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+.fa-spinner {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Field Animation */
+.form-section {
+  animation: slideInUp 0.6s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+  opacity: 0;
+}
+
+.form-section:nth-child(1) { animation-delay: 0.1s; }
+.form-section:nth-child(2) { animation-delay: 0.2s; }
+.form-section:nth-child(3) { animation-delay: 0.3s; }
+.form-section:nth-child(4) { animation-delay: 0.4s; }
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+</style>
+{% endblock %}
 {% block content %}
 <div class="container">
   <div class="task-form-container">
-    <!-- Header -->
-    <div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- Enhanced Header -->
+    <div class="d-flex justify-content-between align-items-center mb-5">
       <div>
-        <h1 class="h2 mb-1">
-          <i class="fas fa-plus-circle text-primary me-2"></i>
+        <h1 class="h2 mb-2">
+          <i class="fas fa-plus-circle text-primary me-3"></i>
           {% trans "Add New Task" %}
         </h1>
-        <p class="text-muted mb-0">{% trans "Create a new task for your timeboxing sessions" %}</p>
+        <p class="text-muted mb-0">
+          <i class="fas fa-lightbulb text-warning me-2"></i>
+          {% trans "Create a new task for your timeboxing sessions" %}
+        </p>
       </div>
       <a
         href="{% url 'personal_timebox:task_list' %}"
         class="btn btn-outline-secondary"
       >
-        <i class="fas fa-arrow-left me-1"></i>{% trans "Back to Task List" %}
+        <i class="fas fa-arrow-left me-2"></i>{% trans "Back to Task List" %}
       </a>
     </div>
 
-    <!-- Display form errors -->
+    <!-- Enhanced Form Errors -->
     {% if form.errors %}
     <div class="alert alert-danger" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      <strong>{% trans "Please fix the following errors:" %}</strong>
+      <div class="d-flex align-items-center mb-2">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong>{% trans "Please fix the following errors:" %}</strong>
+      </div>
       <ul class="mb-0 mt-2">
         {% for field, errors in form.errors.items %} {% for error in errors %}
-        <li>{{ field|title }}: {{ error }}</li>
+        <li><strong>{{ field|title }}:</strong> {{ error }}</li>
         {% endfor %} {% endfor %}
       </ul>
     </div>
     {% endif %}
 
-    <!-- Form -->
-    <form method="post" id="taskForm">
+    <!-- Enhanced Form -->
+    <form method="post" id="taskForm" class="needs-validation" novalidate>
       {% csrf_token %}
 
-      <!-- Basic Information -->
+      <!-- Basic Information Section -->
       <div class="form-section">
-        <h5><i class="fas fa-info-circle me-2"></i>{% trans "Basic Information" %}</h5>
+        <h5>
+          <i class="fas fa-info-circle"></i>
+          {% trans "Basic Information" %}
+        </h5>
 
-        <div class="mb-3">
+        <div class="mb-4">
           <label for="{{ form.title.id_for_label }}" class="form-label">
-            <i class="fas fa-tag me-1"></i>{% trans "Task Title" %} *
+            <i class="fas fa-tag"></i>
+            {% trans "Task Title" %} *
           </label>
           <div class="input-with-icon">
             <i class="fas fa-heading"></i>
             {{ form.title }}
           </div>
           {% if form.title.errors %}
-          <div class="text-danger small mt-1">
+          <div class="text-danger small mt-2">
             {% for error in form.title.errors %}
-            <div>{{ error }}</div>
+            <div><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
             {% endfor %}
           </div>
           {% endif %}
+          <div class="form-text">
+            <i class="fas fa-lightbulb"></i>
+            {% trans "Give your task a clear, descriptive title" %}
+          </div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-4">
           <label for="{{ form.description.id_for_label }}" class="form-label">
-            <i class="fas fa-align-left me-1"></i>{% trans "Description" %}
+            <i class="fas fa-align-left"></i>
+            {% trans "Description" %}
           </label>
           <div class="input-with-icon">
             <i class="fas fa-align-left"></i>
             {{ form.description }}
           </div>
           {% if form.description.errors %}
-          <div class="text-danger small mt-1">
+          <div class="text-danger small mt-2">
             {% for error in form.description.errors %}
-            <div>{{ error }}</div>
+            <div><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
             {% endfor %}
           </div>
           {% endif %}
           <div class="form-text">
-            <i class="fas fa-lightbulb me-1"></i>
+            <i class="fas fa-lightbulb"></i>
             {% trans "Add details about what needs to be done" %}
           </div>
         </div>
       </div>
 
-      <!-- Categorization -->
+      <!-- Categorization Section -->
       <div class="form-section">
-        <h5><i class="fas fa-tags me-2"></i>{% trans "Categorization" %}</h5>
+        <h5>
+          <i class="fas fa-tags"></i>
+          {% trans "Categorization" %}
+        </h5>
 
         <div class="row">
           <div class="col-md-6">
-            <div class="mb-3">
+            <div class="mb-4">
               <label for="{{ form.category.id_for_label }}" class="form-label">
-                <i class="fas fa-folder me-1"></i>{% trans "Category" %} *
+                <i class="fas fa-folder"></i>
+                {% trans "Category" %} *
               </label>
               <div class="input-with-icon">
                 <i class="fas fa-folder"></i>
                 {{ form.category }}
               </div>
               {% if form.category.errors %}
-              <div class="text-danger small mt-1">
+              <div class="text-danger small mt-2">
                 {% for error in form.category.errors %}
-                <div>{{ error }}</div>
-                {% endfor %}
-              </div>
-              {% endif %}
-            </div>
-          </div>
-
-          <div class="col-md-6">
-            <div class="mb-3">
-              <label for="{{ form.goal.id_for_label }}" class="form-label">
-                <i class="fas fa-bullseye me-1"></i>{% trans "Related Goal" %}
-              </label>
-              <div class="input-with-icon">
-                <i class="fas fa-bullseye"></i>
-                {{ form.goal }}
-              </div>
-              {% if form.goal.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.goal.errors %}
-                <div>{{ error }}</div>
+                <div><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
                 {% endfor %}
               </div>
               {% endif %}
               <div class="form-text">
-                <i class="fas fa-info-circle me-1"></i>
-                {% trans "Optional: link this task to a specific goal" %}
+                <i class="fas fa-info-circle"></i>
+                {% trans "Select a category for better organization" %}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-6">
+            <div class="mb-4">
+              <label for="{{ form.priority.id_for_label }}" class="form-label">
+                <i class="fas fa-flag"></i>
+                {% trans "Priority" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-flag"></i>
+                {{ form.priority }}
+              </div>
+              {% if form.priority.errors %}
+              <div class="text-danger small mt-2">
+                {% for error in form.priority.errors %}
+                <div><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="form-text">
+                <i class="fas fa-info-circle"></i>
+                {% trans "Set the importance level" %}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Task Properties -->
+      <!-- Task Properties Section -->
       <div class="form-section">
-        <h5><i class="fas fa-sliders-h me-2"></i>{% trans "Task Properties" %}</h5>
+        <h5>
+          <i class="fas fa-sliders-h"></i>
+          {% trans "Task Properties" %}
+        </h5>
 
         <div class="row">
           <div class="col-md-4">
-            <div class="mb-3">
-              <label for="{{ form.priority.id_for_label }}" class="form-label">
-                <i class="fas fa-exclamation-triangle me-1"></i>{% trans "Priority" %} *
-              </label>
-              <div class="input-with-icon">
-                <i class="fas fa-exclamation"></i>
-                {{ form.priority }}
-              </div>
-              {% if form.priority.errors %}
-              <div class="text-danger small mt-1">
-                {% for error in form.priority.errors %}
-                <div>{{ error }}</div>
-                {% endfor %}
-              </div>
-              {% endif %}
-              <div class="priority-preview mt-2">
-                <span class="priority-badge priority-1">{% trans "Critical" %}</span>
-                <span class="priority-badge priority-2">{% trans "High" %}</span>
-                <span class="priority-badge priority-3">{% trans "Medium" %}</span>
-                <span class="priority-badge priority-4">{% trans "Low" %}</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="col-md-4">
-            <div class="mb-3">
-              <label
-                for="{{ form.energy_level.id_for_label }}"
-                class="form-label"
-              >
-                <i class="fas fa-battery-three-quarters me-1"></i>{% trans "Energy Level Required" %} *
+            <div class="mb-4">
+              <label for="{{ form.energy_level.id_for_label }}" class="form-label">
+                <i class="fas fa-battery-three-quarters"></i>
+                {% trans "Energy Level" %} *
               </label>
               <div class="input-with-icon">
                 <i class="fas fa-battery-three-quarters"></i>
                 {{ form.energy_level }}
               </div>
               {% if form.energy_level.errors %}
-              <div class="text-danger small mt-1">
+              <div class="text-danger small mt-2">
                 {% for error in form.energy_level.errors %}
-                <div>{{ error }}</div>
+                <div><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
                 {% endfor %}
               </div>
               {% endif %}
               <div class="energy-indicator">
-                <div class="energy-bar">
-                  <div
-                    class="energy-fill energy-medium"
-                    style="width: 60%"
-                  ></div>
+                <div class="d-flex justify-content-between align-items-center">
+                  <small class="text-muted">{% trans "Current Energy" %}</small>
+                  <small class="energy-level-text fw-bold">-</small>
                 </div>
-                <span class="small">{% trans "Low" %}</span>
-                <span class="small">{% trans "High" %}</span>
+                <div class="energy-bar">
+                  <div class="energy-fill" id="energyFill"></div>
+                </div>
               </div>
             </div>
           </div>
-
           <div class="col-md-4">
-            <div class="mb-3">
-              <label
-                for="{{ form.estimated_minutes.id_for_label }}"
-                class="form-label"
-              >
-                <i class="fas fa-clock me-1"></i>{% trans "Estimated Duration(minutes)" %} *
+            <div class="mb-4">
+              <label for="{{ form.estimated_minutes.id_for_label }}" class="form-label">
+                <i class="fas fa-clock"></i>
+                {% trans "Estimated Duration (minutes)" %} *
               </label>
               <div class="input-with-icon">
                 <i class="fas fa-clock"></i>
                 {{ form.estimated_minutes }}
               </div>
               {% if form.estimated_minutes.errors %}
-              <div class="text-danger small mt-1">
+              <div class="text-danger small mt-2">
                 {% for error in form.estimated_minutes.errors %}
-                <div>{{ error }}</div>
+                <div><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
                 {% endfor %}
               </div>
               {% endif %}
               <div class="form-text">
-                <i class="fas fa-lightbulb me-1"></i>
-                {% trans "How long do you think it will take?" %}
+                <i class="fas fa-info-circle"></i>
+                {% trans "How long will this task take?" %}
+              </div>
+            </div>
+          </div>
+          <div class="col-md-4">
+            <div class="mb-4">
+              <label for="{{ form.due_date.id_for_label }}" class="form-label">
+                <i class="fas fa-calendar-alt"></i>
+                {% trans "Due Date" %}
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-calendar-alt"></i>
+                {{ form.due_date }}
+              </div>
+              {% if form.due_date.errors %}
+              <div class="text-danger small mt-2">
+                {% for error in form.due_date.errors %}
+                <div><i class="fas fa-exclamation-circle me-1"></i>{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="form-text">
+                <i class="fas fa-info-circle"></i>
+                {% trans "Optional deadline" %}
               </div>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- Scheduling -->
-      <div class="form-section">
-        <h5><i class="fas fa-calendar-alt me-2"></i>{% trans "Scheduling (optional)" %}</h5>
-
-        <div class="mb-3">
-          <label for="{{ form.due_date.id_for_label }}" class="form-label">
-            <i class="fas fa-calendar-check me-1"></i>{% trans "Due Date & Time" %}
-          </label>
-          <div class="input-with-icon">
-            <i class="fas fa-calendar-alt"></i>
-            {{ form.due_date }}
-          </div>
-          {% if form.due_date.errors %}
-          <div class="text-danger small mt-1">
-            {% for error in form.due_date.errors %}
-            <div>{{ error }}</div>
-            {% endfor %}
-          </div>
-          {% endif %}
-          <div class="form-text">
-            <i class="fas fa-info-circle me-1"></i>
-            {% trans "When should this task be completed?" %}
-          </div>
-        </div>
-      </div>
-
       <!-- Form Actions -->
+      <!-- Submit Section -->
       <div class="form-section">
         <div class="d-flex justify-content-between align-items-center">
           <div class="form-check">
             <input
               type="checkbox"
               class="form-check-input"
-              id="startImmediately"
+              id="addAnother"
+              name="add_another"
             />
-            <label class="form-check-label" for="startImmediately">
-              <i class="fas fa-play me-1"></i>{% trans "Start working on this task immediately after creation" %}
+            <label class="form-check-label" for="addAnother">
+              <i class="fas fa-plus me-2"></i>
+              {% trans "Add another task after this one" %}
             </label>
           </div>
-
-          <div class="btn-group">
+          <div class="d-flex gap-3">
             <a
               href="{% url 'personal_timebox:task_list' %}"
               class="btn btn-outline-secondary"
             >
-              <i class="fas fa-times me-1"></i>{% trans "Cancel" %}
+              <i class="fas fa-times me-2"></i>
+              {% trans "Cancel" %}
             </a>
-            <button type="submit" class="btn btn-success">
-              <i class="fas fa-save me-1"></i>{% trans "Create Task" %}
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-plus me-2"></i>
+              {% trans "Create Task" %}
             </button>
           </div>
         </div>
@@ -284,34 +618,45 @@
       titleField.focus();
     }
 
-    // Update energy indicator based on selection
+    // Enhanced Energy Level Indicator
     const energySelect = document.getElementById("id_energy_level");
-    const energyFill = document.querySelector(".energy-fill");
+    const energyFill = document.getElementById("energyFill");
+    const energyLevelText = document.querySelector(".energy-level-text");
 
     function updateEnergyIndicator() {
-      if (!energySelect || !energyFill) return;
+      if (!energySelect || !energyFill || !energyLevelText) return;
 
       const value = energySelect.value;
       let width = 0;
       let className = "energy-low";
+      let text = "-";
+      let textColor = "";
 
       switch (value) {
         case "low":
           width = 30;
           className = "energy-low";
+          text = "{% trans 'Low' %}";
+          textColor = "var(--warning)";
           break;
         case "medium":
           width = 60;
           className = "energy-medium";
+          text = "{% trans 'Medium' %}";
+          textColor = "var(--info)";
           break;
         case "high":
           width = 90;
           className = "energy-high";
+          text = "{% trans 'High' %}";
+          textColor = "var(--success)";
           break;
       }
 
       energyFill.style.width = width + "%";
       energyFill.className = "energy-fill " + className;
+      energyLevelText.textContent = text;
+      energyLevelText.style.color = textColor;
     }
 
     if (energySelect) {
@@ -319,19 +664,130 @@
       updateEnergyIndicator();
     }
 
-    // Form validation
+    // Enhanced Form Validation
     const form = document.getElementById("taskForm");
-    form.addEventListener("submit", function (e) {
-      const title = document.getElementById("id_title");
-      const category = document.getElementById("id_category");
-      const priority = document.getElementById("id_priority");
-      const energy = document.getElementById("id_energy_level");
-      const duration = document.getElementById("id_estimated_minutes");
+    const inputs = form.querySelectorAll('input, select, textarea');
+    
+    // Real-time validation feedback
+    inputs.forEach(input => {
+      input.addEventListener('blur', function() {
+        validateField(this);
+      });
+      
+      input.addEventListener('input', function() {
+        if (this.classList.contains('is-invalid')) {
+          validateField(this);
+        }
+      });
+    });
+    
+    function validateField(field) {
+      const value = field.value.trim();
+      const fieldName = field.name;
+      let isValid = true;
+      let errorMessage = '';
+      
+      // Required field validation
+      if (field.hasAttribute('required') || fieldName === 'title' || fieldName === 'category' || fieldName === 'priority' || fieldName === 'energy_level' || fieldName === 'estimatted_minutes') {
+        if (!value) {
+          isValid = false;
+          errorMessage = '{% trans "This field is required" %}';
+        }
+      }
+      
+      // Specific validations
+      if (fieldName === 'title' && value && value.length < 3) {
+        isValid = false;
+        errorMessage = '{% trans "Title must be at least 3 characters long" %}';
+      }
+      
+      if (fieldName === 'estimatted_minutes' && value) {
+        const minutes = parseInt(value);
+        if (isNaN(minutes) || minutes < 1) {
+          isValid = false;
+          errorMessage = '{% trans "Duration must be at least 1 minute" %}';
+        } else if (minutes > 480) {
+          isValid = false;
+          errorMessage = '{% trans "Duration cannot exceed 8 hours (480 minutes)" %}';
+        }
+      }
+      
+      // Update field appearance
+      if (isValid) {
+        field.classList.remove('is-invalid');
+        field.classList.add('is-valid');
+        removeFieldError(field);
+      } else {
+        field.classList.remove('is-valid');
+        field.classList.add('is-invalid');
+        showFieldError(field, errorMessage);
+      }
+      
+      return isValid;
+    }
+    
+    function showFieldError(field, message) {
+      // Remove existing error message
+      removeFieldError(field);
+      
+      // Create error message element
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'text-danger small mt-2 field-error';
+      errorDiv.innerHTML = `<i class="fas fa-exclamation-circle me-1"></i>${message}`;
+      
+      // Insert error message after the field's container
+      const container = field.closest('.mb-4, .mb-3');
+      if (container) {
+        container.appendChild(errorDiv);
+      }
+    }
+    
+    function removeFieldError(field) {
+      const container = field.closest('.mb-4, .mb-3');
+      if (container) {
+        const errorElement = container.querySelector('.field-error');
+        if (errorElement) {
+          errorElement.remove();
+        }
+      }
+    }
 
-      if (!title || !title.value.trim()) {
+    // Form submission validation
+    form.addEventListener("submit", function (e) {
+      let isFormValid = true;
+      
+      // Validate all fields
+      inputs.forEach(input => {
+        if (!validateField(input)) {
+          isFormValid = false;
+        }
+      });
+      
+      if (!isFormValid) {
         e.preventDefault();
-        alert('{% trans "Please enter a task title" %}');
-        if (title) title.focus();
+        
+        // Scroll to first invalid field
+        const firstInvalid = form.querySelector('.is-invalid');
+        if (firstInvalid) {
+          firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          firstInvalid.focus();
+        }
+        
+        // Show general error message
+        const existingAlert = form.querySelector('.alert-danger');
+        if (!existingAlert) {
+          const alertDiv = document.createElement('div');
+          alertDiv.className = 'alert alert-danger';
+          alertDiv.innerHTML = `
+            <div class="d-flex align-items-center mb-2">
+              <i class="fas fa-exclamation-triangle me-2"></i>
+              <strong>{% trans "Please fix the errors below" %}</strong>
+            </div>
+            <p class="mb-0">{% trans "Some fields contain invalid data. Please review and correct them." %}</p>
+          `;
+          form.insertBefore(alertDiv, form.firstChild);
+        }
+        
         return false;
       }
 
@@ -340,16 +796,21 @@
       if (submitBtn) {
         submitBtn.disabled = true;
         submitBtn.innerHTML =
-          '<i class="fas fa-spinner fa-spin ms-1"></i>{% trans "Creating task..." %}';
+          '<i class="fas fa-spinner fa-spin me-2"></i>{% trans "Creating task..." %}';
       }
     });
 
-    // Keyboard shortcuts
+    // Enhanced Keyboard shortcuts
     document.addEventListener("keydown", function (e) {
       // Ctrl/Cmd + Enter to submit
       if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
         e.preventDefault();
-        form.submit();
+        if (form.checkValidity()) {
+          form.submit();
+        } else {
+          // Trigger validation
+          form.dispatchEvent(new Event('submit'));
+        }
       }
 
       // Escape to cancel
@@ -363,6 +824,52 @@
         }
       }
     });
+    
+    // Add smooth scrolling for better UX
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      });
+    });
+    
+    // Add character counter for title field
+    const titleInput = document.getElementById('id_title');
+    if (titleInput) {
+      const titleContainer = titleInput.closest('.mb-4');
+      if (titleContainer) {
+        const counterDiv = document.createElement('div');
+        counterDiv.className = 'form-text';
+        counterDiv.innerHTML = '<span class="char-count">0</span> / 100 characters';
+        titleContainer.appendChild(counterDiv);
+        
+        function updateCharCount() {
+          const count = titleInput.value.length;
+          const counter = counterDiv.querySelector('.char-count');
+          counter.textContent = count;
+          
+          if (count > 100) {
+            counter.classList.add('text-danger');
+            counter.classList.remove('text-muted');
+          } else if (count > 80) {
+            counter.classList.add('text-warning');
+            counter.classList.remove('text-muted', 'text-danger');
+          } else {
+            counter.classList.add('text-muted');
+            counter.classList.remove('text-warning', 'text-danger');
+          }
+        }
+        
+        titleInput.addEventListener('input', updateCharCount);
+        updateCharCount();
+      }
+    }
   });
 </script>
 {% endblock %}

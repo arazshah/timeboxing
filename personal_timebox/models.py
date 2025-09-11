@@ -210,7 +210,7 @@ class PersonalTimeboxSession(models.Model):
     end_time = models.DateTimeField(null=True, blank=True)
     planned_minutes = models.PositiveIntegerField(default=25)
     actual_minutes = models.PositiveIntegerField(null=True, blank=True)
-    outcome = models.CharField(max_length=20, choices=OUTCOME_CHOICES, default='completed')
+    outcome = models.CharField(max_length=20, choices=OUTCOME_CHOICES, null=True, blank=True)
     
     # Reflection fields
     focus_rating = models.IntegerField(
