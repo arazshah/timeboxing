@@ -1579,18 +1579,6 @@ body {
 
 .analytics-category-progress-bar::after {
   content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(255, 255, 255, 0.4),
-    transparent
-  );
-  background-size: 200% 100%;
   animation: shimmer 2s infinite;
 }
 
@@ -1796,4 +1784,312 @@ body {
   .charts-row .dashboard-card .card-body {
     padding: var(--space-md);
   }
+}
+
+/* Authentication Forms Styles */
+
+/* Login Container */
+.login-container, .register-container {
+  max-width: 420px;
+  margin: 2rem auto;
+  padding: 2.5rem;
+  background: var(--gray-0);
+  border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-lg);
+  border: 1px solid var(--gray-200);
+  position: relative;
+  overflow: hidden;
+}
+
+.login-container::before, .register-container::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--primary) 0%, var(--primary-light) 50%, var(--primary) 100%);
+  animation: gradient-shift 3s ease-in-out infinite;
+}
+
+@keyframes gradient-shift {
+  0%, 100% { transform: translateX(-100%); }
+  50% { transform: translateX(100%); }
+}
+
+/* Authentication Headers */
+.login-header, .register-header {
+  text-align: center;
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+}
+
+.login-header h2, .register-header h2 {
+  color: var(--gray-900);
+  font-weight: 700;
+  font-size: var(--font-size-2xl);
+  margin-bottom: 0.5rem;
+}
+
+.login-header p, .register-header p {
+  color: var(--gray-600);
+  font-size: var(--font-size-sm);
+  margin: 0;
+}
+
+/* Form Controls Enhancement */
+.login-container .form-floating, .register-container .form-floating {
+  margin-bottom: 1.25rem;
+}
+
+.login-container .form-control, .register-container .form-control {
+  border: 2px solid var(--gray-300);
+  border-radius: var(--radius-lg);
+  padding: 1rem 0.75rem;
+  font-size: var(--font-size-base);
+  transition: all var(--transition-normal);
+  background-color: var(--gray-50);
+}
+
+.login-container .form-control:focus, .register-container .form-control:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+  background-color: var(--gray-0);
+  transform: translateY(-1px);
+}
+
+.login-container .form-label, .register-container .form-label {
+  color: var(--gray-700);
+  font-weight: 500;
+  padding: 1rem 0.75rem;
+  font-size: var(--font-size-sm);
+}
+
+.login-container .form-floating > label, .register-container .form-floating > label {
+  padding: 1rem 0.75rem;
+}
+
+/* Form Icons */
+.login-container .form-floating i, .register-container .form-floating i {
+  color: var(--primary);
+  font-size: var(--font-size-sm);
+  margin-right: 0.5rem;
+}
+
+/* Buttons */
+.btn-login {
+  padding: 0.875rem 1.5rem;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  border-radius: var(--radius-lg);
+  border: none;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+  box-shadow: var(--shadow-md);
+  transition: all var(--transition-normal);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.btn-login:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-lg);
+  background: linear-gradient(135deg, var(--primary-dark) 0%, var(--primary) 100%);
+}
+
+.btn-login:active {
+  transform: translateY(0);
+  box-shadow: var(--shadow-md);
+}
+
+/* Form Checkboxes */
+.login-container .form-check-input, .register-container .form-check-input {
+  width: 1.25rem;
+  height: 1.25rem;
+  border: 2px solid var(--gray-400);
+  border-radius: var(--radius-sm);
+  transition: all var(--transition-fast);
+}
+
+.login-container .form-check-input:checked, .register-container .form-check-input:checked {
+  background-color: var(--primary);
+  border-color: var(--primary);
+}
+
+.login-container .form-check-label, .register-container .form-check-label {
+  color: var(--gray-700);
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  margin-left: 0.5rem;
+}
+
+/* Links */
+.forgot-password a, .register-link a {
+  color: var(--primary);
+  text-decoration: none;
+  font-weight: 500;
+  font-size: var(--font-size-sm);
+  transition: all var(--transition-fast);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+}
+
+.forgot-password a:hover, .register-link a:hover {
+  color: var(--primary-dark);
+  transform: translateX(2px);
+}
+
+/* Alert Messages */
+.login-container .alert, .register-container .alert {
+  border: none;
+  border-radius: var(--radius-lg);
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.5rem;
+  font-size: var(--font-size-sm);
+  box-shadow: var(--shadow-sm);
+}
+
+.login-container .alert-danger, .register-container .alert-danger {
+  background: linear-gradient(135deg, #fef2f2 0%, #fee2e2 100%);
+  color: var(--danger);
+  border-left: 4px solid var(--danger);
+}
+
+.login-container .alert-info, .register-container .alert-info {
+  background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+  color: var(--info);
+  border-left: 4px solid var(--info);
+}
+
+/* Form Text */
+.login-container .form-text, .register-container .form-text {
+  color: var(--gray-600);
+  font-size: var(--font-size-xs);
+  margin-top: 0.5rem;
+  font-style: italic;
+}
+
+/* Register Form Specific Styles */
+.register-container .row > div {
+  padding: 0 0.375rem;
+}
+
+.register-container .row {
+  margin: 0 -0.375rem;
+}
+
+/* Password Strength Indicator */
+.password-strength {
+  height: 4px;
+  border-radius: var(--radius-sm);
+  margin-top: 0.5rem;
+  background: var(--gray-300);
+  overflow: hidden;
+}
+
+.password-strength-bar {
+  height: 100%;
+  transition: all var(--transition-normal);
+  border-radius: var(--radius-sm);
+}
+
+.password-strength-weak {
+  background: linear-gradient(90deg, var(--danger) 0%, var(--danger-light) 100%);
+  width: 33%;
+}
+
+.password-strength-medium {
+  background: linear-gradient(90deg, var(--warning) 0%, var(--warning-light) 100%);
+  width: 66%;
+}
+
+.password-strength-strong {
+  background: linear-gradient(90deg, var(--success) 0%, var(--success-light) 100%);
+  width: 100%;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .login-container, .register-container {
+    margin: 1rem;
+    padding: 2rem 1.5rem;
+  }
+  
+  .login-header h2, .register-header h2 {
+    font-size: var(--font-size-xl);
+  }
+  
+  .register-container .row > div {
+    padding: 0 0.25rem;
+  }
+  
+  .register-container .row {
+    margin: 0 -0.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .login-container, .register-container {
+    margin: 0.5rem;
+    padding: 1.5rem 1rem;
+  }
+  
+  .btn-login {
+    padding: 0.75rem 1rem;
+    font-size: var(--font-size-sm);
+  }
+}
+
+/* Loading States */
+.login-container .btn-login.loading, .register-container .btn-login.loading {
+  position: relative;
+  color: transparent;
+}
+
+.login-container .btn-login.loading::after, .register-container .btn-login.loading::after {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  top: 50%;
+  left: 50%;
+  margin-left: -8px;
+  margin-top: -8px;
+  border: 2px solid var(--gray-0);
+  border-radius: 50%;
+  border-top-color: transparent;
+  animation: spinner 0.8s linear infinite;
+}
+
+@keyframes spinner {
+  to { transform: rotate(360deg); }
+}
+
+/* Focus Management */
+.login-container .form-control:focus-visible, .register-container .form-control:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+/* Error States */
+.login-container .form-control.is-invalid, .register-container .form-control.is-invalid {
+  border-color: var(--danger);
+  background-color: #fef2f2;
+}
+
+.login-container .form-control.is-invalid:focus, .register-container .form-control.is-invalid:focus {
+  border-color: var(--danger);
+  box-shadow: 0 0 0 0.2rem rgba(245, 101, 101, 0.25);
+}
+
+/* Success States */
+.login-container .form-control.is-valid, .register-container .form-control.is-valid {
+  border-color: var(--success);
+  background-color: #f0fdf4;
+}
+
+.login-container .form-control.is-valid:focus, .register-container .form-control.is-valid:focus {
+  border-color: var(--success);
+  box-shadow: 0 0 0 0.2rem rgba(72, 187, 120, 0.25);
 }

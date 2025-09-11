@@ -1,26 +1,102 @@
-{% extends 'base.html' %} {% load static %} {% block title %}Register - Personal
-Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
-<div class="container">
+{% extends 'base.html' %} 
+{% load static %} 
+{% load i18n %} 
+
+{% block title %}{% trans "Register" %} - {% trans "Personal Timebox" %}{% endblock %} 
+
+{% block extra_css %}
+<style>
+  /* Additional register-specific styles */
+  .register-container {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .password-requirements {
+    background: var(--gray-50);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: var(--font-size-xs);
+  }
+  
+  .password-requirements ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+  }
+  
+  .password-requirements li {
+    margin-bottom: 0.25rem;
+    color: var(--gray-600);
+  }
+  
+  .btn-register {
+    padding: 0.875rem 1.5rem;
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    border-radius: var(--radius-lg);
+    border: none;
+    background: linear-gradient(135deg, var(--success) 0%, var(--success-light) 100%);
+    box-shadow: var(--shadow-md);
+    transition: all var(--transition-normal);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  
+  .btn-register:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-lg);
+    background: linear-gradient(135deg, var(--success-light) 0%, var(--success) 100%);
+  }
+  
+  .btn-register:active {
+    transform: translateY(0);
+    box-shadow: var(--shadow-md);
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
   <div class="register-container">
     <div class="register-header">
-      <i class="fas fa-user-plus fa-3x text-success mb-3"></i>
-      <h2>Create Account</h2>
+      <div class="icon-wrapper mb-3">
+        <i class="fas fa-user-plus"></i>
+      </div>
+      <h2>{% trans "Create Account" %}</h2>
       <p class="text-muted">
-        Join Personal Timebox and boost your productivity!
+        {% trans "Join Personal Timebox and boost your productivity!" %}
       </p>
     </div>
 
     {% if form.errors %}
     <div class="alert alert-danger" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      <strong>Please fix the following errors:</strong>
-      {% for field, errors in form.errors.items %} {% for error in errors %}
-      <div>• {{ error }}</div>
-      {% endfor %} {% endfor %}
+      <div class="d-flex align-items-center">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <div>
+          <strong>{% trans "Please fix the following errors:" %}</strong>
+          {% for field, errors in form.errors.items %} 
+            {% for error in errors %}
+              <div class="mb-1">• {{ error }}</div>
+            {% endfor %} 
+          {% endfor %}
+        </div>
+      </div>
     </div>
     {% endif %}
 
-    <form method="post" id="registerForm">
+    <form method="post" id="registerForm" class="register-form">
       {% csrf_token %}
 
       <div class="row">
@@ -31,11 +107,12 @@ Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
               class="form-control"
               id="id_first_name"
               name="first_name"
-              placeholder="First Name"
+              placeholder="{% trans "First Name" %}"
               value="{{ form.first_name.value|default:'' }}"
+              autocomplete="given-name"
             />
             <label for="id_first_name">
-              <i class="fas fa-user me-2"></i>First Name
+              <i class="fas fa-user me-2"></i>{% trans "First Name" %}
             </label>
           </div>
         </div>
@@ -46,11 +123,12 @@ Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
               class="form-control"
               id="id_last_name"
               name="last_name"
-              placeholder="Last Name"
+              placeholder="{% trans "Last Name" %}"
               value="{{ form.last_name.value|default:'' }}"
+              autocomplete="family-name"
             />
             <label for="id_last_name">
-              <i class="fas fa-user me-2"></i>Last Name
+              <i class="fas fa-user me-2"></i>{% trans "Last Name" %}
             </label>
           </div>
         </div>
@@ -62,15 +140,16 @@ Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
           class="form-control"
           id="id_username"
           name="username"
-          placeholder="Username"
+          placeholder="{% trans "Username" %}"
           value="{{ form.username.value|default:'' }}"
           required
+          autocomplete="username"
         />
         <label for="id_username">
-          <i class="fas fa-at me-2"></i>Username
+          <i class="fas fa-at me-2"></i>{% trans "Username" %}
         </label>
         <div class="form-text">
-          Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only.
+          {% trans "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only." %}
         </div>
       </div>
 
@@ -80,14 +159,15 @@ Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
           class="form-control"
           id="id_email"
           name="email"
-          placeholder="Email"
+          placeholder="{% trans "Email" %}"
           value="{{ form.email.value|default:'' }}"
+          autocomplete="email"
         />
         <label for="id_email">
-          <i class="fas fa-envelope me-2"></i>Email (optional)
+          <i class="fas fa-envelope me-2"></i>{% trans "Email (optional)" %}
         </label>
         <div class="form-text">
-          Optional: Used for password reset and notifications.
+          {% trans "Optional: Used for password reset and notifications." %}
         </div>
       </div>
 
@@ -97,21 +177,25 @@ Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
           class="form-control"
           id="id_password1"
           name="password1"
-          placeholder="Password"
+          placeholder="{% trans "Password" %}"
           required
+          autocomplete="new-password"
         />
         <label for="id_password1">
-          <i class="fas fa-lock me-2"></i>Password
+          <i class="fas fa-lock me-2"></i>{% trans "Password" %}
         </label>
+        <div class="password-strength" id="passwordStrength">
+          <div class="password-strength-bar" id="passwordStrengthBar"></div>
+        </div>
       </div>
 
       <div class="password-requirements">
-        <strong>Password requirements:</strong>
+        <strong>{% trans "Password requirements:" %}</strong>
         <ul>
-          <li>At least 8 characters long</li>
-          <li>Cannot be too similar to your personal information</li>
-          <li>Cannot be a commonly used password</li>
-          <li>Cannot be entirely numeric</li>
+          <li>{% trans "At least 8 characters long" %}</li>
+          <li>{% trans "Cannot be too similar to your personal information" %}</li>
+          <li>{% trans "Cannot be a commonly used password" %}</li>
+          <li>{% trans "Cannot be entirely numeric" %}</li>
         </ul>
       </div>
 
@@ -121,15 +205,16 @@ Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
           class="form-control"
           id="id_password2"
           name="password2"
-          placeholder="Confirm Password"
+          placeholder="{% trans "Confirm Password" %}"
           required
+          autocomplete="new-password"
         />
         <label for="id_password2">
-          <i class="fas fa-lock me-2"></i>Confirm Password
+          <i class="fas fa-lock me-2"></i>{% trans "Confirm Password" %}
         </label>
       </div>
 
-      <div class="form-check mb-3">
+      <div class="form-check mb-4">
         <input
           type="checkbox"
           class="form-check-input"
@@ -137,56 +222,129 @@ Timebox{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
           required
         />
         <label class="form-check-label" for="agree_terms">
-          I agree to the
-          <a href="#" class="text-decoration-none">Terms of Service</a> and
-          <a href="#" class="text-decoration-none">Privacy Policy</a>
+          {% trans "I agree to the" %}
+          <a href="#" class="text-decoration-none">{% trans "Terms of Service" %}</a> {% trans "and" %}
+          <a href="#" class="text-decoration-none">{% trans "Privacy Policy" %}</a>
         </label>
       </div>
 
-      <button type="submit" class="btn btn-success btn-register w-100">
-        <i class="fas fa-user-plus me-2"></i>Create Account
+      <button type="submit" class="btn btn-success btn-register w-100 mb-4" id="registerButton">
+        <i class="fas fa-user-plus me-2"></i>
+        <span class="button-text">{% trans "Create Account" %}</span>
       </button>
     </form>
 
-    <div class="login-link">
+    <div class="login-link text-center">
       <p class="mb-0">
-        Already have an account?
+        {% trans "Already have an account?" %}
         <a href="{% url 'login' %}" class="text-decoration-none fw-bold">
-          Sign in here <i class="fas fa-arrow-right ms-1"></i>
+          {% trans "Sign in here" %} <i class="fas fa-arrow-right ms-1"></i>
         </a>
       </p>
     </div>
   </div>
 </div>
-{% endblock %} {% block extra_js %}
-<script>
-  // Password confirmation validation
-  document.addEventListener("DOMContentLoaded", function () {
-    const password1 = document.getElementById("id_password1");
-    const password2 = document.getElementById("id_password2");
+{% endblock %}
 
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const registerForm = document.getElementById('registerForm');
+    const registerButton = document.getElementById('registerButton');
+    const buttonText = registerButton.querySelector('.button-text');
+    const password1 = document.getElementById('id_password1');
+    const password2 = document.getElementById('id_password2');
+    const passwordStrength = document.getElementById('passwordStrength');
+    const passwordStrengthBar = document.getElementById('passwordStrengthBar');
+    
+    // Password strength checker
+    function checkPasswordStrength(password) {
+      let strength = 0;
+      
+      // Length check
+      if (password.length >= 8) strength++;
+      if (password.length >= 12) strength++;
+      
+      // Complexity checks
+      if (/[a-z]/.test(password)) strength++;
+      if (/[A-Z]/.test(password)) strength++;
+      if (/[0-9]/.test(password)) strength++;
+      if (/[^A-Za-z0-9]/.test(password)) strength++;
+      
+      return strength;
+    }
+    
+    function updatePasswordStrength() {
+      const strength = checkPasswordStrength(password1.value);
+      
+      passwordStrengthBar.className = 'password-strength-bar';
+      
+      if (strength <= 2) {
+        passwordStrengthBar.classList.add('password-strength-weak');
+      } else if (strength <= 4) {
+        passwordStrengthBar.classList.add('password-strength-medium');
+      } else {
+        passwordStrengthBar.classList.add('password-strength-strong');
+      }
+    }
+    
+    // Password confirmation validation
     function validatePasswords() {
       if (password1.value && password2.value) {
         if (password1.value === password2.value) {
-          password2.setCustomValidity("");
-          password2.classList.remove("is-invalid");
-          password2.classList.add("is-valid");
+          password2.setCustomValidity('');
+          password2.classList.remove('is-invalid');
+          password2.classList.add('is-valid');
         } else {
-          password2.setCustomValidity("Passwords do not match");
-          password2.classList.remove("is-valid");
-          password2.classList.add("is-invalid");
+          password2.setCustomValidity('{% trans "Passwords do not match" %}');
+          password2.classList.remove('is-valid');
+          password2.classList.add('is-invalid');
         }
       }
     }
-
-    password1.addEventListener("input", validatePasswords);
-    password2.addEventListener("input", validatePasswords);
-
+    
+    // Handle form submission with loading state
+    registerForm.addEventListener('submit', function(e) {
+      // Add loading state to button
+      registerButton.classList.add('loading');
+      buttonText.textContent = '{% trans "Creating Account..." %}';
+      registerButton.disabled = true;
+      
+      // Remove loading state after 3 seconds as a fallback
+      setTimeout(() => {
+        registerButton.classList.remove('loading');
+        buttonText.textContent = '{% trans "Create Account" %}';
+        registerButton.disabled = false;
+      }, 3000);
+    });
+    
+    // Event listeners
+    password1.addEventListener('input', function() {
+      updatePasswordStrength();
+      validatePasswords();
+    });
+    
+    password2.addEventListener('input', validatePasswords);
+    
+    // Add input animations
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+      });
+      
+      input.addEventListener('blur', function() {
+        if (!this.value) {
+          this.parentElement.classList.remove('focused');
+        }
+      });
+    });
+    
     // Username availability check (placeholder)
-    const username = document.getElementById("id_username");
-    username.addEventListener("blur", function () {
+    const username = document.getElementById('id_username');
+    username.addEventListener('blur', function() {
       // Could add AJAX check for username availability
-      console.log("Check username availability:", this.value);
+      console.log('Check username availability:', this.value);
     });
   });
 </script>

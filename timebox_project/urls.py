@@ -4,7 +4,7 @@ from django.conf.urls.i18n import i18n_patterns
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from personal_timebox.views import register_view
+from personal_timebox.views import register_view, home_page
 
 urlpatterns = [
     # language switch endpoint
@@ -13,6 +13,7 @@ urlpatterns = [
 
 urlpatterns += i18n_patterns(
     path('admin/', admin.site.urls),
+    path('', home_page, name='home'),
     path('', include('personal_timebox.urls')),
 
     # Authentication URLs

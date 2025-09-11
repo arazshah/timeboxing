@@ -4,7 +4,7 @@ from . import views
 app_name = 'personal_timebox'
 
 urlpatterns = [
-    path('', views.dashboard, name='dashboard'),
+    path('dashboard/', views.dashboard, name='dashboard'),
     path('tasks/', views.task_list, name='task_list'),
     path('tasks/add/', views.add_task, name='add_task'),
     path('tasks/<int:task_id>/edit/', views.edit_task, name='edit_task'),

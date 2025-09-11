@@ -55,6 +55,13 @@ def create_default_user_data(user):
         }
     )
 
+def home_page(request):
+    """Home page view for visitors - shows login/register options"""
+    if request.user.is_authenticated:
+        return redirect('personal_timebox:dashboard')
+    
+    return render(request, 'personal_timebox/home.html')
+
 @login_required
 def dashboard(request):
     """Main dashboard view"""

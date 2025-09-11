@@ -1,31 +1,68 @@
-{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Login" %} - {% trans "Personal Timebox" %}{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
-<div class="container">
+{% extends 'base.html' %} 
+{% load static %} 
+{% load i18n %} 
+
+{% block title %}{% trans "Login" %} - {% trans "Personal Timebox" %}{% endblock %} 
+
+{% block extra_css %}
+<style>
+  /* Additional login-specific styles */
+  .login-container {
+    animation: fadeInUp 0.6s ease-out;
+  }
+  
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+{% endblock %} 
+
+{% block content %}
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-4">
   <div class="login-container">
     <div class="login-header">
-      <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+      <div class="icon-wrapper mb-3">
+        <i class="fas fa-clock"></i>
+      </div>
       <h2>{% trans "Welcome Back!" %}</h2>
       <p>{% trans "Sign in to your Personal Timebox account" %}</p>
     </div>
 
     {% if form.errors %}
     <div class="alert alert-danger" role="alert">
-      <i class="fas fa-exclamation-triangle me-2"></i>
-      <strong>{% trans "Login Failed!" %}</strong>
-      {% for field, errors in form.errors.items %} {% for error in errors %}
-      <div>{{ error }}</div>
-      {% endfor %} {% endfor %}
+      <div class="d-flex align-items-center">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <div>
+          <strong>{% trans "Login Failed!" %}</strong>
+          {% for field, errors in form.errors.items %} 
+            {% for error in errors %}
+              <div class="mb-1">• {{ error }}</div>
+            {% endfor %} 
+          {% endfor %}
+        </div>
+      </div>
     </div>
-    {% endif %} {% if messages %} {% for message in messages %}
-    <div
-      class="alert alert-{{ message.tags }} alert-dismissible fade show"
-      role="alert"
-    >
-      {{ message }}
-      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-    </div>
-    {% endfor %} {% endif %}
+    {% endif %} 
+    
+    {% if messages %} 
+      {% for message in messages %}
+        <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+          <div class="d-flex align-items-center justify-content-between">
+            <span>{{ message }}</span>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+          </div>
+        </div>
+      {% endfor %} 
+    {% endif %}
 
-    <form method="post">
+    <form method="post" id="loginForm" class="login-form">
       {% csrf_token %}
 
       <div class="form-floating">
@@ -37,6 +74,7 @@
           placeholder="{% trans "Username" %}"
           value="{{ form.username.value|default:'' }}"
           required
+          autocomplete="username"
         />
         <label for="id_username">
           <i class="fas fa-user me-2"></i>{% trans "Username" %}
@@ -51,13 +89,14 @@
           name="password"
           placeholder="{% trans "Password" %}"
           required
+          autocomplete="current-password"
         />
         <label for="id_password">
           <i class="fas fa-lock me-2"></i>{% trans "Password" %}
         </label>
       </div>
 
-      <div class="form-check mb-3">
+      <div class="form-check mb-4">
         <input
           type="checkbox"
           class="form-check-input"
@@ -69,18 +108,19 @@
         </label>
       </div>
 
-      <button type="submit" class="btn btn-primary btn-login w-100">
-        <i class="fas fa-sign-in-alt me-2"></i>{% trans "Sign In" %}
+      <button type="submit" class="btn btn-primary btn-login w-100 mb-4" id="loginButton">
+        <i class="fas fa-sign-in-alt me-2"></i>
+        <span class="button-text">{% trans "Sign In" %}</span>
       </button>
 
-      <div class="forgot-password">
+      <div class="forgot-password text-center mb-4">
         <a href="{% url 'password_reset' %}" class="text-decoration-none">
           <i class="fas fa-key me-1"></i>{% trans "Forgot your password?" %}
         </a>
       </div>
     </form>
 
-    <div class="register-link">
+    <div class="register-link text-center">
       <p class="mb-0">
         {% trans "Don't have an account?" %}
         <a href="{% url 'register' %}" class="text-decoration-none fw-bold">
@@ -92,56 +132,85 @@
 </div>
 
 <!-- Demo Account Info (Remove in production) -->
-<div class="container mt-3">
-  <div class="alert alert-info text-center" role="alert">
-    <i class="fas fa-info-circle me-2"></i>
-    <strong>{% trans "Demo Account:" %}</strong> {% trans "Username" %}: <code>demo</code> | {% trans "Password" %}:
-    <code>testpass123</code>
-    <br />
-    <small>{% trans "Or create a new account to get started!" %}</small>
+<div class="container mt-4">
+  <div class="alert alert-info" role="alert">
+    <div class="d-flex align-items-center justify-content-center">
+      <i class="fas fa-info-circle me-2"></i>
+      <div>
+        <strong>{% trans "Demo Account:" %}</strong><br>
+        <small>
+          {% trans "Username" %}: <code>demo</code> | {% trans "Password" %}: <code>testpass123</code>
+        </small>
+      </div>
+    </div>
   </div>
 </div>
-{% endblock %} {% block extra_js %}
+{% endblock %}
+
+{% block extra_js %}
 <script>
-  // Auto-focus on username field
-  document.addEventListener("DOMContentLoaded", function () {
-    document.getElementById("id_username").focus();
-  });
-
-  // Handle remember me functionality
-  document.addEventListener("DOMContentLoaded", function () {
-    const form = document.querySelector("form");
-    const rememberMe = document.getElementById("remember_me");
-
-    // Load saved username if remember me was checked
-    const savedUsername = localStorage.getItem("rememberedUsername");
+  document.addEventListener('DOMContentLoaded', function() {
+    const loginForm = document.getElementById('loginForm');
+    const loginButton = document.getElementById('loginButton');
+    const buttonText = loginButton.querySelector('.button-text');
+    
+    // Auto-focus on username field
+    document.getElementById('id_username').focus();
+    
+    // Handle form submission with loading state
+    loginForm.addEventListener('submit', function(e) {
+      // Add loading state to button
+      loginButton.classList.add('loading');
+      buttonText.textContent = '{% trans "Signing in..." %}';
+      loginButton.disabled = true;
+      
+      // Remove loading state after 3 seconds as a fallback
+      setTimeout(() => {
+        loginButton.classList.remove('loading');
+        buttonText.textContent = '{% trans "Sign In" %}';
+        loginButton.disabled = false;
+      }, 3000);
+    });
+    
+    // Handle remember me functionality
+    const rememberMe = document.getElementById('remember_me');
+    const savedUsername = localStorage.getItem('rememberedUsername');
     if (savedUsername) {
-      document.getElementById("id_username").value = savedUsername;
+      document.getElementById('id_username').value = savedUsername;
       rememberMe.checked = true;
     }
-
-    form.addEventListener("submit", function () {
+    
+    loginForm.addEventListener('submit', function() {
       if (rememberMe.checked) {
-        localStorage.setItem(
-          "rememberedUsername",
-          document.getElementById("id_username").value
-        );
+        localStorage.setItem('rememberedUsername', document.getElementById('id_username').value);
       } else {
-        localStorage.removeItem("rememberedUsername");
+        localStorage.removeItem('rememberedUsername');
       }
     });
-  });
-
-  // Keyboard shortcuts
-  document.addEventListener("keydown", function (e) {
-    // Enter to submit form
-    if (e.key === "Enter" && !e.shiftKey) {
-      const form = document.querySelector("form");
-      const activeElement = document.activeElement;
-      if (activeElement.tagName === "INPUT") {
-        form.submit();
+    
+    // Add input animations
+    const inputs = document.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+      input.addEventListener('focus', function() {
+        this.parentElement.classList.add('focused');
+      });
+      
+      input.addEventListener('blur', function() {
+        if (!this.value) {
+          this.parentElement.classList.remove('focused');
+        }
+      });
+    });
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && !e.shiftKey) {
+        const activeElement = document.activeElement;
+        if (activeElement.tagName === 'INPUT') {
+          loginForm.submit();
+        }
       }
-    }
+    });
   });
 </script>
 {% endblock %}
