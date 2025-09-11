@@ -1,0 +1,225 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{{ task.title }} - {% trans "Task Detail" %}{% endblock %}
+
+{% block extra_css %}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h3 mb-1 d-flex align-items-center gap-2 flex-wrap">
+        <i class="fas fa-clipboard-list text-primary"></i>
+        <span>{{ task.title }}</span>
+      </h1>
+      
+    </div>
+    <div class="d-flex">
+      <a href="{% url 'personal_timebox:edit_task' task.id %}" class="btn btn-outline-primary btn-sm me-2">
+        <i class="fas fa-edit"></i> {% trans "Edit" %}
+      </a>
+      {% if task.status != 'completed' %}
+        {% if active_for_this_task %}
+          <span class="badge bg-success me-2 align-self-center"><i class="fas fa-circle me-1"></i>{% trans "Session active" %}</span>
+        {% elif active_session %}
+          <button type="button" class="btn btn-success btn-sm me-2" disabled title="{% trans 'Another task session is active. Pause or complete it first.' %}">
+            <i class="fas fa-play"></i> {% trans "Start Session" %}
+          </button>
+        {% else %}
+          <a href="{% url 'personal_timebox:start_task' task.id %}?next={% url 'personal_timebox:task_detail' task.id %}" class="btn btn-success btn-sm me-2">
+            <i class="fas fa-play"></i> {% trans "Start Session" %}
+          </a>
+        {% endif %}
+      {% endif %}
+      <a href="{% url 'personal_timebox:task_list' %}" class="btn btn-secondary btn-sm">
+        <i class="fas fa-arrow-left"></i> {% trans "Back" %}
+      </a>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    <div class="col-md-6">
+      <div class="card compact-card">
+        <div class="card-body">
+          <h5 class="card-title d-flex align-items-center justify-content-between">
+            <span><i class="fas fa-info-circle me-2"></i>{% trans "Overview" %}</span>
+            {% with s=task.status %}
+            <span class="status-badge {% if task.is_overdue %}status-overdue{% elif s == 'completed' %}status-complete{% elif s == 'in_progress' %}status-inprogress{% else %}status-pending{% endif %}">
+              {% if task.is_overdue %}
+                <i class="fas fa-exclamation-circle me-1"></i>
+              {% elif s == 'completed' %}
+                <i class="fas fa-check-circle me-1"></i>
+              {% elif s == 'in_progress' %}
+                <i class="fas fa-hourglass-half me-1"></i>
+              {% else %}
+                <i class="fas fa-clock me-1"></i>
+              {% endif %}
+              {{ task.get_status_display }}
+            </span>
+            {% endwith %}
+          </h5>
+          {% if active_session and not active_for_this_task %}
+            <div class="alert alert-info py-2">
+              <i class="fas fa-info-circle me-1"></i>
+              A session is active for
+              <a href="{% url 'personal_timebox:task_detail' active_session.task.id %}" class="fw-semibold">
+                "{{ active_session.task.title }}"
+              </a>.
+              Start a session for this task to track progress here.
+            </div>
+          {% endif %}
+          <div class="overview-list">
+            <p><strong>{% trans "Description" %}:</strong> {{ task.description|default:_("No description") }}</p>
+            <p><strong>{% trans "Category" %}:</strong>
+              <span class="category-pill" data-color="{{ task.category.color }}">{{ task.category.name }}</span>
+            </p>
+            {% if task.goal %}
+              <p><strong>{% trans "Goal" %}:</strong> {{ task.goal.title }}</p>
+            {% endif %}
+            <p><strong>{% trans "Priority" %}:</strong>
+              <span class="priority-badge priority-{{ task.priority }}">
+                {% if task.priority == 1 %}<i class="fas fa-bolt me-1"></i>{% endif %}
+                {% if task.priority == 2 %}<i class="fas fa-arrow-up me-1"></i>{% endif %}
+                {% if task.priority == 3 %}<i class="fas fa-equals me-1"></i>{% endif %}
+                {% if task.priority == 4 %}<i class="fas fa-arrow-down me-1"></i>{% endif %}
+                {{ task.get_priority_display }}
+              </span>
+            </p>
+            <p><strong>{% trans "Energy" %}:</strong>
+              <span class="energy-dot energy-{{ task.energy_level }}"></span>{{ task.get_energy_level_display }}
+            </p>
+            <p><strong>{% trans "Estimated" %}:</strong> {{ task.estimated_minutes }} {% trans "minutes" %}</p>
+            <p class="{% if task.is_overdue %}due-overdue{% else %}due-normal{% endif %}"><strong>{% trans "Due" %}:</strong> <i class="fas fa-calendar-alt me-1"></i>{{ task.due_date|date:"Y-m-d H:i"|default:_("-") }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card compact-card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-chart-line me-2"></i>{% trans "Progress" %}</h5>
+          <p class="mb-2"><strong>{% trans "Total time spent" %}:</strong> <span id="totalMinutes">{{ task.total_time_spent }}</span> {% trans "minutes" %}</p>
+          <div id="progressDebug" class="text-muted small"></div>
+          <div class="task-progress-container" role="progressbar" aria-label="{% trans 'Completion' %}" aria-valuenow="{{ task.completion_percentage }}" aria-valuemin="0" aria-valuemax="100">
+            <div class="task-progress-label">
+              <span><i class="fas fa-target me-1"></i>{% trans "Completion" %}</span>
+              <span id="progressPctTxt">{{ task.completion_percentage|floatformat:0 }}%</span>
+            </div>
+            <div class="task-progress-bar">
+              {# choose a fill color based on percentage #}
+              {% with pct=task.completion_percentage|floatformat:0 %}
+                <div id="progressBar" class="task-progress-fill {% if pct|add:'0' >= 100 %}complete{% elif pct|add:'0' >= 66 %}high{% elif pct|add:'0' >= 33 %}medium{% else %}low{% endif %}" data-estimated="{{ task.estimated_minutes }}"></div>
+              {% endwith %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card mt-3 compact-card">
+    <div class="card-body">
+      <h5 class="card-title d-flex align-items-center gap-2"><i class="fas fa-history"></i>{% trans "Recent Sessions" %}</h5>
+      {% if sessions %}
+        <div class="table-responsive">
+          <table class="table table-hover table-sm align-middle">
+            <thead>
+              <tr>
+                <th><i class="fas fa-play me-1"></i>{% trans "Start" %}</th>
+                <th><i class="fas fa-clock me-1"></i>{% trans "Duration" %}</th>
+                <th><i class="fas fa-bullseye me-1"></i>{% trans "Focus" %}</th>
+                <th><i class="fas fa-flag-checkered me-1"></i>{% trans "Outcome" %}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for s in sessions %}
+              <tr>
+                <td>{{ s.start_time|date:"Y-m-d H:i" }}</td>
+                <td>{{ s.actual_minutes|default:0 }} {% trans "min" %}</td>
+                <td>{{ s.focus_rating|default:"-" }}</td>
+                <td><span class="badge bg-light text-dark">{{ s.get_outcome_display }}</span></td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% else %}
+        <p class="text-muted text-center">{% trans "No sessions yet." %}</p>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+  (function() {
+    const progressUrl = "{% url 'personal_timebox:task_progress' task.id %}";
+    const minutesEl = document.getElementById('totalMinutes');
+    const barEl = document.getElementById('progressBar');
+    const estimated = parseInt(barEl?.dataset?.estimated || '0', 10) || 0;
+    if (!minutesEl || !barEl) return;
+
+    function updateUI(data) {
+      try { console.debug('task_progress payload:', data); } catch(e) {}
+      let minutes = (typeof data.total_minutes === 'number') ? data.total_minutes : 0;
+      // Fallback: if server minutes are 0 but we have active elapsed, show that
+      if (minutes <= 0 && typeof data.active_elapsed === 'number' && data.active_elapsed > 0) {
+        minutes = data.active_elapsed;
+      }
+      minutesEl.textContent = minutes;
+      if (typeof data.completion_percentage === 'number') {
+        let pct = Math.max(0, Math.min(100, data.completion_percentage));
+        // If server reports 0 but we have minutes and an estimate, compute client-side
+        if (pct === 0 && estimated > 0 && minutes > 0) {
+          pct = Math.round(Math.min(100, (minutes / estimated) * 100));
+        }
+        barEl.style.width = pct + '%';
+        barEl.textContent = pct + '%';
+        const prog = barEl.parentElement;
+        if (prog && prog.setAttribute) prog.setAttribute('aria-valuenow', pct);
+      }
+      const dbg = document.getElementById('progressDebug');
+      if (dbg) {
+        const now = new Date();
+        dbg.textContent = `Last update: ${now.toLocaleTimeString()} • minutes=${data.total_minutes} • pct=${data.completion_percentage}%`;
+      }
+    }
+
+    let timerId = null;
+    function poll() {
+      // clear any existing timer to avoid overlap
+      if (timerId) { clearTimeout(timerId); timerId = null; }
+      fetch(progressUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' }, cache: 'no-store' })
+        .then(r => r.json())
+        .then(data => {
+          if (!data.success) return;
+          updateUI(data);
+          // Continue polling every 30s while not completed
+          if (data.is_completed) {
+            if (timerId) clearTimeout(timerId);
+            return;
+          }
+          timerId = setTimeout(poll, 5000);
+        })
+        .catch(() => {
+          // backoff on errors
+          timerId = setTimeout(poll, 10000);
+        });
+    }
+
+    // initial kick
+    poll();
+
+    // cleanup on page hide
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden && timerId) {
+        clearTimeout(timerId);
+      } else if (!document.hidden) {
+        poll();
+      }
+    });
+  })();
+</script>
+{% endblock %}

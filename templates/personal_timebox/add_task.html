@@ -1,0 +1,368 @@
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Add Task" %} - {% trans "Personal Timebox" %}{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="task-form-container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="h2 mb-1">
+          <i class="fas fa-plus-circle text-primary me-2"></i>
+          {% trans "Add New Task" %}
+        </h1>
+        <p class="text-muted mb-0">{% trans "Create a new task for your timeboxing sessions" %}</p>
+      </div>
+      <a
+        href="{% url 'personal_timebox:task_list' %}"
+        class="btn btn-outline-secondary"
+      >
+        <i class="fas fa-arrow-left me-1"></i>{% trans "Back to Task List" %}
+      </a>
+    </div>
+
+    <!-- Display form errors -->
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <strong>{% trans "Please fix the following errors:" %}</strong>
+      <ul class="mb-0 mt-2">
+        {% for field, errors in form.errors.items %} {% for error in errors %}
+        <li>{{ field|title }}: {{ error }}</li>
+        {% endfor %} {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <!-- Form -->
+    <form method="post" id="taskForm">
+      {% csrf_token %}
+
+      <!-- Basic Information -->
+      <div class="form-section">
+        <h5><i class="fas fa-info-circle me-2"></i>{% trans "Basic Information" %}</h5>
+
+        <div class="mb-3">
+          <label for="{{ form.title.id_for_label }}" class="form-label">
+            <i class="fas fa-tag me-1"></i>{% trans "Task Title" %} *
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-heading"></i>
+            {{ form.title }}
+          </div>
+          {% if form.title.errors %}
+          <div class="text-danger small mt-1">
+            {% for error in form.title.errors %}
+            <div>{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}" class="form-label">
+            <i class="fas fa-align-left me-1"></i>{% trans "Description" %}
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-align-left"></i>
+            {{ form.description }}
+          </div>
+          {% if form.description.errors %}
+          <div class="text-danger small mt-1">
+            {% for error in form.description.errors %}
+            <div>{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="form-text">
+            <i class="fas fa-lightbulb me-1"></i>
+            {% trans "Add details about what needs to be done" %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Categorization -->
+      <div class="form-section">
+        <h5><i class="fas fa-tags me-2"></i>{% trans "Categorization" %}</h5>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="{{ form.category.id_for_label }}" class="form-label">
+                <i class="fas fa-folder me-1"></i>{% trans "Category" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-folder"></i>
+                {{ form.category }}
+              </div>
+              {% if form.category.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.category.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="{{ form.goal.id_for_label }}" class="form-label">
+                <i class="fas fa-bullseye me-1"></i>{% trans "Related Goal" %}
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-bullseye"></i>
+                {{ form.goal }}
+              </div>
+              {% if form.goal.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.goal.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="form-text">
+                <i class="fas fa-info-circle me-1"></i>
+                {% trans "Optional: link this task to a specific goal" %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Properties -->
+      <div class="form-section">
+        <h5><i class="fas fa-sliders-h me-2"></i>{% trans "Task Properties" %}</h5>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label for="{{ form.priority.id_for_label }}" class="form-label">
+                <i class="fas fa-exclamation-triangle me-1"></i>{% trans "Priority" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-exclamation"></i>
+                {{ form.priority }}
+              </div>
+              {% if form.priority.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.priority.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="priority-preview mt-2">
+                <span class="priority-badge priority-1">{% trans "Critical" %}</span>
+                <span class="priority-badge priority-2">{% trans "High" %}</span>
+                <span class="priority-badge priority-3">{% trans "Medium" %}</span>
+                <span class="priority-badge priority-4">{% trans "Low" %}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label
+                for="{{ form.energy_level.id_for_label }}"
+                class="form-label"
+              >
+                <i class="fas fa-battery-three-quarters me-1"></i>{% trans "Energy Level Required" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-battery-three-quarters"></i>
+                {{ form.energy_level }}
+              </div>
+              {% if form.energy_level.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.energy_level.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="energy-indicator">
+                <div class="energy-bar">
+                  <div
+                    class="energy-fill energy-medium"
+                    style="width: 60%"
+                  ></div>
+                </div>
+                <span class="small">{% trans "Low" %}</span>
+                <span class="small">{% trans "High" %}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label
+                for="{{ form.estimated_minutes.id_for_label }}"
+                class="form-label"
+              >
+                <i class="fas fa-clock me-1"></i>{% trans "Estimated Duration(minutes)" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-clock"></i>
+                {{ form.estimated_minutes }}
+              </div>
+              {% if form.estimated_minutes.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.estimated_minutes.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+              </div>
+              {% endif %}
+              <div class="form-text">
+                <i class="fas fa-lightbulb me-1"></i>
+                {% trans "How long do you think it will take?" %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scheduling -->
+      <div class="form-section">
+        <h5><i class="fas fa-calendar-alt me-2"></i>{% trans "Scheduling (optional)" %}</h5>
+
+        <div class="mb-3">
+          <label for="{{ form.due_date.id_for_label }}" class="form-label">
+            <i class="fas fa-calendar-check me-1"></i>{% trans "Due Date & Time" %}
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-calendar-alt"></i>
+            {{ form.due_date }}
+          </div>
+          {% if form.due_date.errors %}
+          <div class="text-danger small mt-1">
+            {% for error in form.due_date.errors %}
+            <div>{{ error }}</div>
+            {% endfor %}
+          </div>
+          {% endif %}
+          <div class="form-text">
+            <i class="fas fa-info-circle me-1"></i>
+            {% trans "When should this task be completed?" %}
+          </div>
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-section">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="startImmediately"
+            />
+            <label class="form-check-label" for="startImmediately">
+              <i class="fas fa-play me-1"></i>{% trans "Start working on this task immediately after creation" %}
+            </label>
+          </div>
+
+          <div class="btn-group">
+            <a
+              href="{% url 'personal_timebox:task_list' %}"
+              class="btn btn-outline-secondary"
+            >
+              <i class="fas fa-times me-1"></i>{% trans "Cancel" %}
+            </a>
+            <button type="submit" class="btn btn-success">
+              <i class="fas fa-save me-1"></i>{% trans "Create Task" %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    // Auto-focus on title field
+    const titleField = document.getElementById("id_title");
+    if (titleField) {
+      titleField.focus();
+    }
+
+    // Update energy indicator based on selection
+    const energySelect = document.getElementById("id_energy_level");
+    const energyFill = document.querySelector(".energy-fill");
+
+    function updateEnergyIndicator() {
+      if (!energySelect || !energyFill) return;
+
+      const value = energySelect.value;
+      let width = 0;
+      let className = "energy-low";
+
+      switch (value) {
+        case "low":
+          width = 30;
+          className = "energy-low";
+          break;
+        case "medium":
+          width = 60;
+          className = "energy-medium";
+          break;
+        case "high":
+          width = 90;
+          className = "energy-high";
+          break;
+      }
+
+      energyFill.style.width = width + "%";
+      energyFill.className = "energy-fill " + className;
+    }
+
+    if (energySelect) {
+      energySelect.addEventListener("change", updateEnergyIndicator);
+      updateEnergyIndicator();
+    }
+
+    // Form validation
+    const form = document.getElementById("taskForm");
+    form.addEventListener("submit", function (e) {
+      const title = document.getElementById("id_title");
+      const category = document.getElementById("id_category");
+      const priority = document.getElementById("id_priority");
+      const energy = document.getElementById("id_energy_level");
+      const duration = document.getElementById("id_estimated_minutes");
+
+      if (!title || !title.value.trim()) {
+        e.preventDefault();
+        alert('{% trans "Please enter a task title" %}');
+        if (title) title.focus();
+        return false;
+      }
+
+      // Show loading state
+      const submitBtn = form.querySelector('button[type="submit"]');
+      if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.innerHTML =
+          '<i class="fas fa-spinner fa-spin ms-1"></i>{% trans "Creating task..." %}';
+      }
+    });
+
+    // Keyboard shortcuts
+    document.addEventListener("keydown", function (e) {
+      // Ctrl/Cmd + Enter to submit
+      if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+        e.preventDefault();
+        form.submit();
+      }
+
+      // Escape to cancel
+      if (e.key === "Escape") {
+        if (
+          confirm(
+            '{% trans "Are you sure you want to cancel? Unsaved changes will be lost." %}'
+          )
+        ) {
+          window.location.href = "{% url 'personal_timebox:task_list' %}";
+        }
+      }
+    });
+  });
+</script>
+{% endblock %}

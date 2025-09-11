@@ -1,0 +1,204 @@
+ {% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Dashboard" %} - {% trans "Personal Timebox" %}{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
+<div class="container">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4 dashboard-header">
+    <div>
+      <h1 class="h2 mb-1">
+        <i class="fas fa-tachometer-alt text-primary me-2"></i>
+        {% trans "Dashboard" %}
+      </h1>
+      <p class="text-muted mb-0">
+        {% blocktrans %}Welcome, {{ user.username }}! Your activity summary{% endblocktrans %}
+      </p>
+    </div>
+    <div class="quick-link">
+      <a
+        href="{% url 'personal_timebox:add_task' %}"
+        class="btn btn-primary btn-sm"
+      >
+        <i class="fas fa-plus me-1"></i>{% trans "Add New Task" %}
+      </a>
+      <a
+        href="{% url 'personal_timebox:manage_categories' %}"
+        class="btn btn-outline-secondary btn-sm me-2"
+      >
+        <i class="fas fa-tags me-1"></i>{% trans "Manage Categories" %}
+      </a>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4 stats-row">
+    <div class="col-md-4">
+      <div class="card dashboard-card bg-success text-white">
+        <div class="card-body position-relative pe-5">
+          <i
+            class="fas fa-check-circle fa-2x opacity-50 position-absolute end-0 top-0 m-3"
+          ></i>
+          <h6 class="card-title">{% trans "Completed Tasks" %}</h6>
+          <div class="stat-number">{{ stats.completed_tasks|default:0 }}</div>
+          <small>{% blocktrans %}out of {{ stats.total_tasks|default:0 }} tasks{% endblocktrans %}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card dashboard-card bg-warning text-dark">
+        <div class="card-body position-relative pe-5">
+          <i
+            class="fas fa-hourglass-half fa-2x opacity-50 position-absolute end-0 top-0 m-3"
+          ></i>
+          <h6 class="card-title">{% trans "In-Progress Tasks" %}</h6>
+          <div class="stat-number">{{ stats.in_progress_tasks|default:0 }}</div>
+          <small>{% trans "Needs your attention" %}</small>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="card dashboard-card bg-danger text-white">
+        <div class="card-body position-relative pe-5">
+          <i
+            class="fas fa-exclamation-triangle fa-2x opacity-50 position-absolute end-0 top-0 m-3"
+          ></i>
+          <h6 class="card-title">{% trans "Overdue Tasks" %}</h6>
+          <div class="stat-number">{{ stats.overdue_tasks|default:0 }}</div>
+          <small>{% trans "Past due" %}</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Section -->
+  <div class="row mb-4 charts-row">
+    <div class="col-md-6">
+      <div class="card dashboard-card">
+        <div class="card-body">
+          <h5 class="card-title"><i class="fas fa-info-circle me-2"></i>{% trans "Overview" %}</h5>
+          <canvas id="priorityChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="card dashboard-card">
+        <div class="card-body">
+          <h5 class="card-title">
+            <i class="fas fa-chart-bar me-2"></i>{% trans "Weekly Time Spent" %}
+          </h5>
+          <canvas id="timeChart" height="200"></canvas>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Recent Tasks -->
+  <div class="card dashboard-card">
+    <div class="card-body">
+      <h5 class="card-title">
+        <i class="fas fa-tasks me-2"></i>{% trans "Recent Priority Tasks" %}
+      </h5>
+      {% if recent_tasks %} {% for task in recent_tasks %}
+      <div class="task-list-item">
+        <div>
+          <h6 class="mb-0 {% if task.is_overdue %}overdue{% endif %}">
+            {{ task.title }}
+          </h6>
+          <small class="text-muted">
+            {% trans "Priority:" %} {{ task.get_priority_display }} | {% trans "Due:" %} {{ task.due_date|date:"Y-m-d" }} | {% trans "Status:" %} {{ task.get_status_display }}
+          </small>
+        </div>
+        <div class="category-actions">
+          <a
+            href="{% url 'personal_timebox:task_detail' task.id %}"
+            class="btn btn-outline-primary btn-sm"
+            title="{% trans "Details" %}"
+          >
+            <i class="fas fa-eye"></i>
+          </a>
+          <a
+            href="{% url 'personal_timebox:edit_task' task.id %}"
+            class="btn btn-outline-secondary btn-sm ms-1"
+            title="{% trans "Edit" %}"
+          >
+            <!-- RTL: ms-1 -->
+            <i class="fas fa-edit"></i>
+          </a>
+        </div>
+      </div>
+      {% endfor %} {% else %}
+      <div class="text-center py-4">
+        <i class="fas fa-tasks fa-3x text-muted mb-2"></i>
+        <p class="text-muted">
+          {% trans "No tasks found. Create a new one!" %}
+        </p>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Priority Pie Chart
+      const priorityCtx = document.getElementById('priorityChart');
+      if (priorityCtx) {
+          new Chart(priorityCtx, {
+              type: 'pie',
+              data: {
+                  labels: ['Critical', 'High', 'Medium', 'Low'],
+                  datasets: [{
+                      data: [
+                        Number('{{ stats.priority_critical|default:0 }}'),
+                        Number('{{ stats.priority_high|default:0 }}'),
+                        Number('{{ stats.priority_medium|default:0 }}'),
+                        Number('{{ stats.priority_low|default:0 }}')
+                      ],
+                      backgroundColor: ['#dc3545', '#fd7e14', '#ffc107', '#6c757d']
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  plugins: {
+                      legend: {
+                          position: 'top',
+                          align: 'start'
+                      }
+                  }
+              }
+          });
+      }
+
+      // Time Bar Chart (dynamic data from view)
+      const timeCtx = document.getElementById('timeChart');
+      if (timeCtx) {
+          const weekdayLabels = JSON.parse('{{ weekday_labels|escapejs }}');
+          const weeklyMinutes = JSON.parse('{{ weekly_minutes|escapejs }}');
+          new Chart(timeCtx, {
+              type: 'bar',
+              data: {
+                  labels: weekdayLabels,
+                  datasets: [{
+                      label: 'Time Spent (minutes)',
+                      data: weeklyMinutes,
+                      backgroundColor: '#667eea'
+                  }]
+              },
+              options: {
+                  responsive: true,
+                  scales: {
+                      y: {
+                          beginAtZero: true
+                      }
+                  },
+                  plugins: {
+                      legend: {
+                          align: 'start'
+                      }
+                  }
+              }
+          });
+      }
+  });
+</script>
+{% endblock %}

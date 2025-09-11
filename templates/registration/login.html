@@ -1,0 +1,147 @@
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Login" %} - {% trans "Personal Timebox" %}{% endblock %} {% block extra_css %}{% endblock %} {% block content %}
+<div class="container">
+  <div class="login-container">
+    <div class="login-header">
+      <i class="fas fa-clock fa-3x text-primary mb-3"></i>
+      <h2>{% trans "Welcome Back!" %}</h2>
+      <p>{% trans "Sign in to your Personal Timebox account" %}</p>
+    </div>
+
+    {% if form.errors %}
+    <div class="alert alert-danger" role="alert">
+      <i class="fas fa-exclamation-triangle me-2"></i>
+      <strong>{% trans "Login Failed!" %}</strong>
+      {% for field, errors in form.errors.items %} {% for error in errors %}
+      <div>{{ error }}</div>
+      {% endfor %} {% endfor %}
+    </div>
+    {% endif %} {% if messages %} {% for message in messages %}
+    <div
+      class="alert alert-{{ message.tags }} alert-dismissible fade show"
+      role="alert"
+    >
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    {% endfor %} {% endif %}
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="form-floating">
+        <input
+          type="text"
+          class="form-control"
+          id="id_username"
+          name="username"
+          placeholder="{% trans "Username" %}"
+          value="{{ form.username.value|default:'' }}"
+          required
+        />
+        <label for="id_username">
+          <i class="fas fa-user me-2"></i>{% trans "Username" %}
+        </label>
+      </div>
+
+      <div class="form-floating">
+        <input
+          type="password"
+          class="form-control"
+          id="id_password"
+          name="password"
+          placeholder="{% trans "Password" %}"
+          required
+        />
+        <label for="id_password">
+          <i class="fas fa-lock me-2"></i>{% trans "Password" %}
+        </label>
+      </div>
+
+      <div class="form-check mb-3">
+        <input
+          type="checkbox"
+          class="form-check-input"
+          id="remember_me"
+          name="remember_me"
+        />
+        <label class="form-check-label" for="remember_me">
+          {% trans "Remember me for 30 days" %}
+        </label>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-login w-100">
+        <i class="fas fa-sign-in-alt me-2"></i>{% trans "Sign In" %}
+      </button>
+
+      <div class="forgot-password">
+        <a href="{% url 'password_reset' %}" class="text-decoration-none">
+          <i class="fas fa-key me-1"></i>{% trans "Forgot your password?" %}
+        </a>
+      </div>
+    </form>
+
+    <div class="register-link">
+      <p class="mb-0">
+        {% trans "Don't have an account?" %}
+        <a href="{% url 'register' %}" class="text-decoration-none fw-bold">
+          {% trans "Create one here" %} <i class="fas fa-arrow-right ms-1"></i>
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- Demo Account Info (Remove in production) -->
+<div class="container mt-3">
+  <div class="alert alert-info text-center" role="alert">
+    <i class="fas fa-info-circle me-2"></i>
+    <strong>{% trans "Demo Account:" %}</strong> {% trans "Username" %}: <code>demo</code> | {% trans "Password" %}:
+    <code>testpass123</code>
+    <br />
+    <small>{% trans "Or create a new account to get started!" %}</small>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Auto-focus on username field
+  document.addEventListener("DOMContentLoaded", function () {
+    document.getElementById("id_username").focus();
+  });
+
+  // Handle remember me functionality
+  document.addEventListener("DOMContentLoaded", function () {
+    const form = document.querySelector("form");
+    const rememberMe = document.getElementById("remember_me");
+
+    // Load saved username if remember me was checked
+    const savedUsername = localStorage.getItem("rememberedUsername");
+    if (savedUsername) {
+      document.getElementById("id_username").value = savedUsername;
+      rememberMe.checked = true;
+    }
+
+    form.addEventListener("submit", function () {
+      if (rememberMe.checked) {
+        localStorage.setItem(
+          "rememberedUsername",
+          document.getElementById("id_username").value
+        );
+      } else {
+        localStorage.removeItem("rememberedUsername");
+      }
+    });
+  });
+
+  // Keyboard shortcuts
+  document.addEventListener("keydown", function (e) {
+    // Enter to submit form
+    if (e.key === "Enter" && !e.shiftKey) {
+      const form = document.querySelector("form");
+      const activeElement = document.activeElement;
+      if (activeElement.tagName === "INPUT") {
+        form.submit();
+      }
+    }
+  });
+</script>
+{% endblock %}

@@ -1,0 +1,339 @@
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Edit Task" %} - {% trans "Personal Timebox" %}{% endblock %}
+{% block extra_css %}{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="task-form-container">
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
+      <div>
+        <h1 class="h2 mb-1">
+          <i class="fas fa-edit text-warning me-2"></i>
+          {% trans "Edit Task" %}
+        </h1>
+        <p class="text-muted mb-0">{% trans "Update task details and properties" %}</p>
+      </div>
+      <div class="btn-group">
+        <a
+          href="{% url 'personal_timebox:task_list' %}"
+          class="btn btn-outline-secondary"
+        >
+          <i class="fas fa-arrow-left me-1"></i>{% trans "Back to Tasks" %}
+        </a>
+        <button
+          type="button"
+          class="btn btn-outline-danger"
+          data-bs-toggle="modal"
+          data-bs-target="#deleteModal"
+        >
+          <i class="fas fa-trash me-1"></i>{% trans "Delete" %}
+        </button>
+      </div>
+    </div>
+
+    <!-- Task Info -->
+    <div class="alert alert-info">
+      <div class="d-flex justify-content-between align-items-center">
+        <div>
+          <i class="fas fa-info-circle me-2"></i>
+          <strong>{% trans "Created:" %}</strong>
+          {{ task.created_at|date:'F d, Y' }} {% trans "at" %} {{ task.created_at|date:'H:i' }}
+          {% if task.completed_at %}
+            • <strong>{% trans "Completed:" %}</strong>
+            {{ task.completed_at|date:'F d, Y' }} {% trans "at" %} {{ task.completed_at|date:'H:i' }}
+          {% endif %}
+        </div>
+        <span class="badge bg-{% if task.is_completed %}success{% else %}warning{% endif %}">
+          {% if task.is_completed %}{% trans "Completed" %}{% else %}{% trans "Pending" %}{% endif %}
+        </span>
+      </div>
+    </div>
+
+    <!-- Form -->
+    <form method="post" id="taskForm" data-initial-completed="{{ task.is_completed|yesno:'true,false' }}">
+      {% csrf_token %}
+
+      <!-- Basic Information -->
+      <div class="form-section">
+        <h5><i class="fas fa-info-circle me-2"></i>{% trans "Basic Information" %}</h5>
+
+        <div class="mb-3">
+          <label for="{{ form.title.id_for_label }}" class="form-label">
+            <i class="fas fa-tag me-1"></i>{% trans "Task Title" %} *
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-heading"></i>
+            {{ form.title }}
+          </div>
+          {% if form.title.errors %}
+          <div class="text-danger small mt-1">
+            {% for error in form.title.errors %}{{ error }}{% endfor %}
+          </div>
+          {% endif %}
+        </div>
+
+        <div class="mb-3">
+          <label for="{{ form.description.id_for_label }}" class="form-label">
+            <i class="fas fa-align-left me-1"></i>{% trans "Description" %}
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-align-left"></i>
+            {{ form.description }}
+          </div>
+          {% if form.description.errors %}
+          <div class="text-danger small mt-1">
+            {% for error in form.description.errors %}{{ error }}{% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Categorization -->
+      <div class="form-section">
+        <h5><i class="fas fa-tags me-2"></i>{% trans "Categorization" %}</h5>
+
+        <div class="row">
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="{{ form.category.id_for_label }}" class="form-label">
+                <i class="fas fa-folder me-1"></i>{% trans "Category" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-folder"></i>
+                {{ form.category }}
+              </div>
+              {% if form.category.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.category.errors %}{{ error }}{% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-md-6">
+            <div class="mb-3">
+              <label for="{{ form.goal.id_for_label }}" class="form-label">
+                <i class="fas fa-bullseye me-1"></i>{% trans "Related Goal" %}
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-bullseye"></i>
+                {{ form.goal }}
+              </div>
+              {% if form.goal.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.goal.errors %}{{ error }}{% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Task Properties -->
+      <div class="form-section">
+        <h5><i class="fas fa-sliders-h me-2"></i>{% trans "Task Properties" %}</h5>
+
+        <div class="row">
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label for="{{ form.priority.id_for_label }}" class="form-label">
+                <i class="fas fa-exclamation-triangle me-1"></i>{% trans "Priority" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-exclamation"></i>
+                {{ form.priority }}
+              </div>
+              {% if form.priority.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.priority.errors %}{{ error }}{% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label
+                for="{{ form.energy_level.id_for_label }}"
+                class="form-label"
+              >
+                <i class="fas fa-battery-three-quarters me-1"></i>
+                {% trans "Energy Level Required" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-battery-three-quarters"></i>
+                {{ form.energy_level }}
+              </div>
+              {% if form.energy_level.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.energy_level.errors %}
+                {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+
+          <div class="col-md-4">
+            <div class="mb-3">
+              <label
+                for="{{ form.estimated_minutes.id_for_label }}"
+                class="form-label"
+              >
+                <i class="fas fa-clock me-1"></i>{% trans "Estimated Duration (minutes)" %} *
+              </label>
+              <div class="input-with-icon">
+                <i class="fas fa-clock"></i>
+                {{ form.estimated_minutes }}
+              </div>
+              {% if form.estimated_minutes.errors %}
+              <div class="text-danger small mt-1">
+                {% for error in form.estimated_minutes.errors %}
+                {{ error }}
+                {% endfor %}
+              </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scheduling -->
+      <div class="form-section">
+        <h5><i class="fas fa-calendar-alt me-2"></i>{% trans "Scheduling" %}</h5>
+
+        <div class="mb-3">
+          <label for="{{ form.due_date.id_for_label }}" class="form-label">
+            <i class="fas fa-calendar-check me-1"></i>{% trans "Due Date & Time" %}
+          </label>
+          <div class="input-with-icon">
+            <i class="fas fa-calendar-alt"></i>
+            {{ form.due_date }}
+          </div>
+          {% if form.due_date.errors %}
+          <div class="text-danger small mt-1">
+            {% for error in form.due_date.errors %}{{ error }}{% endfor %}
+          </div>
+          {% endif %}
+        </div>
+      </div>
+
+      <!-- Form Actions -->
+      <div class="form-section">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="form-check">
+            <input
+              type="checkbox"
+              class="form-check-input"
+              id="markCompleted"
+              {%
+              if
+              task.is_completed
+              %}checked{%
+              endif
+              %}
+            />
+            <label class="form-check-label" for="markCompleted">
+              <i class="fas fa-check me-1"></i>{% trans "Mark task as completed" %}
+            </label>
+          </div>
+
+          <div class="btn-group">
+            <a
+              href="{% url 'personal_timebox:task_list' %}"
+              class="btn btn-outline-secondary"
+            >
+              <i class="fas fa-times me-1"></i>{% trans "Cancel" %}
+            </a>
+            <button type="submit" class="btn btn-primary">
+              <i class="fas fa-save me-1"></i>{% trans "Update Task" %}
+            </button>
+          </div>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="deleteModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title text-danger">
+          <i class="fas fa-exclamation-triangle me-2"></i>{% trans "Delete Task" %}
+        </h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          {% blocktrans %}Are you sure you want to delete <strong>"{{ task.title }}"</strong>?{% endblocktrans %}
+        </p>
+        <div class="alert alert-warning">
+          <i class="fas fa-warning me-2"></i>
+          {% trans "This action cannot be undone. All associated session data will also be deleted." %}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          {% trans "Cancel" %}
+        </button>
+        <form
+          method="post"
+          action="{% url 'personal_timebox:delete_task' task.id %}"
+          style="display: inline"
+        >
+          {% csrf_token %}
+          <button type="submit" class="btn btn-danger">
+            <i class="fas fa-trash me-1"></i>{% trans "Delete Task" %}
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+      // Form validation and submission
+      const form = document.getElementById('taskForm');
+      const markCompletedCheckbox = document.getElementById('markCompleted');
+
+      form.addEventListener('submit', function(e) {
+          // Add completion status to form data
+          const initialCompleted = (form.dataset.initialCompleted === 'true');
+          if (markCompletedCheckbox.checked !== initialCompleted) {
+              const hiddenInput = document.createElement('input');
+              hiddenInput.type = 'hidden';
+              hiddenInput.name = 'mark_completed';
+              hiddenInput.value = markCompletedCheckbox.checked;
+              form.appendChild(hiddenInput);
+          }
+
+          // Show loading state
+          const submitBtn = form.querySelector('button[type="submit"]');
+          submitBtn.disabled = true;
+          submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>{% trans "Updating Task..." %}';
+      });
+
+      // Keyboard shortcuts
+      document.addEventListener('keydown', function(e) {
+          // Ctrl/Cmd + Enter to submit
+          if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+              e.preventDefault();
+              form.submit();
+          }
+
+          // Escape to cancel
+          if (e.key === 'Escape') {
+              if (confirm('{% trans "Are you sure you want to cancel? Any unsaved changes will be lost." %}')) {
+                  window.location.href = "{% url 'personal_timebox:task_list' %}";
+              }
+          }
+      });
+  });
+</script>
+{% endblock %}

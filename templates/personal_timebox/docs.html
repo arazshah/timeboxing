@@ -1,0 +1,216 @@
+{% extends 'base.html' %}
+{% load i18n %}
+
+{% block title %}{% trans "Documentation" %}{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+  <div class="row">
+    <div class="col-lg-9 mx-auto">
+      <div class="card shadow-sm">
+        <div class="card-body p-5">
+          <div class="text-center mb-5">
+            <div class="brand-icon mx-auto mb-3">
+              <i class="fas fa-book"></i>
+            </div>
+            <h1 class="display-5 fw-bold text-primary">{% trans "Documentation" %}</h1>
+            <p class="lead text-muted">{% trans "Learn how to use Personal Timebox effectively" %}</p>
+          </div>
+
+          <div class="accordion" id="docsAccordion">
+            <!-- Getting Started -->
+            <div class="accordion-item mb-3">
+              <h2 class="accordion-header">
+                <button class="accordion-button fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#gettingStarted">
+                  <i class="fas fa-rocket me-2"></i>{% trans "Getting Started" %}
+                </button>
+              </h2>
+              <div id="gettingStarted" class="accordion-collapse collapse show" data-bs-parent="#docsAccordion">
+                <div class="accordion-body">
+                  <h5>{% trans "Welcome to Personal Timebox!" %}</h5>
+                  <p>{% trans "Personal Timebox is a productivity application designed to help you manage your tasks, track your time, and achieve your goals using proven techniques like the Pomodoro method and timeboxing." %}</p>
+                  
+                  <h6 class="mt-4">{% trans "Quick Start Guide:" %}</h6>
+                  <ol>
+                    <li>{% trans "Create your first task by clicking 'Add Task' in the dashboard" %}</li>
+                    <li>{% trans "Set a category, priority, and deadline for your task" %}</li>
+                    <li>{% trans "Start a timeboxing session using the Pomodoro timer" %}</li>
+                    <li>{% trans "Track your progress and analyze your productivity" %}</li>
+                  </ol>
+                </div>
+              </div>
+            </div>
+
+            <!-- Task Management -->
+            <div class="accordion-item mb-3">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#taskManagement">
+                  <i class="fas fa-tasks me-2"></i>{% trans "Task Management" %}
+                </button>
+              </h2>
+              <div id="taskManagement" class="accordion-collapse collapse" data-bs-parent="#docsAccordion">
+                <div class="accordion-body">
+                  <h5>{% trans "Creating Tasks" %}</h5>
+                  <p>{% trans "Tasks are the core of your productivity workflow. Each task can have:" %}</p>
+                  <ul>
+                    <li><strong>{% trans "Title" %}:</strong> {% trans "A clear, descriptive name for your task" %}</li>
+                    <li><strong>{% trans "Description" %}:</strong> {% trans "Detailed information about the task" %}</li>
+                    <li><strong>{% trans "Category" %}:</strong> {% trans "Organize tasks by type (Work, Health, Learning, etc.)" %}</li>
+                    <li><strong>{% trans "Priority" %}:</strong> {% trans "High, Medium, or Low priority levels" %}</li>
+                    <li><strong>{% trans "Deadline" %}:</strong> {% trans "Optional due date for time-sensitive tasks" %}</li>
+                  </ul>
+
+                  <h5 class="mt-4">{% trans "Task Status" %}</h5>
+                  <p>{% trans "Tasks can have different status levels:" %}</p>
+                  <ul>
+                    <li><strong>{% trans "Not Started" %}:</strong> {% trans "New tasks that haven't been worked on" %}</li>
+                    <li><strong>{% trans "In Progress" %}:</strong> {% trans "Tasks currently being worked on" %}</li>
+                    <li><strong>{% trans "Completed" %}:</strong> {% trans "Finished tasks" %}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Time Tracking -->
+            <div class="accordion-item mb-3">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#timeTracking">
+                  <i class="fas fa-stopwatch me-2"></i>{% trans "Time Tracking" %}
+                </button>
+              </h2>
+              <div id="timeTracking" class="accordion-collapse collapse" data-bs-parent="#docsAccordion">
+                <div class="accordion-body">
+                  <h5>{% trans "Pomodoro Technique" %}</h5>
+                  <p>{% trans "Personal Timebox uses the Pomodoro Technique, a time management method that uses a timer to break work into intervals:" %}</p>
+                  <ul>
+                    <li>{% trans "Work for 25 minutes (one Pomodoro)" %}</li>
+                    <li>{% trans "Take a 5-minute short break" %}</li>
+                    <li>{% trans "After four Pomodoros, take a 15-30 minute long break" %}</li>
+                  </ul>
+
+                  <h5 class="mt-4">{% trans "Starting a Session" %}</h5>
+                  <ol>
+                    <li>{% trans "Select a task from your task list" %}</li>
+                    <li>{% trans "Click the 'Start' button next to the task" %}</li>
+                    <li>{% trans "The timer will begin counting down from 25 minutes" %}</li>
+                    <li>{% trans "Focus on your task until the timer completes" %}</li>
+                    <li>{% trans "Take a break and repeat the process" %}</li>
+                  </ol>
+
+                  <h5 class="mt-4">{% trans "Session Outcomes" %}</h5>
+                  <p>{% trans "After each session, you can record:" %}</p>
+                  <ul>
+                    <li><strong>{% trans "Completed" %}:</strong> {% trans "Task was finished during the session" %}</li>
+                    <li><strong>{% trans "Partial" %}:</strong> {% trans "Made progress but task is not complete" %}</li>
+                    <li><strong>{% trans "Blocked" %}:</strong> {% trans "Encountered obstacles preventing progress" %}</li>
+                    <li><strong>{% trans "Interrupted" %}:</strong> {% trans "Session was interrupted" %}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Categories -->
+            <div class="accordion-item mb-3">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#categories">
+                  <i class="fas fa-tags me-2"></i>{% trans "Categories" %}
+                </button>
+              </h2>
+              <div id="categories" class="accordion-collapse collapse" data-bs-parent="#docsAccordion">
+                <div class="accordion-body">
+                  <h5>{% trans "Organizing with Categories" %}</h5>
+                  <p>{% trans "Categories help you organize your tasks by type or area of focus. Each category has:" %}</p>
+                  <ul>
+                    <li><strong>{% trans "Name" %}:</strong> {% trans "Descriptive title for the category" %}</li>
+                    <li><strong>{% trans "Type" %}:</strong> {% trans "General classification (Work, Health, Learning, etc.)" %}</li>
+                    <li><strong>{% trans "Color" %}:</strong> {% trans "Visual identifier for quick recognition" %}</li>
+                    <li><strong>{% trans "Icon" %}:</strong> {% trans "Emoji or icon for visual appeal" %}</li>
+                  </ul>
+
+                  <h5 class="mt-4">{% trans "Default Categories" %}</h5>
+                  <p>{% trans "When you first sign up, these default categories are created for you:" %}</p>
+                  <ul>
+                    <li>💼 <strong>{% trans "Work & Career" %}</strong></li>
+                    <li>💪 <strong>{% trans "Health & Fitness" %}</strong></li>
+                    <li>📚 <strong>{% trans "Learning & Development" %}</strong></li>
+                    <li>🏠 <strong>{% trans "Personal Life" %}</strong></li>
+                    <li>🎨 <strong>{% trans "Hobbies & Interests" %}</strong></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Goals -->
+            <div class="accordion-item mb-3">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#goals">
+                  <i class="fas fa-bullseye me-2"></i>{% trans "Goals" %}
+                </button>
+              </h2>
+              <div id="goals" class="accordion-collapse collapse" data-bs-parent="#docsAccordion">
+                <div class="accordion-body">
+                  <h5>{% trans "Setting Goals" %}</h5>
+                  <p>{% trans "Goals help you achieve bigger objectives by breaking them down into manageable tasks. Each goal can have:" %}</p>
+                  <ul>
+                    <li><strong>{% trans "Title" %}:</strong> {% trans "Clear, motivating goal name" %}</li>
+                    <li><strong>{% trans "Description" %}:</strong> {% trans "Detailed explanation of the goal" %}</li>
+                    <li><strong>{% trans "Target Date" %}:</strong> {% trans "When you want to achieve the goal" %}</li>
+                    <li><strong>{% trans "Category" %}:</strong> {% trans "Which area of life this goal relates to" %}</li>
+                  </ul>
+
+                  <h5 class="mt-4">{% trans "Goal Progress" %}</h5>
+                  <p>{% trans "Track your goal progress by:" %}</p>
+                  <ul>
+                    <li>{% trans "Completing tasks associated with the goal" %}</li>
+                    <li>{% trans "Tracking time spent on goal-related activities" %}</li>
+                    <li>{% trans "Monitoring completion percentage" %}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+            <!-- Analytics -->
+            <div class="accordion-item mb-3">
+              <h2 class="accordion-header">
+                <button class="accordion-button collapsed fw-semibold" type="button" data-bs-toggle="collapse" data-bs-target="#analytics">
+                  <i class="fas fa-chart-line me-2"></i>{% trans "Analytics & Reports" %}
+                </button>
+              </h2>
+              <div id="analytics" class="accordion-collapse collapse" data-bs-parent="#docsAccordion">
+                <div class="accordion-body">
+                  <h5>{% trans "Understanding Your Productivity" %}</h5>
+                  <p>{% trans "The analytics section provides insights into your productivity patterns:" %}</p>
+                  <ul>
+                    <li><strong>{% trans "Daily Overview" %}:</strong> {% trans "Tasks completed, time spent, and productivity score" %}</li>
+                    <li><strong>{% trans "Weekly Trends" %}:</strong> {% trans "Productivity patterns over the week" %}</li>
+                    <li><strong>{% trans "Category Breakdown" %}:</strong> {% trans "Time distribution across different categories" %}</li>
+                    <li><strong>{% trans "Goal Progress" %}:</strong> {% trans "Advancement towards your goals" %}</li>
+                  </ul>
+
+                  <h5 class="mt-4">{% trans "Exporting Data" %}</h5>
+                  <p>{% trans "You can export your data for further analysis:" %}</p>
+                  <ul>
+                    <li><strong>{% trans "CSV Export" %}:</strong> {% trans "Export sessions and tasks to CSV format" %}</li>
+                    <li><strong>{% trans "PDF Reports" %}:</strong> {% trans "Generate printable reports (coming soon)" %}</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-5">
+            <h3 class="fw-semibold mb-4">{% trans "Need More Help?" %}</h3>
+            <p class="text-muted mb-4">{% trans "Check out our About page or contact support for additional assistance." %}</p>
+            <a href="{% url 'personal_timebox:about' %}" class="btn btn-primary me-2">
+              <i class="fas fa-info-circle me-2"></i>{% trans "About" %}
+            </a>
+            <a href="{% url 'personal_timebox:dashboard' %}" class="btn btn-outline-primary">
+              <i class="fas fa-tachometer-alt me-2"></i>{% trans "Dashboard" %}
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

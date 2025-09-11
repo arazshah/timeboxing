@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Overdue Tasks Notification</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .header h1 {
+            color: #e74c3c;
+            margin: 0;
+            font-size: 24px;
+        }
+        .task-count {
+            background: #e74c3c;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            display: inline-block;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .task-list {
+            margin: 20px 0;
+        }
+        .task-item {
+            background: #f8f9fa;
+            padding: 15px;
+            margin-bottom: 10px;
+            border-left: 4px solid #e74c3c;
+            border-radius: 5px;
+        }
+        .task-title {
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 5px;
+        }
+        .task-meta {
+            color: #666;
+            font-size: 14px;
+        }
+        .priority {
+            display: inline-block;
+            padding: 2px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+        }
+        .priority.critical { background-color: #dc3545; }
+        .priority.high { background-color: #fd7e14; }
+        .priority.medium { background-color: #ffc107; color: #333; }
+        .priority.low { background-color: #28a745; }
+        .cta-button {
+            display: inline-block;
+            background: #007bff;
+            color: white;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 5px;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: #666;
+            font-size: 12px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>⏰ Overdue Tasks Alert</h1>
+        </div>
+        
+        <div class="task-count">
+            You have {{ task_count }} overdue task{{ task_count|pluralize }}
+        </div>
+        
+        <p>Hello {{ user.username }},</p>
+        
+        <p>The following tasks are now overdue and need your attention:</p>
+        
+        <div class="task-list">
+            {% for task in tasks %}
+            <div class="task-item">
+                <div class="task-title">{{ task.title }}</div>
+                <div class="task-meta">
+                    <span class="priority {{ task.get_priority_display|lower }}">{{ task.get_priority_display }}</span>
+                    Category: {{ task.category.name }} | 
+                    Due: {{ task.due_date|date:"F j, Y, g:i a" }}
+                    {% if task.description %}
+                    <br><strong>Description:</strong> {{ task.description }}
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <p>We've automatically increased the priority of these tasks to help you focus on what's most important.</p>
+        
+        <div style="text-align: center;">
+            <a href="{{ site_url }}{% url 'personal_timebox:task_list' %}" class="cta-button">
+                View Your Tasks
+            </a>
+        </div>
+        
+        <div class="footer">
+            <p>This is an automated notification from your Personal Timebox system.</p>
+            <p>To disable these notifications, please update your preferences in your account settings.</p>
+        </div>
+    </div>
+</body>
+</html>

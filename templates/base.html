@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+{% load i18n %}
+<html lang="en" dir="ltr">
+  <!-- Fixed language and direction -->
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{% block title %}{% trans "Personal Timebox" %}{% endblock %}</title>
+
+    <!-- Bootstrap CSS (standard LTR) -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+
+    <!-- Font Awesome -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <!-- Custom CSS -->
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/tasks.css' %}" />
+
+    {% block extra_css %}{% endblock %}
+
+    <!-- Favicon -->
+    <link
+      rel="icon"
+      type="image/x-icon"
+      href="{% static 'images/favicon.ico' %}"
+    />
+
+    <!-- Typography handled in custom.css -->
+  </head>
+  <body>
+    <div class="page-wrap d-flex flex-column min-vh-100">
+      <!-- Navigation -->
+      <nav class="navbar navbar-expand-lg app-navbar sticky-top bg-white shadow-sm">
+        <div class="container">
+          <a
+            class="navbar-brand fw-bold d-flex align-items-center"
+            href="{% url 'personal_timebox:dashboard' %}"
+          >
+            <span class="brand-icon rounded-3 me-2 d-inline-flex align-items-center justify-content-center"><i class="fas fa-clock"></i></span>
+            <span>{% trans "Personal Timebox" %}</span>
+          </a>
+
+          <button
+            class="navbar-toggler border-0"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#navbarNav"
+            aria-controls="navbarNav"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+          >
+            <i class="fas fa-bars"></i>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarNav">
+            {% if user.is_authenticated %}
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'personal_timebox:dashboard' %}">
+                  <i class="fas fa-home"></i> {% trans "Dashboard" %}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'personal_timebox:task_list' %}">
+                  <i class="fas fa-tasks"></i> {% trans "Tasks" %}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'personal_timebox:goals_list' %}">
+                  <i class="fas fa-bullseye"></i> {% trans "Goals" %}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'personal_timebox:category_list' %}">
+                  <i class="fas fa-tags"></i> {% trans "Categories" %}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'personal_timebox:analytics' %}">
+                  <i class="fas fa-chart-line"></i> {% trans "Analytics" %}
+                </a>
+              </li>
+            </ul>
+
+            <ul class="navbar-nav">
+              <li class="nav-item dropdown">
+                <a
+                  class="nav-link dropdown-toggle d-flex align-items-center gap-2"
+                  href="#"
+                  role="button"
+                  data-bs-toggle="dropdown"
+                >
+                  <i class="fas fa-user"></i> <span>{{ user.username }}</span>
+                </a>
+                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                  <li>
+                    <a class="dropdown-item" href="{% url 'logout' %}">
+                      <i class="fas fa-sign-out-alt me-2"></i> {% trans "Logout" %}
+                    </a>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+            {% else %}
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'login' %}">
+                  <i class="fas fa-sign-in-alt"></i> {% trans "Login" %}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'register' %}">
+                  <i class="fas fa-user-plus"></i> {% trans "Register" %}
+                </a>
+              </li>
+            </ul>
+            {% endif %}
+          </div>
+        </div>
+      </nav>
+
+      <!-- Messages -->
+      {% if messages %}
+      <div class="container mt-3">
+        {% for message in messages %}
+        <div
+          class="alert alert-{{ message.tags }} alert-dismissible fade show"
+          role="alert"
+        >
+          <i
+            class="fas fa-{% if message.tags == 'success' %}check-circle{% elif message.tags == 'error' %}exclamation-triangle{% elif message.tags == 'warning' %}exclamation-circle{% else %}info-circle{% endif %} me-2"
+          ></i>
+          {{ message }}
+          <button
+            type="button"
+            class="btn-close"
+            data-bs-dismiss="alert"
+          ></button>
+        </div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <!-- Main Content -->
+      <main class="flex-grow-1 py-4">{% block content %}{% endblock %}</main>
+
+      <!-- Footer -->
+      <footer class="app-footer mt-auto py-4">
+        <div class="container">
+          <div class="row align-items-center gy-3">
+            <div class="col-md-6 text-center text-md-start">
+              <div class="d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+                <span class="brand-icon small rounded-2 d-inline-flex align-items-center justify-content-center"><i class="fas fa-clock"></i></span>
+                <small class="text-muted">
+                  &copy; {% now "Y" %} {% trans "Personal Timebox" %}. {% trans "Built with Django & Bootstrap." %}
+                </small>
+              </div>
+            </div>
+            <div class="col-md-6 text-md-end">
+              <div class="footer-links d-inline-flex gap-3">
+                <a href="{% url 'personal_timebox:about' %}" class="nav-link text-decoration-none">{% trans "About" %}</a>
+                <a href="{% url 'personal_timebox:docs' %}" class="nav-link text-decoration-none">{% trans "Docs" %}</a>
+                <a href="{% url 'personal_timebox:privacy' %}" class="nav-link text-decoration-none">{% trans "Privacy" %}</a>
+                <a href="https://github.com" target="_blank" rel="noopener" class="nav-link text-decoration-none" aria-label="GitHub">
+                  <i class="fab fa-github"></i>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+    </div>
+
+    <!-- Back to top button -->
+    <button type="button" class="btn back-to-top" aria-label="Back to top">
+      <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Custom JavaScript -->
+    <script>
+      // Global utility functions
+      function getCookie(name) {
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== "") {
+          const cookies = document.cookie.split(";");
+          for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === name + "=") {
+              cookieValue = decodeURIComponent(
+                cookie.substring(name.length + 1)
+              );
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      function formatTime(seconds) {
+        if (seconds < 0) {
+          const absSeconds = Math.abs(seconds);
+          const minutes = Math.floor(absSeconds / 60);
+          const secs = absSeconds % 60;
+          return `-${minutes.toString().padStart(2, "0")}:${secs
+            .toString()
+            .padStart(2, "0")}`;
+        }
+
+        const minutes = Math.floor(seconds / 60);
+        const secs = seconds % 60;
+        return `${minutes.toString().padStart(2, "0")}:${secs
+          .toString()
+          .padStart(2, "0")}`;
+      }
+
+      // Apply dataset-driven styles to avoid inline CSS in templates
+      document.addEventListener('DOMContentLoaded', function() {
+        // Back to top toggle
+        const backToTop = document.querySelector('.back-to-top');
+        const onScroll = () => {
+          if (!backToTop) return;
+          if (window.scrollY > 300) {
+            backToTop.classList.add('show');
+          } else {
+            backToTop.classList.remove('show');
+          }
+        };
+        window.addEventListener('scroll', onScroll);
+        if (backToTop) {
+          backToTop.addEventListener('click', function() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+          });
+        }
+
+        // Elements with data-color
+        document.querySelectorAll('[data-color]').forEach(function(el) {
+          const color = el.getAttribute('data-color');
+          if (!color) return;
+          if (el.classList.contains('category-pill')) {
+            el.style.backgroundColor = color;
+            // ensure legible text
+            try {
+              const c = color.replace('#','');
+              const r = parseInt(c.substring(0,2),16);
+              const g = parseInt(c.substring(2,4),16);
+              const b = parseInt(c.substring(4,6),16);
+              const luminance = 0.2126*r + 0.7152*g + 0.0722*b;
+              el.style.color = luminance > 140 ? '#000' : '#fff';
+            } catch(_) {}
+          } else {
+            el.style.color = color;
+          }
+        });
+
+        // Elements with data-bg (background color)
+        document.querySelectorAll('[data-bg]').forEach(function(el) {
+          const bg = el.getAttribute('data-bg');
+          if (!bg) return;
+          el.style.backgroundColor = bg;
+        });
+
+        // Progress bars with data-width
+        document.querySelectorAll('.progress-bar[data-width]').forEach(function(el) {
+          const width = el.getAttribute('data-width');
+          if (width !== null) {
+            el.style.width = width + '%';
+          }
+        });
+      });
+    </script>
+
+    {% block extra_js %}{% endblock %}
+  </body>
+</html>

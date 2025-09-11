@@ -1,0 +1,370 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load i18n %}
+
+{% block title %}{% trans "Task List" %} - {% trans "Personal Timebox" %}{% endblock %}
+
+{% block extra_css %}{% endblock %}
+
+{% block content %}
+<div class="container">
+  <!-- Header -->
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <div>
+      <h1 class="h2 mb-1">
+        <i class="fas fa-tasks text-primary me-2"></i>
+        {% trans "Task List" %}
+      </h1>
+      <p class="text-muted mb-0">{% trans "Manage and view all your tasks" %}</p>
+    </div>
+    <div class="d-flex gap-2">
+      <div class="export-dropdown">
+        <div class="dropdown">
+          <button class="btn btn-success dropdown-toggle" type="button" id="exportTasksDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="fas fa-download me-1"></i>
+            {% trans "Export" %}
+          </button>
+          <ul class="dropdown-menu" aria-labelledby="exportTasksDropdown">
+            <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_csv' %}"><i class="fas fa-file-csv me-2"></i>{% trans "CSV Format" %}</a></li>
+            <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
+          </ul>
+        </div>
+      </div>
+      <a href="{% url 'personal_timebox:add_task' %}"
+         class="btn btn-primary">
+        <i class="fas fa-plus me-1"></i>{% trans "Add New Task" %}
+      </a>
+    </div>
+  </div>
+
+  <!-- Filters and Search -->
+  <div class="task-filter-container card mb-4">
+    <div class="card-body">
+      <form id="filterForm" class="task-filter-toolbar">
+        <div>
+          <label for="searchInput" class="form-label">{% trans "Search" %}</label>
+          <div class="search-input-wrapper">
+            <input type="text" id="searchInput" class="form-control" placeholder="{% trans "Title or description..." %}">
+          </div>
+        </div>
+        <div>
+          <label for="statusFilter" class="form-label">{% trans "Status" %}</label>
+          <select id="statusFilter" class="form-select">
+            <option value="">{% trans "All" %}</option>
+            <option value="pending">{% trans "Pending" %}</option>
+            <option value="in_progress">{% trans "In Progress" %}</option>
+            <option value="completed">{% trans "Completed" %}</option>
+          </select>
+        </div>
+        <div>
+          <label for="priorityFilter" class="form-label">{% trans "Priority" %}</label>
+          <select id="priorityFilter" class="form-select">
+            <option value="">{% trans "All" %}</option>
+            <option value="1">{% trans "Critical" %}</option>
+            <option value="2">{% trans "High" %}</option>
+            <option value="3">{% trans "Medium" %}</option>
+            <option value="4">{% trans "Low" %}</option>
+          </select>
+        </div>
+        <div>
+          <label for="categoryFilter" class="form-label">{% trans "Category" %}</label>
+          <select id="categoryFilter" class="form-select">
+            <option value="">{% trans "All" %}</option>
+            {% for category in categories %}
+            <option value="{{ category.id }}">{{ category.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+      </form>
+      <div class="d-flex justify-content-between align-items-center mt-3">
+        <div class="active-filters" id="activeFilters"></div>
+        <button type="button" id="clearFiltersBtn" class="btn clear-filters-btn">
+          <i class="fas fa-times-circle me-1"></i>{% trans "Clear Filters" %}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Task List -->
+  <div id="taskList">
+    {% if tasks %}
+    {% for task in tasks %}
+    <div class="card task-card compact ultra-compact priority-{{ task.priority }} mb-3 {% if task.status == 'completed' %}completed{% endif %}"
+         id="task-card-{{ task.id }}"
+         data-status="{{ task.status }}"
+         data-priority="{{ task.priority }}"
+         data-category="{{ task.category.id }}"
+         data-delete-url="{% url 'personal_timebox:delete_task' task.id %}"
+         data-toggle-url="{% url 'personal_timebox:toggle_task_completion' task.id %}">
+      <div class="card-body">
+        <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 task-headline">
+          <div class="d-inline-flex align-items-center gap-2 flex-wrap">
+            <h5 class="card-title mb-0">
+              <a href="{% url 'personal_timebox:task_detail' task.id %}" class="text-decoration-none">{{ task.title }}</a>
+            </h5>
+            <div class="meta-inline d-inline-flex align-items-center flex-wrap">
+              <small class="me-2">
+                <i class="fas fa-folder me-1"></i>
+                <span class="category-pill" data-color="{{ task.category.color }}">{{ task.category.name }}</span>
+              </small>
+              <small class="me-2">
+                <i class="fas fa-clock me-1"></i>{{ task.estimated_minutes }} {% trans "minutes" %}
+              </small>
+              <small class="me-2 {% if task.is_overdue %}due-overdue{% else %}due-normal{% endif %}">
+                <i class="fas fa-calendar-alt me-1"></i>{{ task.due_date|date:"Y-m-d" }}
+              </small>
+              <small class="me-2">
+                {% with s=task.status %}
+                  <span class="status-badge {% if task.is_overdue %}status-overdue{% elif s == 'completed' %}status-complete{% elif s == 'in_progress' %}status-inprogress{% else %}status-pending{% endif %}">
+                    {% if task.is_overdue %}
+                      <i class="fas fa-exclamation-circle me-1"></i>
+                    {% elif s == 'completed' %}
+                      <i class="fas fa-check-circle me-1"></i>
+                    {% elif s == 'in_progress' %}
+                      <i class="fas fa-hourglass-half me-1"></i>
+                    {% else %}
+                      <i class="fas fa-clock me-1"></i>
+                    {% endif %}
+                    <span class="status-label">{{ task.get_status_display }}</span>
+                  </span>
+                {% endwith %}
+              </small>
+            </div>
+          </div>
+          <div class="d-inline-flex align-items-center gap-2">
+            <span class="priority-badge priority-{{ task.priority }}">
+              {% if task.priority == 1 %}<i class="fas fa-bolt me-1"></i>{% endif %}
+              {% if task.priority == 2 %}<i class="fas fa-arrow-up me-1"></i>{% endif %}
+              {% if task.priority == 3 %}<i class="fas fa-equals me-1"></i>{% endif %}
+              {% if task.priority == 4 %}<i class="fas fa-arrow-down me-1"></i>{% endif %}
+              {{ task.get_priority_display }}
+            </span>
+            <div class="energy-indicator">
+              <span class="energy-dot energy-{{ task.energy_level }}"></span>
+              <small>{{ task.get_energy_level_display }}</small>
+            </div>
+          </div>
+        </div>
+
+        <p class="card-text text-muted small">{{ task.description|truncatechars:100 }}</p>
+
+        {# Optional completion overlay, revealed via CSS when completed #}
+        <div class="task-completion-overlay">
+          <i class="fas fa-check-circle task-completion-icon"></i>
+        </div>
+
+        <div class="d-flex justify-content-end mt-3 task-actions">
+          <a href="{% url 'personal_timebox:edit_task' task.id %}"
+             class="btn btn-outline-primary btn-sm me-2">
+            <i class="fas fa-edit"></i> {% trans "Edit" %}
+          </a>
+
+          <!-- Delete: works with or without JS -->
+          <form method="post"
+                action="{% url 'personal_timebox:delete_task' task.id %}"
+                class="me-2"
+                data-task-id="{{ task.id }}"
+                onsubmit="event.preventDefault(); if (window.confirmDelete) { window.confirmDelete(this.dataset.taskId); } else { this.submit(); }">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-danger btn-sm">
+              <i class="fas fa-trash"></i> {% trans "Delete" %}
+            </button>
+          </form>
+
+          <!-- Toggle Complete: works with or without JS -->
+          <form method="post"
+                action="{% url 'personal_timebox:toggle_task_completion' task.id %}"
+                class="me-2"
+                data-task-id="{{ task.id }}"
+                onsubmit="event.preventDefault(); if (window.toggleComplete) { window.toggleComplete(this.dataset.taskId); } else { this.submit(); }">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-outline-success btn-sm">
+              <i class="fas fa-check"></i> {% trans "Toggle Complete" %}
+            </button>
+          </form>
+
+          {% if not active_session and task.status != 'completed' %}
+          <a href="{% url 'personal_timebox:start_task' task.id %}"
+             class="btn btn-success btn-sm me-2">
+            <i class="fas fa-play"></i> {% trans "Start" %}
+          </a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% else %}
+    <div class="text-center py-5">
+      <i class="fas fa-tasks fa-4x text-muted mb-3"></i>
+      <h4 class="text-muted">{% trans "No tasks found" %}</h4>
+      <p class="text-muted">{% trans "Create a new task to get started!" %}</p>
+      <a href="{% url 'personal_timebox:add_task' %}"
+         class="btn btn-primary">
+        <i class="fas fa-plus ms-1"></i>{% trans "Create first task" %}
+      </a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const taskList = document.getElementById('taskList');
+    const taskItems = taskList.querySelectorAll('.task-card');
+    const activeFiltersWrap = document.getElementById('activeFilters');
+    const clearBtn = document.getElementById('clearFiltersBtn');
+
+    // Filter function
+    function applyFilters() {
+      const search = document.getElementById('searchInput')?.value.toLowerCase() || '';
+      const status = document.getElementById('statusFilter')?.value || '';
+      const priority = document.getElementById('priorityFilter')?.value || '';
+      const category = document.getElementById('categoryFilter')?.value || '';
+
+      taskItems.forEach(item => {
+        const title = item.querySelector('.card-title')?.textContent.toLowerCase() || '';
+        const desc = item.querySelector('.card-text')?.textContent.toLowerCase() || '';
+        const matchesSearch = title.includes(search) || desc.includes(search);
+        const matchesStatus = !status || item.dataset.status === status;
+        const matchesPriority = !priority || item.dataset.priority === priority;
+        const matchesCategory = !category || item.dataset.category === category;
+
+        item.style.display = (matchesSearch && matchesStatus && matchesPriority && matchesCategory) ? '' : 'none';
+      });
+
+      renderActiveFilters();
+    }
+
+    function pill(label, value, onRemove) {
+      const el = document.createElement('span');
+      el.className = 'filter-pill';
+      el.innerHTML = `<i class="fas fa-filter me-1"></i>${label}: <strong>${value}</strong> <button type="button" class="remove-filter ms-2" aria-label="remove">×</button>`;
+      el.querySelector('button')?.addEventListener('click', onRemove);
+      return el;
+    }
+
+    function renderActiveFilters() {
+      if (!activeFiltersWrap) return;
+      activeFiltersWrap.innerHTML = '';
+      const sInput = document.getElementById('searchInput');
+      const stSel = document.getElementById('statusFilter');
+      const prSel = document.getElementById('priorityFilter');
+      const ctSel = document.getElementById('categoryFilter');
+
+      if (sInput && sInput.value.trim()) {
+        activeFiltersWrap.appendChild(pill('{% trans "Search" %}', sInput.value.trim(), () => { sInput.value=''; applyFilters(); }));
+      }
+      if (stSel && stSel.value) {
+        const text = stSel.options[stSel.selectedIndex]?.text || stSel.value;
+        activeFiltersWrap.appendChild(pill('{% trans "Status" %}', text, () => { stSel.value=''; applyFilters(); }));
+      }
+      if (prSel && prSel.value) {
+        const text = prSel.options[prSel.selectedIndex]?.text || prSel.value;
+        activeFiltersWrap.appendChild(pill('{% trans "Priority" %}', text, () => { prSel.value=''; applyFilters(); }));
+      }
+      if (ctSel && ctSel.value) {
+        const text = ctSel.options[ctSel.selectedIndex]?.text || ctSel.value;
+        activeFiltersWrap.appendChild(pill('{% trans "Category" %}', text, () => { ctSel.value=''; applyFilters(); }));
+      }
+    }
+
+    // Add event listeners
+    document.getElementById('searchInput')?.addEventListener('input', applyFilters);
+    document.getElementById('statusFilter')?.addEventListener('change', applyFilters);
+    document.getElementById('priorityFilter')?.addEventListener('change', applyFilters);
+    document.getElementById('categoryFilter')?.addEventListener('change', applyFilters);
+
+    clearBtn?.addEventListener('click', function() {
+      const sInput = document.getElementById('searchInput');
+      const stSel = document.getElementById('statusFilter');
+      const prSel = document.getElementById('priorityFilter');
+      const ctSel = document.getElementById('categoryFilter');
+      if (sInput) sInput.value = '';
+      if (stSel) stSel.value = '';
+      if (prSel) prSel.value = '';
+      if (ctSel) ctSel.value = '';
+      applyFilters();
+    });
+
+    // Initial filter
+    applyFilters();
+  });
+
+  // CSRF helper (fallback if not globally defined)
+  function getCookie(name) {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+  }
+
+  window.confirmDelete = function(taskId) {
+    if (confirm('{% trans "Are you sure you want to delete this task?" %}')) {
+      const el = document.getElementById(`task-card-${taskId}`);
+      const url = el?.dataset.deleteUrl;
+      if (!url) { alert('{% trans "Error deleting task" %}'); return; }
+      fetch(url, {
+        method: 'POST',
+        headers: {
+          'X-CSRFToken': getCookie('csrftoken'),
+          'X-Requested-With': 'XMLHttpRequest',
+        }
+      }).then(response => {
+        if (response.ok) {
+          if (el) el.remove();
+        } else {
+          alert('{% trans "Error deleting task" %}');
+        }
+      }).catch(() => alert('{% trans "Network error" %}'));
+    }
+  }
+
+  window.toggleComplete = function(taskId) {
+    const card = document.getElementById(`task-card-${taskId}`);
+    const url = card?.dataset.toggleUrl;
+    if (!url) { alert('{% trans "Error updating status" %}'); return; }
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'X-CSRFToken': getCookie('csrftoken'),
+        'X-Requested-With': 'XMLHttpRequest',
+      }
+    }).then(res => res.json())
+      .then(data => {
+        if (!data.success) throw new Error('failed');
+        if (!card) return;
+        const wasCompleted = card.dataset.status === 'completed';
+        const newStatus = data.completed ? 'completed' : 'in_progress';
+        card.dataset.status = newStatus;
+        const statusLabel = card.querySelector('.status-label');
+        if (statusLabel) statusLabel.textContent = data.completed ? '{% trans "Completed" %}' : '{% trans "In Progress" %}';
+        // toggle completed class to trigger overlay and styles
+        if (data.completed) {
+          card.classList.add('completed');
+        } else {
+          card.classList.remove('completed');
+        }
+        // update status badge classes and icon
+        const badge = card.querySelector('.status-badge');
+        if (badge) {
+          badge.classList.remove('status-complete', 'status-inprogress', 'status-pending', 'status-overdue');
+          badge.classList.add(data.completed ? 'status-complete' : 'status-inprogress');
+          const icon = badge.querySelector('i');
+          if (icon) {
+            icon.className = data.completed ? 'fas fa-check-circle me-1' : 'fas fa-hourglass-half me-1';
+          }
+        }
+        // Hide start button if completed; show if reopened
+        const startBtn = card.querySelector('a.btn.btn-success');
+        if (startBtn) {
+          if (data.completed) startBtn.style.display = 'none'; else startBtn.style.display = '';
+        }
+        // Re-apply filters after status change
+        const evt = new Event('change');
+        document.getElementById('statusFilter')?.dispatchEvent(evt);
+      })
+      .catch(() => alert('{% trans "Error updating status" %}'));
+  }
+</script>
+{% endblock %}

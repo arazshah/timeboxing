@@ -1,0 +1,547 @@
+{% extends 'base.html' %} {% load static %} {% load i18n %} {% block title %}{% trans "Analytics" %} - {% trans "Personal Timebox" %}{% endblock %} {% block content %}
+<div class="container">
+  <!-- Analytics Header -->
+  <div class="analytics-header mb-4">
+    <div class="row align-items-center">
+      <div class="col-md-8">
+        <h1 class="mb-2">
+          <i class="fas fa-chart-line me-3"></i>
+          {% trans "Analytics Dashboard" %}
+        </h1>
+        <p class="mb-0 opacity-90">
+          <i class="fas fa-info-circle me-2"></i>
+          {% trans "Track your productivity and performance over time" %}
+        </p>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="analytics-period-selector d-inline-block">
+          <div class="btn-group" role="group">
+            <a
+              href="?period=7"
+              class="btn {% if period == '7' %}active{% endif %}"
+              >
+              <i class="fas fa-calendar-week me-1"></i>
+              {% trans "7 Days" %}
+            </a>
+            <a
+              href="?period=30"
+              class="btn {% if period == '30' %}active{% endif %}"
+              >
+              <i class="fas fa-calendar-alt me-1"></i>
+              {% trans "30 Days" %}
+            </a>
+            <a
+              href="?period=90"
+              class="btn {% if period == '90' %}active{% endif %}"
+              >
+              <i class="fas fa-calendar me-1"></i>
+              {% trans "90 Days" %}
+            </a>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-4 text-md-end mt-3 mt-md-0">
+        <div class="export-dropdown d-inline-block">
+          <div class="dropdown">
+            <button class="btn btn-success dropdown-toggle" type="button" id="exportDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fas fa-download me-2"></i>
+              {% trans "Export Data" %}
+            </button>
+            <ul class="dropdown-menu" aria-labelledby="exportDropdown">
+              <li><h6 class="dropdown-header">{% trans "Export Sessions" %}</h6></li>
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_sessions_csv' %}"><i class="fas fa-file-csv me-2"></i>{% trans "CSV Format" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_sessions_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><h6 class="dropdown-header">{% trans "Export Tasks" %}</h6></li>
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_csv' %}"><i class="fas fa-file-csv me-2"></i>{% trans "CSV Format" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_tasks_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><h6 class="dropdown-header">{% trans "Export All Data" %}</h6></li>
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_all_csv' %}"><i class="fas fa-file-archive me-2"></i>{% trans "ZIP (CSV Files)" %}</a></li>
+              <li><a class="dropdown-item" href="{% url 'personal_timebox:export_all_json' %}"><i class="fas fa-file-code me-2"></i>{% trans "JSON Format" %}</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Summary Stats -->
+  <div class="row mb-4">
+    <div class="col-md-3 mb-3">
+      <div class="analytics-kpi-card sessions">
+        <div class="analytics-kpi-icon sessions">
+          <i class="fas fa-play-circle"></i>
+        </div>
+        <div class="analytics-kpi-value" id="kpiTotalSessions">{{ total_sessions }}</div>
+        <div class="analytics-kpi-label">
+          <i class="fas fa-list me-1"></i>
+          {% trans "Total Sessions" %}
+        </div>
+        <div class="analytics-kpi-trend up">
+          <i class="fas fa-arrow-up me-1"></i>
+          <span>+12%</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="analytics-kpi-card hours">
+        <div class="analytics-kpi-icon hours">
+          <i class="fas fa-clock"></i>
+        </div>
+        <div class="analytics-kpi-value" id="kpiTotalHours">{{ total_hours }}</div>
+        <div class="analytics-kpi-label">
+          <i class="fas fa-hourglass-half me-1"></i>
+          {% trans "Hours Focused" %}
+        </div>
+        <div class="analytics-kpi-trend up">
+          <i class="fas fa-arrow-up me-1"></i>
+          <span>+8%</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="analytics-kpi-card focus">
+        <div class="analytics-kpi-icon focus">
+          <i class="fas fa-star"></i>
+        </div>
+        <div class="analytics-kpi-value" id="kpiAvgFocus">{{ avg_focus }}</div>
+        <div class="analytics-kpi-label">
+          <i class="fas fa-bullseye me-1"></i>
+          {% trans "Avg Focus Rating" %}
+        </div>
+        <div class="analytics-kpi-trend down">
+          <i class="fas fa-arrow-down me-1"></i>
+          <span>-3%</span>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3 mb-3">
+      <div class="analytics-kpi-card duration">
+        <div class="analytics-kpi-icon duration">
+          <i class="fas fa-stopwatch"></i>
+        </div>
+        <div class="analytics-kpi-value" id="kpiAvgSession">{{ avg_session_length }}</div>
+        <div class="analytics-kpi-label">
+          <i class="fas fa-ruler me-1"></i>
+          {% trans "Avg Session (min)" %}
+        </div>
+        <div class="analytics-kpi-trend up">
+          <i class="fas fa-arrow-up me-1"></i>
+          <span>+15%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Charts Row -->
+  <div class="row mb-4">
+    <div class="col-md-8">
+      <div class="analytics-chart-card">
+        <div class="analytics-chart-header">
+          <h5>
+            <i class="fas fa-chart-area me-2"></i>
+            {% trans "Daily Activity Trend" %}
+          </h5>
+        </div>
+        <div class="analytics-chart-body">
+          <div class="chart-container">
+            <canvas id="dailyChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-4">
+      <div class="analytics-chart-card">
+        <div class="analytics-chart-header">
+          <h5>
+            <i class="fas fa-chart-pie me-2"></i>
+            {% trans "Time by Category" %}
+          </h5>
+        </div>
+        <div class="analytics-chart-body">
+          <div class="chart-container">
+            <canvas id="categoryChart"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category Breakdown -->
+  {% if category_stats %}
+  <div class="analytics-chart-card">
+    <div class="analytics-chart-header">
+      <h5>
+        <i class="fas fa-tags me-2"></i>
+        {% trans "Category Breakdown" %}
+      </h5>
+    </div>
+    <div class="analytics-chart-body">
+      {% for category in category_stats %}
+      <div class="analytics-category-item">
+        <div class="d-flex justify-content-between align-items-center">
+          <div class="d-flex align-items-center">
+            <div class="analytics-category-icon" style="background: linear-gradient(135deg, {{ category.color }}20 0%, {{ category.color }}40 100%); color: {{ category.color }};">
+              <span>{{ category.icon }}</span>
+            </div>
+            <div>
+              <div class="analytics-category-name">{{ category.name }}</div>
+              <div class="text-muted small">
+                <i class="fas fa-fire me-1"></i>
+                {{ category.session_count }} {% trans "sessions" %}
+              </div>
+            </div>
+          </div>
+          <div class="analytics-category-stats">
+            <div class="analytics-category-badge">
+              {{ category.total_minutes }} {% trans "min" %}
+            </div>
+            <div class="analytics-category-time">
+              {% widthratio category.total_minutes 60 1 %}h
+            </div>
+          </div>
+        </div>
+        <div class="analytics-category-progress">
+          <div
+            class="analytics-category-progress-bar"
+            style="width: {% widthratio category.total_minutes total_minutes 100 %}%; background: linear-gradient(90deg, {{ category.color }} 0%, {{ category.color }}dd 100%);"
+          ></div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% else %}
+  <div class="analytics-empty-state">
+    <i class="fas fa-chart-bar"></i>
+    <h3>{% trans "No Data Available" %}</h3>
+    <p>{% trans "Start tracking your time to see analytics here." %}</p>
+  </div>
+  {% endif %}
+</div>
+{% endblock %} {% block extra_js %}
+<script>
+  // Daily activity chart (initial render)
+  const dailyCtx = document.getElementById('dailyChart').getContext('2d');
+  const dailyData = {{ daily_data|safe }};
+
+  // Enhanced chart configuration
+  const chartColors = {
+    primary: '#667eea',
+    primaryLight: '#7c8ff0',
+    secondary: '#764ba2',
+    success: '#48bb78',
+    successLight: '#68d391',
+    info: '#4299e1',
+    infoLight: '#63b3ed',
+    warning: '#ed8936',
+    warningLight: '#f6ad55',
+    danger: '#f56565',
+    grid: '#e2e8f0',
+    text: '#4a5568'
+  };
+
+  const dailyChart = new Chart(dailyCtx, {
+      type: 'line',
+      data: {
+          labels: dailyData.map(d => d.date),
+          datasets: [{
+              label: '{% trans "Sessions" %}',
+              data: dailyData.map(d => d.sessions),
+              borderColor: chartColors.primary,
+              backgroundColor: chartColors.primary + '20',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: chartColors.primary,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointHoverBackgroundColor: chartColors.primaryLight,
+              pointHoverBorderColor: '#fff',
+              pointHoverBorderWidth: 3
+          }, {
+              label: '{% trans "Minutes" %}',
+              data: dailyData.map(d => d.minutes),
+              borderColor: chartColors.success,
+              backgroundColor: chartColors.success + '20',
+              borderWidth: 3,
+              fill: true,
+              tension: 0.4,
+              pointBackgroundColor: chartColors.success,
+              pointBorderColor: '#fff',
+              pointBorderWidth: 2,
+              pointRadius: 5,
+              pointHoverRadius: 7,
+              pointHoverBackgroundColor: chartColors.successLight,
+              pointHoverBorderColor: '#fff',
+              pointHoverBorderWidth: 3,
+              yAxisID: 'y1'
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          interaction: {
+            mode: 'index',
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              display: true,
+              position: 'top',
+              labels: {
+                usePointStyle: true,
+                padding: 20,
+                font: {
+                  size: 12,
+                  weight: '500'
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: chartColors.primary,
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  let label = context.dataset.label || '';
+                  if (label) {
+                    label += ': ';
+                  }
+                  if (context.parsed.y !== null) {
+                    if (context.datasetIndex === 1) {
+                      label += context.parsed.y + ' {% trans "minutes" %}';
+                    } else {
+                      label += context.parsed.y + ' {% trans "sessions" %}';
+                    }
+                  }
+                  return label;
+                }
+              }
+            }
+          },
+          scales: {
+              x: {
+                grid: {
+                  color: chartColors.grid,
+                  drawBorder: false
+                },
+                ticks: {
+                  color: chartColors.text,
+                  font: {
+                    size: 11
+                  }
+                }
+              },
+              y: {
+                  beginAtZero: true,
+                  grid: {
+                    color: chartColors.grid,
+                    drawBorder: false
+                  },
+                  ticks: {
+                    color: chartColors.text,
+                    font: {
+                      size: 11
+                    }
+                  },
+                  title: { 
+                    display: true, 
+                    text: '{% trans "Sessions" %}',
+                    color: chartColors.primary,
+                    font: {
+                      size: 12,
+                      weight: 'bold'
+                    }
+                  }
+              },
+              y1: {
+                  type: 'linear',
+                  display: true,
+                  position: 'right',
+                  grid: { 
+                    drawOnChartArea: false,
+                    drawBorder: false
+                  },
+                  ticks: {
+                    color: chartColors.text,
+                    font: {
+                      size: 11
+                    }
+                  },
+                  title: { 
+                    display: true, 
+                    text: '{% trans "Minutes" %}',
+                    color: chartColors.success,
+                    font: {
+                      size: 12,
+                      weight: 'bold'
+                    }
+                  }
+              }
+          },
+          animation: {
+            duration: 1000,
+            easing: 'easeInOutQuart'
+          }
+      }
+  });
+
+  // Category pie chart (initial render)
+  const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+  const initialCatLabels = [{% for cat in category_stats %}'{{ cat.name }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+  const initialCatData = [{% for cat in category_stats %}{{ cat.total_minutes|default:0 }}{% if not forloop.last %},{% endif %}{% endfor %}];
+  const initialCatColors = [{% for cat in category_stats %}'{{ cat.color }}'{% if not forloop.last %},{% endif %}{% endfor %}];
+
+  const categoryChart = new Chart(categoryCtx, {
+      type: 'doughnut',
+      data: {
+          labels: initialCatLabels,
+          datasets: [{
+              data: initialCatData,
+              backgroundColor: initialCatColors,
+              borderColor: '#fff',
+              borderWidth: 3,
+              hoverBorderWidth: 4,
+              hoverBorderColor: '#fff',
+              hoverOffset: 8
+          }]
+      },
+      options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '60%',
+          plugins: {
+            legend: {
+              display: true,
+              position: 'bottom',
+              labels: {
+                usePointStyle: true,
+                padding: 15,
+                font: {
+                  size: 11,
+                  weight: '500'
+                },
+                generateLabels: function(chart) {
+                  const data = chart.data;
+                  if (data.labels.length && data.datasets.length) {
+                    return data.labels.map((label, i) => {
+                      const meta = chart.getDatasetMeta(0);
+                      const style = meta.controller.getStyle(i);
+                      return {
+                        text: `${label} (${data.datasets[0].data[i]} min)`,
+                        fillStyle: data.datasets[0].backgroundColor[i],
+                        strokeStyle: data.datasets[0].borderColor,
+                        lineWidth: data.datasets[0].borderWidth,
+                        pointStyle: 'circle',
+                        hidden: !chart.getDataVisibility(i),
+                        index: i
+                      };
+                    });
+                  }
+                  return [];
+                }
+              }
+            },
+            tooltip: {
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              titleColor: '#fff',
+              bodyColor: '#fff',
+              borderColor: chartColors.primary,
+              borderWidth: 1,
+              cornerRadius: 8,
+              displayColors: true,
+              callbacks: {
+                label: function(context) {
+                  const label = context.label || '';
+                  const value = context.parsed || 0;
+                  const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                  const percentage = ((value / total) * 100).toFixed(1);
+                  return `${label}: ${value} {% trans "minutes" %} (${percentage}%)`;
+                }
+              }
+            }
+          },
+          animation: {
+            animateRotate: true,
+            animateScale: true,
+            duration: 1200,
+            easing: 'easeInOutQuart'
+          }
+      }
+  });
+
+  // Live polling for analytics
+  (function() {
+    const period = '{{ period }}';
+    const endpoint = '{% url "personal_timebox:dashboard" %}'.replace(/\/$/, '') + 'api/analytics-stats/?period=' + encodeURIComponent(period);
+    // Build proper absolute path from current origin and i18n prefix
+    const apiUrl = (function(){
+      // Use the configured api include root from project urls: '/<lang>/api/...'
+      const path = window.location.pathname;
+      const parts = path.split('/');
+      // Expect ['', '<lang>', ...]
+      const lang = parts.length > 1 ? parts[1] : '';
+      return `${window.location.origin}/${lang}/api/analytics-stats/?period=${encodeURIComponent(period)}`;
+    })();
+
+    const kpiSessions = document.getElementById('kpiTotalSessions');
+    const kpiHours = document.getElementById('kpiTotalHours');
+    const kpiAvgFocus = document.getElementById('kpiAvgFocus');
+    const kpiAvgSession = document.getElementById('kpiAvgSession');
+
+    function updateUI(data) {
+      if (data && data.totals) {
+        if (kpiSessions) kpiSessions.textContent = data.totals.sessions ?? 0;
+        if (kpiHours) kpiHours.textContent = data.totals.hours ?? 0;
+        if (kpiAvgFocus) kpiAvgFocus.textContent = data.totals.avg_focus ?? 0;
+        if (kpiAvgSession) kpiAvgSession.textContent = data.totals.avg_session_length ?? 0;
+      }
+      if (data && Array.isArray(data.daily)) {
+        dailyChart.data.labels = data.daily.map(d => d.date);
+        // dataset[0] = sessions, dataset[1] = minutes
+        dailyChart.data.datasets[0].data = data.daily.map(d => d.sessions || 0);
+        dailyChart.data.datasets[1].data = data.daily.map(d => d.minutes || 0);
+        dailyChart.update('none');
+      }
+      if (data && Array.isArray(data.categories)) {
+        categoryChart.data.labels = data.categories.map(c => c.name);
+        categoryChart.data.datasets[0].data = data.categories.map(c => c.total_minutes || 0);
+        categoryChart.data.datasets[0].backgroundColor = data.categories.map(c => c.color || '#999');
+        categoryChart.update('none');
+      }
+    }
+
+    let timer = null;
+    function poll() {
+      if (timer) { clearTimeout(timer); timer = null; }
+      fetch(apiUrl, { headers: { 'X-Requested-With': 'XMLHttpRequest' }, cache: 'no-store' })
+        .then(r => r.json())
+        .then(json => {
+          updateUI(json);
+          timer = setTimeout(poll, 5000);
+        })
+        .catch(() => {
+          timer = setTimeout(poll, 10000);
+        });
+    }
+    poll();
+
+    document.addEventListener('visibilitychange', function() {
+      if (document.hidden && timer) {
+        clearTimeout(timer);
+      } else if (!document.hidden) {
+        poll();
+      }
+    });
+  })();
+</script>
+{% endblock %}

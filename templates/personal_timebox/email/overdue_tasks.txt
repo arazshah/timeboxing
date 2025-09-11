@@ -1,0 +1,27 @@
+OVERDUE TASKS NOTIFICATION
+
+Hello {{ user.username }},
+
+You have {{ task_count }} overdue task{{ task_count|pluralize }} that need your attention:
+
+{% for task in tasks %}
+- {{ task.title }}
+  Priority: {{ task.get_priority_display }}
+  Category: {{ task.category.name }}
+  Due: {{ task.due_date|date:"F j, Y, g:i a" }}
+  {% if task.description %}
+  Description: {{ task.description }}
+  {% endif %}
+  
+{% endfor %}
+
+We've automatically increased the priority of these tasks to help you focus on what's most important.
+
+To view and manage your tasks, please visit:
+{{ site_url }}{% url 'personal_timebox:task_list' %}
+
+This is an automated notification from your Personal Timebox system.
+To disable these notifications, please update your preferences in your account settings.
+
+Best regards,
+Personal Timebox Team
