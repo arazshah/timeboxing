@@ -623,28 +623,28 @@
 
 {% block extra_js %}
 <script>
+  // Add loading state management
+  function showLoading(element) {
+    element.style.opacity = '0.6';
+    element.style.pointerEvents = 'none';
+    const loader = document.createElement('div');
+    loader.className = 'loading-spinner';
+    loader.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+    element.appendChild(loader);
+  }
+
+  function hideLoading(element) {
+    element.style.opacity = '1';
+    element.style.pointerEvents = 'auto';
+    const loader = element.querySelector('.loading-spinner');
+    if (loader) loader.remove();
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     const taskList = document.getElementById('taskList');
     const taskItems = taskList.querySelectorAll('.task-card');
     const activeFiltersWrap = document.getElementById('activeFilters');
     const clearBtn = document.getElementById('clearFiltersBtn');
-
-    // Add loading state management
-    function showLoading(element) {
-      element.style.opacity = '0.6';
-      element.style.pointerEvents = 'none';
-      const loader = document.createElement('div');
-      loader.className = 'loading-spinner';
-      loader.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-      element.appendChild(loader);
-    }
-
-    function hideLoading(element) {
-      element.style.opacity = '1';
-      element.style.pointerEvents = 'auto';
-      const loader = element.querySelector('.loading-spinner');
-      if (loader) loader.remove();
-    }
 
     // Enhanced filter function with smooth transitions
     function applyFilters() {
@@ -764,17 +764,18 @@
           'X-CSRFToken': getCookie('csrftoken'),
           'X-Requested-With': 'XMLHttpRequest',
         }
-      }).then(response => {
-        if (response.ok) {
-          // Add fade out animation
-          el.style.animation = 'slideOutUp 0.4s ease-in';
-          setTimeout(() => {
-            if (el) el.remove();
-          }, 400);
-        } else {
-          hideLoading(el);
-          alert('{% trans "Error deleting task" %}');
-        }
+      }).then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            // Add fade out animation
+            el.style.animation = 'slideOutUp 0.4s ease-in';
+            setTimeout(() => {
+              if (el) el.remove();
+            }, 400);
+          } else {
+            hideLoading(el);
+            alert('{% trans "Error deleting task" %}');
+          }
       }).catch(() => {
         hideLoading(el);
         alert('{% trans "Network error" %}');

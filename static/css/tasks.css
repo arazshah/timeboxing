@@ -724,6 +724,21 @@
 
 /* Inline headline/meta refinements */
 .task-headline { gap: 0.25rem; }
+
+/* Meta item styling - Fix white text visibility */
+.task-headline .meta-item {
+  color: #6c757d; /* Gray color for better visibility */
+  font-size: 0.875rem;
+  display: inline-flex;
+  align-items: center;
+  margin-right: 0.75rem;
+}
+
+.task-headline .meta-item i {
+  color: #6c757d; /* Match text color for icons */
+  font-size: 0.8rem;
+}
+
 .task-headline .meta-inline small {
   display: inline-flex;
   align-items: center;
