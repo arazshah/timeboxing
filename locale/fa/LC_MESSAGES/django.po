@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Personal Timebox\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 12:02+0000\n"
+"POT-Creation-Date: 2025-09-13 18:48+0000\n"
 "PO-Revision-Date: 2025-09-13 15:30+0330\n"
 "Last-Translator: Araz Shahkarami <araz@example.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
@@ -17,11 +17,12 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: templates/base.html:7 templates/base.html:53 templates/base.html:168
+#: templates/base.html:7 templates/base.html:54 templates/base.html:193
 #: templates/personal_timebox/add_category.html:1
 #: templates/personal_timebox/add_goal.html:4
 #: templates/personal_timebox/add_task.html:1
 #: templates/personal_timebox/analytics.html:1
+#: templates/personal_timebox/category_list.html:1
 #: templates/personal_timebox/dashboard.html:1
 #: templates/personal_timebox/edit_category.html:5
 #: templates/personal_timebox/edit_goal.html:4
@@ -33,65 +34,63 @@ msgstr ""
 msgid "Personal Timebox"
 msgstr "تایم‌باکس شخصی"
 
-#: templates/base.html:73 templates/personal_timebox/dashboard.html:1
+#: templates/base.html:74 templates/personal_timebox/dashboard.html:1
 #: templates/personal_timebox/dashboard.html:8
 #: templates/personal_timebox/docs.html:208
 #: templates/personal_timebox/privacy.html:147
 msgid "Dashboard"
 msgstr "داشبورد"
 
-#: templates/base.html:78
+#: templates/base.html:79
 msgid "Tasks"
 msgstr "وظایف"
 
-#: templates/base.html:83 templates/personal_timebox/docs.html:147
+#: templates/base.html:84 templates/personal_timebox/docs.html:147
 #: templates/personal_timebox/goals_list.html:4
 msgid "Goals"
 msgstr "اهداف"
 
-#: templates/base.html:88 templates/personal_timebox/docs.html:116
+#: templates/base.html:89 templates/personal_timebox/docs.html:116
 msgid "Categories"
 msgstr "دسته‌بندی‌ها"
 
-#: templates/base.html:93 templates/personal_timebox/analytics.html:1
+#: templates/base.html:94 templates/personal_timebox/analytics.html:1
 #: templates/personal_timebox/home.html:30
 msgid "Analytics"
 msgstr "تحلیل‌ها"
 
-#: templates/base.html:111
+#: templates/base.html:136
 msgid "Logout"
 msgstr "خروج"
 
-#: templates/base.html:121 templates/personal_timebox/home.html:50
+#: templates/base.html:146 templates/personal_timebox/home.html:50
 #: templates/registration/login.html:5
 msgid "Login"
 msgstr "ورود"
 
-#: templates/base.html:126 templates/personal_timebox/home.html:54
+#: templates/base.html:151 templates/personal_timebox/home.html:54
 #: templates/registration/register.html:5
 msgid "Register"
 msgstr "ثبت‌نام"
 
-#: templates/base.html:168
-#, fuzzy
-#| msgid "Built with Django & Bootstrap."
-msgid "Built with Django & Bootstrap by"
-msgstr "ساخته‌شده با Django و Bootstrap."
+#: templates/base.html:193
+msgid "&#x2665;&#xfe0f; by"
+msgstr ""
 
-#: templates/base.html:174
+#: templates/base.html:199
 msgid "Created by"
 msgstr "ساخته شده توسط"
 
-#: templates/base.html:186 templates/personal_timebox/docs.html:205
+#: templates/base.html:211 templates/personal_timebox/docs.html:205
 #: templates/personal_timebox/privacy.html:150
 msgid "About"
 msgstr "درباره ما"
 
-#: templates/base.html:187
+#: templates/base.html:212
 msgid "Docs"
 msgstr "مستندات"
 
-#: templates/base.html:188
+#: templates/base.html:213
 msgid "Privacy"
 msgstr "حریم خصوصی"
 
@@ -116,7 +115,9 @@ msgstr "مدیریت وظایف"
 msgid ""
 "Organize your tasks with categories, priorities, and deadlines. Track "
 "progress and stay focused on what matters most."
-msgstr "وظایف خود را با دسته‌بندی‌ها، اولویت‌ها و مهلت‌ها سازماندهی کنید. پیشرفت را ردیابی کنید و بر مهمترین چیزها تمرکز بمانید."
+msgstr ""
+"وظایف خود را با دسته‌بندی‌ها، اولویت‌ها و مهلت‌ها سازماندهی کنید. پیشرفت را "
+"ردیابی کنید و بر مهمترین چیزها تمرکز بمانید."
 
 #: templates/personal_timebox/about.html:39
 #: templates/personal_timebox/docs.html:78
@@ -127,7 +128,9 @@ msgstr "ردیابی زمان"
 msgid ""
 "Use the Pomodoro technique and timeboxing to manage your time effectively. "
 "Build better habits and boost productivity."
-msgstr "از تکنیک پومودورو و تایم‌باکسینگ برای مدیریت مؤثر زمان خود استفاده کنید. عادت‌های بهتری بسازید و بهره‌وری را افزایش دهید."
+msgstr ""
+"از تکنیک پومودورو و تایم‌باکسینگ برای مدیریت مؤثر زمان خود استفاده کنید. "
+"عادت‌های بهتری بسازید و بهره‌وری را افزایش دهید."
 
 #: templates/personal_timebox/about.html:51
 #, fuzzy
@@ -139,7 +142,9 @@ msgstr "تحلیل‌ها"
 msgid ""
 "Gain insights into your productivity patterns with detailed analytics and "
 "reports. Make data-driven decisions to improve your workflow."
-msgstr "با تحلیل‌ها و گزارش‌های دقیق، بینش‌هایی در مورد الگوهای بهره‌وری خود به دست آورید. تصمیم‌های مبتنی بر داده برای بهبود گردش کار خود بگیرید."
+msgstr ""
+"با تحلیل‌ها و گزارش‌های دقیق، بینش‌هایی در مورد الگوهای بهره‌وری خود به دست "
+"آورید. تصمیم‌های مبتنی بر داده برای بهبود گردش کار خود بگیرید."
 
 #: templates/personal_timebox/about.html:63
 msgid "Goal Setting"
@@ -149,7 +154,9 @@ msgstr "تنظیم اهداف"
 msgid ""
 "Set meaningful goals and break them down into actionable tasks. Track your "
 "progress and celebrate achievements."
-msgstr "اهداف معنادار تعیین کنید و آنها را به وظایف قابل اجرا تقسیم کنید. پیشرفت خود را ردیابی کنید و موفقیت‌ها را جشن بگیرید."
+msgstr ""
+"اهداف معنادار تعیین کنید و آنها را به وظایف قابل اجرا تقسیم کنید. پیشرفت خود "
+"را ردیابی کنید و موفقیت‌ها را جشن بگیرید."
 
 #: templates/personal_timebox/about.html:73
 #, fuzzy
@@ -200,7 +207,8 @@ msgstr "شروع کنید"
 
 #: templates/personal_timebox/about.html:139
 msgid "Ready to take control of your time and boost your productivity?"
-msgstr "آماده‌اید که کنترل زمان خود را در دست بگیرید و بهره‌وری خود را افزایش دهید؟"
+msgstr ""
+"آماده‌اید که کنترل زمان خود را در دست بگیرید و بهره‌وری خود را افزایش دهید؟"
 
 #: templates/personal_timebox/about.html:141
 #, fuzzy
@@ -218,6 +226,8 @@ msgid "Add Category"
 msgstr "افزودن دسته‌بندی"
 
 #: templates/personal_timebox/add_category.html:272
+#: templates/personal_timebox/category_list.html:461
+#: templates/personal_timebox/manage_categories.html:12
 #, fuzzy
 #| msgid "Add Category"
 msgid "Add New Category"
@@ -256,6 +266,7 @@ msgstr "افزودن دسته\fبندی"
 #: templates/personal_timebox/docs.html:156
 #: templates/personal_timebox/edit_category.html:326
 #: templates/personal_timebox/edit_task.html:399
+#: templates/personal_timebox/email/overdue_tasks.html:114
 #: templates/personal_timebox/task_detail.html:436
 msgid "Description"
 msgstr "توضیحات"
@@ -316,7 +327,10 @@ msgid "Settings"
 msgstr "تنظیمات"
 
 #: templates/personal_timebox/add_category.html:384
+#: templates/personal_timebox/category_list.html:443
+#: templates/personal_timebox/category_list.html:482
 #: templates/personal_timebox/edit_category.html:392
+#: templates/personal_timebox/manage_categories.html:22
 #: templates/personal_timebox/task_detail.html:598
 msgid "Active"
 msgstr "فعال"
@@ -444,6 +458,7 @@ msgstr "جزئیات در مورد کاری که باید انجام شود اض
 #: templates/personal_timebox/docs.html:58
 #: templates/personal_timebox/docs.html:158
 #: templates/personal_timebox/edit_task.html:422
+#: templates/personal_timebox/email/overdue_tasks.html:111
 #: templates/personal_timebox/task_detail.html:444
 #: templates/personal_timebox/task_list.html:479
 #: templates/personal_timebox/task_list.html:712
@@ -552,7 +567,8 @@ msgstr "لطفاً خطاهای زیر را اصلاح کنید"
 
 #: templates/personal_timebox/add_task.html:786
 msgid "Some fields contain invalid data. Please review and correct them."
-msgstr "برخی فیلدها حاوی داده‌های نامعتبر هستند. لطفاً آنها را بررسی و اصلاح کنید."
+msgstr ""
+"برخی فیلدها حاوی داده‌های نامعتبر هستند. لطفاً آنها را بررسی و اصلاح کنید."
 
 #: templates/personal_timebox/add_task.html:799
 msgid "Creating task..."
@@ -560,7 +576,9 @@ msgstr "در حال ایجاد وظیفه..."
 
 #: templates/personal_timebox/add_task.html:820
 msgid "Are you sure you want to cancel? Unsaved changes will be lost."
-msgstr "آیا مطمئن هستید که می‌خواهید انصراف دهید؟ تغییرات ذخیره نشده از بین خواهند رفت."
+msgstr ""
+"آیا مطمئن هستید که می‌خواهید انصراف دهید؟ تغییرات ذخیره نشده از بین خواهند "
+"رفت."
 
 #: templates/personal_timebox/analytics.html:9
 #, fuzzy
@@ -594,6 +612,7 @@ msgstr "صادرات جلسات"
 
 #: templates/personal_timebox/analytics.html:52
 #: templates/personal_timebox/analytics.html:56
+#: templates/personal_timebox/category_list.html:455
 #: templates/personal_timebox/goals_list.html:418
 #: templates/personal_timebox/task_list.html:427
 msgid "CSV Format"
@@ -602,6 +621,7 @@ msgstr "فرمت CSV"
 #: templates/personal_timebox/analytics.html:53
 #: templates/personal_timebox/analytics.html:57
 #: templates/personal_timebox/analytics.html:61
+#: templates/personal_timebox/category_list.html:456
 #: templates/personal_timebox/goals_list.html:419
 #: templates/personal_timebox/task_list.html:428
 msgid "JSON Format"
@@ -686,12 +706,63 @@ msgstr "دقایق"
 msgid "minutes"
 msgstr "دقیقه"
 
+#: templates/personal_timebox/category_list.html:1
+#: templates/personal_timebox/category_list.html:431
+msgid "Category List"
+msgstr "لیست دسته‌بندی‌ها"
+
+#: templates/personal_timebox/category_list.html:432
+msgid "Manage your categories to organize tasks efficiently"
+msgstr "دسته‌بندی‌های خود را برای سازماندهی کارآمد وظایف مدیریت کنید"
+
+#: templates/personal_timebox/category_list.html:439
+msgid "Total"
+msgstr "کل"
+
+#: templates/personal_timebox/category_list.html:452
+#: templates/personal_timebox/goals_list.html:415
+#: templates/personal_timebox/privacy.html:95
+#: templates/personal_timebox/task_list.html:424
+msgid "Export"
+msgstr "صادرات"
+
+#: templates/personal_timebox/category_list.html:482
+#: templates/personal_timebox/manage_categories.html:22
+msgid "Inactive"
+msgstr "غیرفعال"
+
+#: templates/personal_timebox/category_list.html:493
+#: templates/personal_timebox/edit_category.html:5
+#: templates/personal_timebox/edit_category.html:280
+#, fuzzy
+#| msgid "Add Category"
+msgid "Edit Category"
+msgstr "ویرایش دسته‌بندی"
+
+#: templates/personal_timebox/category_list.html:499
+msgid "Delete Category"
+msgstr "حذف دسته‌بندی"
+
+#: templates/personal_timebox/category_list.html:510
+msgid "No Categories Found"
+msgstr "هیچ دسته‌بندی‌ای یافت نشد"
+
+#: templates/personal_timebox/category_list.html:511
+msgid "Start organizing your tasks by creating your first category!"
+msgstr "با ایجاد اولین دسته‌بندی خود، سازماندهی وظایف خود را شروع کنید!"
+
+#: templates/personal_timebox/category_list.html:513
+msgid "Create Your First Category"
+msgstr "اولین دسته‌بندی خود را ایجاد کنید"
+
 #: templates/personal_timebox/dashboard.html:11
 #, python-format
 msgid "Welcome, %(user.username)s! Your activity summary"
 msgstr "خوش آمدید، %(user.username)s! خلاصه فعالیت شما"
 
 #: templates/personal_timebox/dashboard.html:25
+#: templates/personal_timebox/manage_categories.html:1
+#: templates/personal_timebox/manage_categories.html:7
 msgid "Manage Categories"
 msgstr "مدیریت دسته‌بندی‌ها"
 
@@ -784,9 +855,9 @@ msgid ""
 "your tasks, track your time, and achieve your goals using proven techniques "
 "like the Pomodoro method and timeboxing."
 msgstr ""
-"Personal Timebox یک برنامه بهره‌وری است که برای کمک به مدیریت وظایف، "
-"ردیابی زمان و دستیابی به اهداف شما با استفاده از تکنیک‌های اثبات شده مانند "
-"روش پومودورو و تایم‌باکس طراحی شده است."
+"Personal Timebox یک برنامه بهره‌وری است که برای کمک به مدیریت وظایف، ردیابی "
+"زمان و دستیابی به اهداف شما با استفاده از تکنیک‌های اثبات شده مانند روش "
+"پومودورو و تایم‌باکس طراحی شده است."
 
 #: templates/personal_timebox/docs.html:33
 msgid "Quick Start Guide:"
@@ -981,8 +1052,8 @@ msgid ""
 "Categories help you organize your tasks by type or area of focus. Each "
 "category has:"
 msgstr ""
-"دسته‌بندی‌ها به شما کمک می‌کنند وظایف خود را بر اساس نوع یا حوزه تمرکز سازماندهی کنید. هر "
-"دسته‌بندی دارای:"
+"دسته‌بندی‌ها به شما کمک می‌کنند وظایف خود را بر اساس نوع یا حوزه تمرکز "
+"سازماندهی کنید. هر دسته‌بندی دارای:"
 
 #: templates/personal_timebox/docs.html:124
 msgid "Name"
@@ -1018,7 +1089,9 @@ msgstr "دسته‌بندی‌های پیش‌فرض"
 
 #: templates/personal_timebox/docs.html:131
 msgid "When you first sign up, these default categories are created for you:"
-msgstr "وقتی برای اولین بار ثبت‌نام می‌کنید، این دسته‌بندی‌های پیش‌فرض برای شما ایجاد می‌شوند:"
+msgstr ""
+"وقتی برای اولین بار ثبت‌نام می‌کنید، این دسته‌بندی‌های پیش‌فرض برای شما ایجاد "
+"می‌شوند:"
 
 #: templates/personal_timebox/docs.html:133
 msgid "Work & Career"
@@ -1051,7 +1124,8 @@ msgid ""
 "Goals help you achieve bigger objectives by breaking them down into "
 "manageable tasks. Each goal can have:"
 msgstr ""
-"اهداف به شما کمک می‌کنند اهداف بزرگتر را با تقسیم آنها به وظایف قابل مدیریت به دست آورید. هر هدف می‌تواند دارای:"
+"اهداف به شما کمک می‌کنند اهداف بزرگتر را با تقسیم آنها به وظایف قابل مدیریت "
+"به دست آورید. هر هدف می‌تواند دارای:"
 
 #: templates/personal_timebox/docs.html:155
 msgid "Clear, motivating goal name"
@@ -1107,8 +1181,7 @@ msgstr "درک بهره‌وری شما"
 #: templates/personal_timebox/docs.html:182
 msgid ""
 "The analytics section provides insights into your productivity patterns:"
-msgstr ""
-"بخش تحلیل‌ها بینش‌هایی در مورد الگوهای بهره‌وری شما ارائه می‌دهد:"
+msgstr "بخش تحلیل‌ها بینش‌هایی در مورد الگوهای بهره‌وری شما ارائه می‌دهد:"
 
 #: templates/personal_timebox/docs.html:184
 msgid "Daily Overview"
@@ -1164,14 +1237,8 @@ msgstr "نیاز به کمک بیشتر دارید؟"
 
 #: templates/personal_timebox/docs.html:203
 msgid "Check out our About page or contact support for additional assistance."
-msgstr "صفحه درباره ما را بررسی کنید یا برای کمک بیشتر با پشتیبانی تماس بگیرید."
-
-#: templates/personal_timebox/edit_category.html:5
-#: templates/personal_timebox/edit_category.html:280
-#, fuzzy
-#| msgid "Add Category"
-msgid "Edit Category"
-msgstr "ویرایش دسته‌بندی"
+msgstr ""
+"صفحه درباره ما را بررسی کنید یا برای کمک بیشتر با پشتیبانی تماس بگیرید."
 
 #: templates/personal_timebox/edit_category.html:281
 msgid "Update this category's information"
@@ -1268,14 +1335,14 @@ msgstr "حذف وظیفه"
 #: templates/personal_timebox/edit_task.html:605
 #, python-format
 msgid "Are you sure you want to delete <strong>\"%(task.title)s\"</strong>?"
-msgstr "آیا مطمئن هستید که می‌خواهید <strong>\"%(task.title)s\"</strong> را حذف کنید؟"
+msgstr ""
+"آیا مطمئن هستید که می‌خواهید <strong>\"%(task.title)s\"</strong> را حذف کنید؟"
 
 #: templates/personal_timebox/edit_task.html:609
 msgid ""
 "This action cannot be undone. All associated session data will also be "
 "deleted."
-msgstr ""
-"این عمل قابل بازگشت نیست. تمام داده‌های جلسه مرتبط نیز حذف خواهند شد."
+msgstr "این عمل قابل بازگشت نیست. تمام داده‌های جلسه مرتبط نیز حذف خواهند شد."
 
 #: templates/personal_timebox/edit_task.html:671
 msgid "Very Low Energy"
@@ -1343,7 +1410,60 @@ msgstr "در حال به‌روزرسانی وظیفه..."
 
 #: templates/personal_timebox/edit_task.html:855
 msgid "Are you sure you want to cancel? Any unsaved changes will be lost."
-msgstr "آیا مطمئن هستید که می‌خواهید لغو کنید؟ هرگونه تغییر ذخیره نشده از دست خواهد رفت."
+msgstr ""
+"آیا مطمئن هستید که می‌خواهید لغو کنید؟ هرگونه تغییر ذخیره نشده از دست خواهد "
+"رفت."
+
+#: templates/personal_timebox/email/overdue_tasks.html:7
+msgid "Overdue Tasks Notification"
+msgstr "اعلان وظایف معوق"
+
+#: templates/personal_timebox/email/overdue_tasks.html:94
+msgid "Overdue Tasks Alert"
+msgstr "هشدار وظایف معوق"
+
+#: templates/personal_timebox/email/overdue_tasks.html:98
+#, python-format
+msgid "You have %(task_count)s overdue task"
+msgid_plural "You have %(task_count)s overdue tasks"
+msgstr[0] "شما %(task_count)s وظیفه معوق دارید"
+msgstr[1] "شما %(task_count)s وظیفه معوق دارید"
+
+#: templates/personal_timebox/email/overdue_tasks.html:101
+msgid "Hello"
+msgstr "سلام"
+
+#: templates/personal_timebox/email/overdue_tasks.html:103
+msgid "The following tasks are now overdue and need your attention:"
+msgstr "وظایف زیر اکنون معوق شده و نیاز به توجه شما دارند:"
+
+#: templates/personal_timebox/email/overdue_tasks.html:112
+msgid "Due"
+msgstr "موعد تحویل"
+
+#: templates/personal_timebox/email/overdue_tasks.html:121
+msgid ""
+"We've automatically increased the priority of these tasks to help you focus "
+"on what's most important."
+msgstr ""
+"ما اولویت این وظایف را به طور خودکار افزایش داده‌ایم تا به شما کمک کنیم روی "
+"مهمترین موارد تمرکز کنید."
+
+#: templates/personal_timebox/email/overdue_tasks.html:125
+msgid "View Your Tasks"
+msgstr "مشاهده وظایف شما"
+
+#: templates/personal_timebox/email/overdue_tasks.html:130
+msgid "This is an automated notification from your Personal Timebox system."
+msgstr "این یک اعلان خودکار از سیستم جعبه زمانی شخصی شماست."
+
+#: templates/personal_timebox/email/overdue_tasks.html:131
+msgid ""
+"To disable these notifications, please update your preferences in your "
+"account settings."
+msgstr ""
+"برای غیرفعال کردن این اعلان‌ها، لطفاً تنظیمات خود را در تنظیمات حساب کاربری "
+"به‌روز کنید."
 
 #: templates/personal_timebox/goals_list.html:406
 #, fuzzy
@@ -1354,12 +1474,6 @@ msgstr "اهداف شخصی"
 #: templates/personal_timebox/goals_list.html:408
 msgid "Define and track time goals by category and period"
 msgstr "تعریف و ردیابی اهداف زمانی بر اساس دسته‌بندی و دوره"
-
-#: templates/personal_timebox/goals_list.html:415
-#: templates/personal_timebox/privacy.html:95
-#: templates/personal_timebox/task_list.html:424
-msgid "Export"
-msgstr "صادرات"
 
 #: templates/personal_timebox/goals_list.html:451
 #: templates/personal_timebox/task_detail.html:438
@@ -1402,7 +1516,9 @@ msgid ""
 "timeboxing system. Track tasks, manage categories, and achieve your goals "
 "efficiently."
 msgstr ""
-"کنترل زمان خود را در دست بگیرید و بهره‌وری خود را با سیستم هوشمند تایم‌باکسینگ ما افزایش دهید. وظایف را ردیابی کنید، دسته‌بندی‌ها را مدیریت کنید و به اهداف خود به طور کارآمد دست یابید."
+"کنترل زمان خود را در دست بگیرید و بهره‌وری خود را با سیستم هوشمند تایم‌باکسینگ "
+"ما افزایش دهید. وظایف را ردیابی کنید، دسته‌بندی‌ها را مدیریت کنید و به اهداف "
+"خود به طور کارآمد دست یابید."
 
 #: templates/personal_timebox/home.html:22
 msgid "Organize and track your tasks with ease"
@@ -1431,7 +1547,9 @@ msgid ""
 "focus. Our system makes it easy to implement this strategy in your daily "
 "life."
 msgstr ""
-"تایم‌باکسینگ یک تکنیک قدرتمند مدیریت زمان است که به شما کمک می‌کند بلوک‌های زمانی مشخصی را برای وظایف اختصاص دهید، تعلل را کاهش دهید و تمرکز را افزایش دهید. سیستم ما پیاده‌سازی این استراتژی در زندگی روزمره شما را آسان می‌کند."
+"تایم‌باکسینگ یک تکنیک قدرتمند مدیریت زمان است که به شما کمک می‌کند بلوک‌های "
+"زمانی مشخصی را برای وظایف اختصاص دهید، تعلل را کاهش دهید و تمرکز را افزایش "
+"دهید. سیستم ما پیاده‌سازی این استراتژی در زندگی روزمره شما را آسان می‌کند."
 
 #: templates/personal_timebox/home.html:84
 msgid ""
@@ -1439,7 +1557,25 @@ msgid ""
 "Personal Timebox. Create your free account today and start making the most "
 "of your time!"
 msgstr ""
-"به هزاران کاربری بپیوندید که بهره‌وری خود را با تایم‌باکس شخصی متحول کرده‌اند. حساب رایگان خود را امروز ایجاد کنید و شروع به بهترین استفاده از زمان خود کنید!"
+"به هزاران کاربری بپیوندید که بهره‌وری خود را با تایم‌باکس شخصی متحول کرده‌اند. "
+"حساب رایگان خود را امروز ایجاد کنید و شروع به بهترین استفاده از زمان خود "
+"کنید!"
+
+#: templates/personal_timebox/manage_categories.html:9
+msgid "View and manage your categories"
+msgstr "دسته‌بندی‌های خود را مشاهده و مدیریت کنید"
+
+#: templates/personal_timebox/manage_categories.html:47
+msgid "No categories found"
+msgstr "هیچ دسته‌بندی‌ای یافت نشد"
+
+#: templates/personal_timebox/manage_categories.html:48
+msgid "Create your first category to get started!"
+msgstr "برای شروع اولین دسته‌بندی خود را ایجاد کنید!"
+
+#: templates/personal_timebox/manage_categories.html:50
+msgid "Create First Category"
+msgstr "ایجاد اولین دسته‌بندی"
 
 #: templates/personal_timebox/privacy.html:4
 #: templates/personal_timebox/privacy.html:16
@@ -1564,7 +1700,8 @@ msgstr "۳. امنیت داده‌ها"
 
 #: templates/personal_timebox/privacy.html:61
 msgid "We implement appropriate security measures to protect your information:"
-msgstr "ما اقدامات امنیتی مناسب را برای محافظت از اطلاعات شما پیاده‌سازی می‌کنیم:"
+msgstr ""
+"ما اقدامات امنیتی مناسب را برای محافظت از اطلاعات شما پیاده‌سازی می‌کنیم:"
 
 #: templates/personal_timebox/privacy.html:63
 msgid "All data is encrypted in transit using HTTPS"
@@ -1572,7 +1709,8 @@ msgstr "تمام داده‌ها در حین انتقال با استفاده ا
 
 #: templates/personal_timebox/privacy.html:64
 msgid "Passwords are securely hashed and never stored in plain text"
-msgstr "رمزهای عبور به صورت امن هش می‌شوند و هرگز به صورت متن ساده ذخیره نمی‌شوند"
+msgstr ""
+"رمزهای عبور به صورت امن هش می‌شوند و هرگز به صورت متن ساده ذخیره نمی‌شوند"
 
 #: templates/personal_timebox/privacy.html:65
 msgid "Regular security audits and vulnerability assessments"
@@ -1595,7 +1733,8 @@ msgid ""
 "We do not sell, trade, or otherwise transfer your personal information to "
 "third parties without your consent, except in the following circumstances:"
 msgstr ""
-"ما اطلاعات شخصی شما را بدون رضایت شما به طرف‌های سوم فروش نمی‌دهیم، معامله نمی‌کنیم یا به طور دیگری منتقل نمی‌کنیم، مگر در شرایط زیر:"
+"ما اطلاعات شخصی شما را بدون رضایت شما به طرف‌های سوم فروش نمی‌دهیم، معامله "
+"نمی‌کنیم یا به طور دیگری منتقل نمی‌کنیم، مگر در شرایط زیر:"
 
 #: templates/personal_timebox/privacy.html:75
 msgid "Service Providers"
@@ -1606,7 +1745,8 @@ msgid ""
 "We may use third-party service providers to help operate our service, such "
 "as:"
 msgstr ""
-"ما ممکن است از ارائه‌دهندگان خدمات شخص ثالث برای کمک به عملکرد سرویس خود استفاده کنیم، مانند:"
+"ما ممکن است از ارائه‌دهندگان خدمات شخص ثالث برای کمک به عملکرد سرویس خود "
+"استفاده کنیم، مانند:"
 
 #: templates/personal_timebox/privacy.html:78
 msgid "Hosting and infrastructure services"
@@ -1626,7 +1766,9 @@ msgid ""
 "on our behalf and are obligated not to disclose or use it for any other "
 "purpose."
 msgstr ""
-"این ارائه‌دهندگان فقط برای انجام این وظایف به نمایندگی از ما به اطلاعات شما دسترسی دارند و متعهد هستند که آن را فاش نکنند یا برای هیچ هدف دیگری استفاده نکنند."
+"این ارائه‌دهندگان فقط برای انجام این وظایف به نمایندگی از ما به اطلاعات شما "
+"دسترسی دارند و متعهد هستند که آن را فاش نکنند یا برای هیچ هدف دیگری استفاده "
+"نکنند."
 
 #: templates/personal_timebox/privacy.html:84
 msgid "Legal Requirements"
@@ -1637,7 +1779,8 @@ msgid ""
 "We may disclose your information if required by law or in response to valid "
 "requests by public authorities."
 msgstr ""
-"ما ممکن است اطلاعات شما را در صورت الزام قانونی یا در پاسخ به درخواست‌های معتبر توسط مقامات عمومی فاش کنیم."
+"ما ممکن است اطلاعات شما را در صورت الزام قانونی یا در پاسخ به درخواست‌های "
+"معتبر توسط مقامات عمومی فاش کنیم."
 
 #: templates/personal_timebox/privacy.html:89
 msgid "5. Your Data Rights"
@@ -1688,7 +1831,8 @@ msgid ""
 "To exercise these rights, please contact us using the information provided "
 "at the end of this policy."
 msgstr ""
-"برای اعمال این حقوق، لطفاً با استفاده از اطلاعات ارائه شده در انتهای این سیاست با ما تماس بگیرید."
+"برای اعمال این حقوق، لطفاً با استفاده از اطلاعات ارائه شده در انتهای این "
+"سیاست با ما تماس بگیرید."
 
 #: templates/personal_timebox/privacy.html:102
 msgid "6. Data Retention"
@@ -1711,7 +1855,8 @@ msgid ""
 "Legal requirements: Some data may be retained longer to meet legal "
 "obligations"
 msgstr ""
-"الزامات قانونی: برخی داده‌ها ممکن است برای برآورده کردن تعهدات قانونی برای مدت طولانی‌تری نگه داشته شوند"
+"الزامات قانونی: برخی داده‌ها ممکن است برای برآورده کردن تعهدات قانونی برای "
+"مدت طولانی‌تری نگه داشته شوند"
 
 #: templates/personal_timebox/privacy.html:112
 msgid "7. Cookies and Tracking"
@@ -1752,7 +1897,8 @@ msgid ""
 "You can manage cookie preferences through your browser settings, but this "
 "may affect your experience with our service."
 msgstr ""
-"شما می‌توانید ترجیحات کوکی را از طریق تنظیمات مرورگر خود مدیریت کنید، اما این ممکن است بر تجربه شما با سرویس ما تأثیر بگذارد."
+"شما می‌توانید ترجیحات کوکی را از طریق تنظیمات مرورگر خود مدیریت کنید، اما این "
+"ممکن است بر تجربه شما با سرویس ما تأثیر بگذارد."
 
 #: templates/personal_timebox/privacy.html:123
 msgid "8. International Data Transfers"
@@ -1764,7 +1910,9 @@ msgid ""
 "your country of residence. We ensure appropriate safeguards are in place to "
 "protect your data during these transfers."
 msgstr ""
-"اطلاعات شما ممکن است به کشورهایی غیر از کشور محل سکونت شما منتقل و در آنجا پردازش شود. ما اطمینان حاصل می‌کنیم که اقدامات حفاظتی مناسب برای محافظت از داده‌های شما در حین این انتقال‌ها در جای خود قرار دارد."
+"اطلاعات شما ممکن است به کشورهایی غیر از کشور محل سکونت شما منتقل و در آنجا "
+"پردازش شود. ما اطمینان حاصل می‌کنیم که اقدامات حفاظتی مناسب برای محافظت از "
+"داده‌های شما در حین این انتقال‌ها در جای خود قرار دارد."
 
 #: templates/personal_timebox/privacy.html:128
 msgid "9. Changes to This Policy"
@@ -1776,14 +1924,17 @@ msgid ""
 "will be indicated by a revised 'Last updated' date. We encourage you to "
 "review this policy periodically for any changes."
 msgstr ""
-"ما ممکن است گاهی این سیاست حریم خصوصی را به‌روزرسانی کنیم. نسخه به‌روز شده با تاریخ 'آخرین به‌روزرسانی' اصلاح شده مشخص می‌شود. ما تشویق می‌کنیم که این سیاست را به طور دوره‌ای برای هرگونه تغییر بررسی کنید."
+"ما ممکن است گاهی این سیاست حریم خصوصی را به‌روزرسانی کنیم. نسخه به‌روز شده با "
+"تاریخ 'آخرین به‌روزرسانی' اصلاح شده مشخص می‌شود. ما تشویق می‌کنیم که این سیاست "
+"را به طور دوره‌ای برای هرگونه تغییر بررسی کنید."
 
 #: templates/personal_timebox/privacy.html:130
 msgid ""
 "Material changes will be communicated through prominent notices or direct "
 "email notification."
 msgstr ""
-"تغییرات مهم از طریق اعلان‌های برجسته یا اعلان ایمیل مستقیم اطلاع‌رسانی خواهد شد."
+"تغییرات مهم از طریق اعلان‌های برجسته یا اعلان ایمیل مستقیم اطلاع‌رسانی خواهد "
+"شد."
 
 #: templates/personal_timebox/privacy.html:134
 msgid "10. Contact Information"
@@ -2041,26 +2192,6 @@ msgstr "حساب آزمایشی:"
 msgid "Signing in..."
 msgstr "در حال ورود..."
 
-#: templates/personal_timebox/category_list.html:1
-msgid "Category List"
-msgstr "لیست دسته‌بندی‌ها"
-
-#: templates/personal_timebox/category_list.html:432
-msgid "Manage your categories to organize tasks efficiently"
-msgstr "دسته‌بندی‌های خود را برای سازماندهی کارآمد وظایف مدیریت کنید"
-
-#: templates/personal_timebox/category_list.html:439
-msgid "Total"
-msgstr "کل"
-
-#: templates/personal_timebox/category_list.html:443
-msgid "Active"
-msgstr "فعال"
-
-#: templates/personal_timebox/category_list.html:482
-msgid "Inactive"
-msgstr "غیرفعال"
-
 #: templates/registration/register.html:77
 #: templates/registration/register.html:233
 #: templates/registration/register.html:316
@@ -2148,94 +2279,12 @@ msgstr "رمزهای عبور مطابقت ندارند"
 msgid "Creating Account..."
 msgstr "در حال ایجاد حساب کاربری..."
 
-#: templates/personal_timebox/manage_categories.html:7
-#: templates/personal_timebox/manage_categories.html:1
-msgid "Manage Categories"
-msgstr "مدیریت دسته‌بندی‌ها"
+#, fuzzy
+#~| msgid "Built with Django & Bootstrap."
+#~ msgid "Built with Django & Bootstrap by"
+#~ msgstr "ساخته‌شده با Django و Bootstrap."
 
-#: templates/personal_timebox/manage_categories.html:9
-msgid "View and manage your categories"
-msgstr "دسته‌بندی‌های خود را مشاهده و مدیریت کنید"
-
-#: templates/personal_timebox/manage_categories.html:47
-msgid "No categories found"
-msgstr "هیچ دسته‌بندی‌ای یافت نشد"
-
-#: templates/personal_timebox/manage_categories.html:48
-msgid "Create your first category to get started!"
-msgstr "برای شروع اولین دسته‌بندی خود را ایجاد کنید!"
-
-#: templates/personal_timebox/manage_categories.html:50
-msgid "Create First Category"
-msgstr "ایجاد اولین دسته‌بندی"
-
-#: templates/personal_timebox/category_list.html:455
-msgid "CSV Format"
-msgstr "فرمت CSV"
-
-#: templates/personal_timebox/category_list.html:456
-msgid "JSON Format"
-msgstr "فرمت JSON"
-
-#: templates/personal_timebox/category_list.html:493
-msgid "Edit Category"
-msgstr "ویرایش دسته‌بندی"
-
-#: templates/personal_timebox/category_list.html:499
-msgid "Delete Category"
-msgstr "حذف دسته‌بندی"
-
-#: templates/personal_timebox/category_list.html:510
-msgid "No Categories Found"
-msgstr "هیچ دسته‌بندی‌ای یافت نشد"
-
-#: templates/personal_timebox/category_list.html:511
-msgid "Start organizing your tasks by creating your first category!"
-msgstr "با ایجاد اولین دسته‌بندی خود، سازماندهی وظایف خود را شروع کنید!"
-
-#: templates/personal_timebox/category_list.html:513
-msgid "Create Your First Category"
-msgstr "اولین دسته‌بندی خود را ایجاد کنید"
-
-#: templates/personal_timebox/category_list.html:523
-msgid "Are you sure you want to delete this category? This action cannot be undone."
-msgstr "آیا از حذف این دسته‌بندی مطمئن هستید؟ این عمل قابل بازگشت نیست."
-
-msgid "Overdue Tasks Notification"
-msgstr "اعلان وظایف معوق"
-
-msgid "Overdue Tasks Alert"
-msgstr "هشدار وظایف معوق"
-
-#, python-format
-msgid "You have %(task_count)s overdue task"
-msgid_plural "You have %(task_count)s overdue tasks"
-msgstr[0] "شما %(task_count)s وظیفه معوق دارید"
-msgstr[1] "شما %(task_count)s وظیفه معوق دارید"
-
-msgid "Hello"
-msgstr "سلام"
-
-msgid "The following tasks are now overdue and need your attention:"
-msgstr "وظایف زیر اکنون معوق شده و نیاز به توجه شما دارند:"
-
-msgid "Category"
-msgstr "دسته‌بندی"
-
-msgid "Due"
-msgstr "موعد تحویل"
-
-msgid "Description"
-msgstr "توضیحات"
-
-msgid "We've automatically increased the priority of these tasks to help you focus on what's most important."
-msgstr "ما اولویت این وظایف را به طور خودکار افزایش داده‌ایم تا به شما کمک کنیم روی مهمترین موارد تمرکز کنید."
-
-msgid "View Your Tasks"
-msgstr "مشاهده وظایف شما"
-
-msgid "This is an automated notification from your Personal Timebox system."
-msgstr "این یک اعلان خودکار از سیستم جعبه زمانی شخصی شماست."
-
-msgid "To disable these notifications, please update your preferences in your account settings."
-msgstr "برای غیرفعال کردن این اعلان‌ها، لطفاً تنظیمات خود را در تنظیمات حساب کاربری به‌روز کنید."
+#~ msgid ""
+#~ "Are you sure you want to delete this category? This action cannot be "
+#~ "undone."
+#~ msgstr "آیا از حذف این دسته‌بندی مطمئن هستید؟ این عمل قابل بازگشت نیست."
