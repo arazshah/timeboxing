@@ -43,6 +43,10 @@ echo "🗄️ Setting up database..."
 python manage.py makemigrations
 python manage.py migrate
 
+# Compile translation messages
+echo "🌐 Compiling translation messages..."
+python manage.py compilemessages
+
 # Create superuser if needed
 echo "👤 Creating superuser..."
 python manage.py shell << EOF
