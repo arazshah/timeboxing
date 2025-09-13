@@ -38,6 +38,7 @@ MIDDLEWARE = [
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
+    'timebox_project.middleware.DomainLanguageMiddleware',
     'django.middleware.locale.LocaleMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -98,6 +99,7 @@ USE_TZ = True
 # Languages
 LANGUAGES = [
     ('en', 'English'),
+    ('fa', 'فارسی'),
 ]
 
 # Locale paths

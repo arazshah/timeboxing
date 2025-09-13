@@ -4,7 +4,7 @@ from django.contrib.auth import login
 from django.contrib import messages
 from django.http import JsonResponse, HttpResponse
 from django.db.models import Sum, Count, Avg, Q
-from django.utils import timezone
+from django.utils import timezone, translation
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_http_methods
 from datetime import datetime, timedelta, date
@@ -12,6 +12,23 @@ import json
 import csv
 from .models import *
 from .forms import *
+
+def set_language_view(request):
+    """Set language and redirect back to the same page"""
+    if request.method == 'GET':
+        language = request.GET.get('language', 'en')
+        next_url = request.GET.get('next', '/')
+        
+        # Activate the language
+        translation.activate(language)
+        request.session['django_language'] = language
+        
+        # Set language cookie
+        response = redirect(next_url)
+        response.set_cookie('django_language', language)
+        return response
+    
+    return redirect('/')
 
 def register_view(request):
     """User registration view"""

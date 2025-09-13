@@ -1,9 +1,10 @@
+{% load i18n %}
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Overdue Tasks Notification</title>
+    <title>{% trans "Overdue Tasks Notification" %}</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -90,16 +91,16 @@
 <body>
     <div class="container">
         <div class="header">
-            <h1>⏰ Overdue Tasks Alert</h1>
+            <h1>⏰ {% trans "Overdue Tasks Alert" %}</h1>
         </div>
         
         <div class="task-count">
-            You have {{ task_count }} overdue task{{ task_count|pluralize }}
+            {% blocktrans count task_count=task_count %}You have {{ task_count }} overdue task{% plural %}You have {{ task_count }} overdue tasks{% endblocktrans %}
         </div>
         
-        <p>Hello {{ user.username }},</p>
+        <p>{% trans "Hello" %} {{ user.username }},</p>
         
-        <p>The following tasks are now overdue and need your attention:</p>
+        <p>{% trans "The following tasks are now overdue and need your attention:" %}</p>
         
         <div class="task-list">
             {% for task in tasks %}
@@ -107,27 +108,27 @@
                 <div class="task-title">{{ task.title }}</div>
                 <div class="task-meta">
                     <span class="priority {{ task.get_priority_display|lower }}">{{ task.get_priority_display }}</span>
-                    Category: {{ task.category.name }} | 
-                    Due: {{ task.due_date|date:"F j, Y, g:i a" }}
+                    {% trans "Category" %}: {{ task.category.name }} | 
+                    {% trans "Due" %}: {{ task.due_date|date:"F j, Y, g:i a" }}
                     {% if task.description %}
-                    <br><strong>Description:</strong> {{ task.description }}
+                    <br><strong>{% trans "Description" %}:</strong> {{ task.description }}
                     {% endif %}
                 </div>
             </div>
             {% endfor %}
         </div>
         
-        <p>We've automatically increased the priority of these tasks to help you focus on what's most important.</p>
+        <p>{% trans "We've automatically increased the priority of these tasks to help you focus on what's most important." %}</p>
         
         <div style="text-align: center;">
             <a href="{{ site_url }}{% url 'personal_timebox:task_list' %}" class="cta-button">
-                View Your Tasks
+                {% trans "View Your Tasks" %}
             </a>
         </div>
         
         <div class="footer">
-            <p>This is an automated notification from your Personal Timebox system.</p>
-            <p>To disable these notifications, please update your preferences in your account settings.</p>
+            <p>{% trans "This is an automated notification from your Personal Timebox system." %}</p>
+            <p>{% trans "To disable these notifications, please update your preferences in your account settings." %}</p>
         </div>
     </div>
 </body>
