@@ -9,10 +9,10 @@ from personal_timebox.views import register_view, home_page, set_language_view
 urlpatterns = [
     # language switch endpoint
     path('i18n/', include('django.conf.urls.i18n')),
-    path('set-language/', set_language_view, name='set_language'),
 ]
 
 urlpatterns += i18n_patterns(
+    path('set-language/', set_language_view, name='set_language'),
     path('admin/', admin.site.urls),
     path('', home_page, name='home'),
     path('', include('personal_timebox.urls')),

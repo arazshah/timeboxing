@@ -7,6 +7,7 @@ from django.db.models import Sum, Count, Avg, Q
 from django.utils import timezone, translation
 from django.core.paginator import Paginator
 from django.views.decorators.http import require_http_methods
+from django.conf import settings
 from datetime import datetime, timedelta, date
 import json
 import csv
@@ -19,13 +20,29 @@ def set_language_view(request):
         language = request.GET.get('language', 'en')
         next_url = request.GET.get('next', '/')
         
+        # Validate language
+        if language not in ['en', 'fa']:
+            language = 'en'
+        
         # Activate the language
         translation.activate(language)
         request.session['django_language'] = language
+        request.LANGUAGE_CODE = language
+        
+        # Handle next_url to ensure proper language prefix
+        if next_url == '/':
+            # If going to root, redirect to language-specific root
+            next_url = f'/{language}/'
+        elif not next_url.startswith(f'/{language}/') and next_url != '/':
+            # If next_url doesn't have the correct language prefix, add it
+            # Remove any existing language prefix first
+            if next_url.startswith('/en/') or next_url.startswith('/fa/'):
+                next_url = next_url[3:]  # Remove /en/ or /fa/
+            next_url = f'/{language}{next_url}'
         
         # Set language cookie
         response = redirect(next_url)
-        response.set_cookie('django_language', language)
+        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language, max_age=365*24*60*60)  # 1 year
         return response
     
     return redirect('/')
