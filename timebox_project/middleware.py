@@ -23,11 +23,15 @@ class DomainLanguageMiddleware(MiddlewareMixin):
         if path.startswith('/fa/'):
             language = 'fa'
             self._activate_language(request, language)
-            return self.get_response(request)
+            response = self.get_response(request)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+            return response
         elif path.startswith('/en/'):
             language = 'en'
             self._activate_language(request, language)
-            return self.get_response(request)
+            response = self.get_response(request)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+            return response
         
         # Map domains to languages (highest priority for domain-based sites)
         domain_language_map = {
@@ -47,13 +51,17 @@ class DomainLanguageMiddleware(MiddlewareMixin):
             if path == '/':
                 return HttpResponseRedirect(f'/{language}/')
             
-            return self.get_response(request)
+            response = self.get_response(request)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+            return response
         
         # Check for language in session (fallback for other domains)
         if 'django_language' in request.session:
             language = request.session['django_language']
             self._activate_language(request, language)
-            return self.get_response(request)
+            response = self.get_response(request)
+            response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
+            return response
         
         # If domain not found and no session language, continue with default behavior
         return self.get_response(request)
@@ -66,7 +74,5 @@ class DomainLanguageMiddleware(MiddlewareMixin):
         # Store language in session for consistency
         request.session['django_language'] = language
         
-        # Set language cookie for future requests
-        response = self.get_response(request)
-        response.set_cookie(settings.LANGUAGE_COOKIE_NAME, language)
-        return response
+        # Note: Cookie will be set by the actual response in process_request
+        # We don't create a new response here to avoid interference
