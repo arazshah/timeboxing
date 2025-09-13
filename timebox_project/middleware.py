@@ -29,13 +29,7 @@ class DomainLanguageMiddleware(MiddlewareMixin):
             self._activate_language(request, language)
             return self.get_response(request)
         
-        # Check for language in session
-        if 'django_language' in request.session:
-            language = request.session['django_language']
-            self._activate_language(request, language)
-            return self.get_response(request)
-        
-        # Map domains to languages
+        # Map domains to languages (highest priority for domain-based sites)
         domain_language_map = {
             'time2box.ir': 'fa',
             'timebox.click': 'en',
@@ -44,13 +38,24 @@ class DomainLanguageMiddleware(MiddlewareMixin):
             '127.0.0.1:8000': 'fa',
         }
         
-        # Check if the domain is in our mapping
+        # Check if the domain is in our mapping (highest priority)
         if domain in domain_language_map:
             language = domain_language_map[domain]
             self._activate_language(request, language)
+            
+            # If root URL (no language prefix), redirect to language-specific URL
+            if path == '/':
+                return HttpResponseRedirect(f'/{language}/')
+            
             return self.get_response(request)
         
-        # If domain not found, continue with default behavior
+        # Check for language in session (fallback for other domains)
+        if 'django_language' in request.session:
+            language = request.session['django_language']
+            self._activate_language(request, language)
+            return self.get_response(request)
+        
+        # If domain not found and no session language, continue with default behavior
         return self.get_response(request)
     
     def _activate_language(self, request, language):
