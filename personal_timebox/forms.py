@@ -1,10 +1,12 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from django.utils.translation import gettext_lazy as _
 from .models import *
+from .jalali_fields import get_jalali_datetime_field, get_jalali_date_field
 
 class CustomUserCreationForm(UserCreationForm):
-    email = forms.EmailField(required=False, help_text='Optional: for password reset')
+    email = forms.EmailField(required=False, help_text=_('Optional: for password reset'))
     first_name = forms.CharField(max_length=30, required=False)
     last_name = forms.CharField(max_length=30, required=False)
     
@@ -21,39 +23,25 @@ class CustomUserCreationForm(UserCreationForm):
             
         # Customize placeholders
         self.fields['username'].widget.attrs.update({
-            'placeholder': 'Choose a unique username',
+            'placeholder': _('Choose a unique username'),
             'autocomplete': 'username'
         })
         self.fields['email'].widget.attrs.update({
-            'placeholder': 'your@email.com (optional)',
+            'placeholder': _('your@email.com (optional)'),
             'autocomplete': 'email'
         })
-        self.fields['first_name'].widget.attrs['placeholder'] = 'First name'
-        self.fields['last_name'].widget.attrs['placeholder'] = 'Last name'
+        self.fields['first_name'].widget.attrs['placeholder'] = _('First name')
+        self.fields['last_name'].widget.attrs['placeholder'] = _('Last name')
         self.fields['password1'].widget.attrs.update({
-            'placeholder': 'Create a strong password',
+            'placeholder': _('Create a strong password'),
             'autocomplete': 'new-password'
         })
         self.fields['password2'].widget.attrs.update({
-            'placeholder': 'Confirm your password',
+            'placeholder': _('Confirm your password'),
             'autocomplete': 'new-password'
         })
 
 class PersonalTaskForm(forms.ModelForm):
-    class Meta:
-        model = PersonalTask
-        fields = ['title', 'description', 'category', 'goal', 'priority', 'energy_level', 'estimated_minutes', 'due_date']
-        widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'What do you need to work on?'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Add more details about this task...'}),
-            'category': forms.Select(attrs={'class': 'form-select'}),
-            'goal': forms.Select(attrs={'class': 'form-select'}),
-            'priority': forms.Select(attrs={'class': 'form-select'}),
-            'energy_level': forms.Select(attrs={'class': 'form-select'}),
-            'estimated_minutes': forms.NumberInput(attrs={'class': 'form-control', 'min': 5, 'max': 480, 'step': 5}),
-            'due_date': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
-        }
-    
     def __init__(self, *args, **kwargs):
         user = kwargs.pop('user', None)
         super().__init__(*args, **kwargs)
@@ -62,8 +50,33 @@ class PersonalTaskForm(forms.ModelForm):
             self.fields['category'].queryset = PersonalCategory.objects.filter(user=user, is_active=True)
             self.fields['goal'].queryset = PersonalGoal.objects.filter(user=user, status='active')
         
-        self.fields['goal'].empty_label = "No specific goal"
+        self.fields['goal'].empty_label = _("No specific goal")
         self.fields['due_date'].required = False
+        
+        # Use dynamic field types based on language
+        from django.utils.translation import get_language
+        if get_language() == 'fa':
+            # Use Jalali datetime field for Persian
+            self.fields['due_date'] = get_jalali_datetime_field()(required=False)
+        else:
+            # Use standard datetime field for other languages
+            self.fields['due_date'] = forms.DateTimeField(
+                required=False,
+                widget=forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'})
+            )
+    
+    class Meta:
+        model = PersonalTask
+        fields = ['title', 'description', 'category', 'goal', 'priority', 'energy_level', 'estimated_minutes', 'due_date']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('What do you need to work on?')}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': _('Add more details about this task...')}),
+            'category': forms.Select(attrs={'class': 'form-select'}),
+            'goal': forms.Select(attrs={'class': 'form-select'}),
+            'priority': forms.Select(attrs={'class': 'form-select'}),
+            'energy_level': forms.Select(attrs={'class': 'form-select'}),
+            'estimated_minutes': forms.NumberInput(attrs={'class': 'form-control', 'min': 5, 'max': 480, 'step': 5}),
+        }
 
 class PersonalCategoryForm(forms.ModelForm):
     def __init__(self, *args, **kwargs):
@@ -78,11 +91,11 @@ class PersonalCategoryForm(forms.ModelForm):
         model = PersonalCategory
         fields = ['name', 'category_type', 'description', 'color', 'icon', 'is_active']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Category name'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Category name')}),
             'category_type': forms.Select(attrs={'class': 'form-select'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Brief description...'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': _('Brief description...')}),
             'color': forms.TextInput(attrs={'class': 'form-control', 'type': 'color'}),
-            'icon': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '📋 (emoji or icon class)'}),
+            'icon': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('📋 (emoji or icon class)')}),
         }
 
     def clean_name(self):
@@ -95,7 +108,7 @@ class PersonalCategoryForm(forms.ModelForm):
             if self.instance.pk:
                 qs = qs.exclude(pk=self.instance.pk)
             if qs.exists():
-                raise forms.ValidationError('You already have a category with this name.')
+                raise forms.ValidationError(_('You already have a category with this name.'))
         return name
 
 class PersonalGoalForm(forms.ModelForm):
@@ -103,8 +116,8 @@ class PersonalGoalForm(forms.ModelForm):
         model = PersonalGoal
         fields = ['title', 'description', 'category', 'target_hours_per_period', 'period', 'start_date', 'end_date']
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'What do you want to achieve?'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Describe your goal in detail...'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('What do you want to achieve?')}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': _('Describe your goal in detail...')}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'target_hours_per_period': forms.NumberInput(attrs={'class': 'form-control', 'step': 0.5, 'min': 0.5}),
             'period': forms.Select(attrs={'class': 'form-select'}),
@@ -130,11 +143,11 @@ class DailyReflectionForm(forms.ModelForm):
             'energy_level': forms.Select(choices=[(i, f'{i}/5') for i in range(1, 6)], attrs={'class': 'form-select'}),
             'mood': forms.Select(choices=[(i, f'{i}/5') for i in range(1, 6)], attrs={'class': 'form-select'}),
             'stress_level': forms.Select(choices=[(i, f'{i}/5') for i in range(1, 6)], attrs={'class': 'form-select'}),
-            'wins': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'What went well today?'}),
-            'challenges': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'What were the main challenges?'}),
-            'improvements': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'What could be improved?'}),
-            'tomorrow_focus': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Top 3 priorities for tomorrow'}),
-            'gratitude': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'What are you grateful for?'}),
+            'wins': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': _('What went well today?')}),
+            'challenges': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': _('What were the main challenges?')}),
+            'improvements': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': _('What could be improved?')}),
+            'tomorrow_focus': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': _('Top 3 priorities for tomorrow')}),
+            'gratitude': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': _('What are you grateful for?')}),
         }
 
 class UserPreferencesForm(forms.ModelForm):
@@ -168,8 +181,8 @@ class PersonalHabitForm(forms.ModelForm):
         model = PersonalHabit
         fields = ['name', 'description', 'category', 'frequency', 'target_per_period']
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Habit name'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': 'Describe this habit...'}),
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': _('Habit name')}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 2, 'placeholder': _('Describe this habit...')}),
             'category': forms.Select(attrs={'class': 'form-select'}),
             'frequency': forms.Select(attrs={'class': 'form-select'}),
             'target_per_period': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),

@@ -8,7 +8,7 @@ You have {{ task_count }} overdue task{{ task_count|pluralize }} that need your 
 - {{ task.title }}
   Priority: {{ task.get_priority_display }}
   Category: {{ task.category.name }}
-  Due: {{ task.due_date|date:"F j, Y, g:i a" }}
+  Due: {{ task.due_date|jalali_datetime_full }}
   {% if task.description %}
   Description: {{ task.description }}
   {% endif %}

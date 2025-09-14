@@ -628,6 +628,13 @@
   </div>
 </div>
 {% endblock %} {% block extra_js %}
+<!-- Date Picker Libraries -->
+{% if LANGUAGE_CODE == 'fa' %}
+<!-- Native JavaScript Jalali calendar - no external dependencies -->
+{% else %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+{% endif %}
 <script>
   document.addEventListener('DOMContentLoaded', function() {
       const form = document.getElementById('taskForm');
@@ -881,6 +888,167 @@
               section.style.transform = 'translateY(0)';
           }, index * 100);
       });
+
+      // Initialize date picker for due date field
+      const dueDateInput = document.getElementById('id_due_date');
+      if (dueDateInput) {
+        {% if LANGUAGE_CODE == 'fa' %}
+        // Persian (Jalali) Date Picker
+        (function() {
+          dueDateInput.type = 'text';
+          dueDateInput.placeholder = 'YYYY/MM/DD HH:mm';
+          
+          // Jalali to Gregorian conversion functions
+          function jalaliToGregorian(jy, jm, jd) {
+            jy = parseInt(jy);
+            jm = parseInt(jm);
+            jd = parseInt(jd);
+            
+            const gDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+            const jDaysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+            
+            let gy = jy + 621;
+            let gd, gm;
+            
+            if (jy > 979) {
+              gy = jy - 979;
+              jy = 979;
+            }
+            
+            if (jm <= 2) {
+              jm += 12;
+              gy--;
+            }
+            
+            let days = (365 * (gy - 1)) + Math.floor((gy - 1) / 4) - Math.floor((gy - 1) / 100) + Math.floor((gy - 1) / 400) + Math.floor((39501 * (jm + 1)) / 5344) + jd - 79;
+            
+            if (days > 79) {
+              days -= 79;
+              gy += Math.floor(days / 365);
+              days %= 365;
+              if (days < 186) {
+                days++;
+                gm = Math.floor(days / 31);
+                gd = days % 31;
+                if (gm < 7) {
+                  gm++;
+                } else {
+                  gm++;
+                }
+              } else {
+                days -= 186;
+                gm = 7 + Math.floor(days / 30);
+                gd = (days % 30) + 1;
+              }
+            } else {
+              gy--;
+              days += 79;
+              gm = Math.floor(days / 31);
+              gd = days % 31;
+              if (gm < 7) {
+                gm++;
+              } else {
+                gm++;
+              }
+            }
+            
+            return [gy + (jy > 979 ? 979 : 0), gm, gd];
+          }
+          
+          function getCurrentJalaliDate() {
+            const now = new Date();
+            const gy = now.getFullYear();
+            const gm = now.getMonth() + 1;
+            const gd = now.getDate();
+            
+            // Simple Gregorian to Jalali conversion
+            let jy = gy - 621;
+            if (gm > 2 || (gm === 2 && gd > 18)) {
+              jy++;
+            }
+            
+            const jDaysInMonth = [31, 31, 31, 31, 31, 31, 30, 30, 30, 30, 30, 29];
+            let dayOfYear = 0;
+            for (let i = 1; i < gm; i++) {
+              dayOfYear += (i === 2 && ((gy % 4 === 0 && gy % 100 !== 0) || gy % 400 === 0)) ? 29 : [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31][i - 1];
+            }
+            dayOfYear += gd;
+            
+            if (dayOfYear > 79) {
+              dayOfYear -= 79;
+              let jm = 1;
+              while (dayOfYear > jDaysInMonth[jm - 1]) {
+                dayOfYear -= jDaysInMonth[jm - 1];
+                jm++;
+              }
+              return [jy, jm, dayOfYear];
+            } else {
+              jy--;
+              dayOfYear += 286;
+              let jm = 1;
+              while (dayOfYear > jDaysInMonth[jm - 1]) {
+                dayOfYear -= jDaysInMonth[jm - 1];
+                jm++;
+              }
+              return [jy, jm, dayOfYear];
+            }
+          }
+          
+          // Add Jalali calendar functionality
+          dueDateInput.addEventListener('click', function() {
+            const currentValue = this.value;
+            const now = new Date();
+            const jalali = getCurrentJalaliDate();
+            
+            let jalaliDate = jalali[0] + '/' + 
+                             String(jalali[1]).padStart(2, '0') + '/' + 
+                             String(jalali[2]).padStart(2, '0') + ' ' +
+                             String(now.getHours()).padStart(2, '0') + ':' +
+                             String(now.getMinutes()).padStart(2, '0');
+            
+            if (currentValue) {
+              // If there's already a value, try to parse it
+              if (currentValue.match(/\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2}/)) {
+                jalaliDate = currentValue;
+              }
+            }
+            
+            const newValue = prompt('لطفاً تاریخ و زمان را به فرمت YYYY/MM/DD HH:mm وارد کنید:', jalaliDate);
+            if (newValue && newValue.match(/\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2}/)) {
+              this.value = newValue;
+            }
+          });
+          
+          // The form field should already have the correct Jalali date from the backend
+          // Only set a default if the field is empty
+          if (!dueDateInput.value || !dueDateInput.value.match(/\d{4}\/\d{2}\/\d{2}\s+\d{2}:\d{2}/)) {
+            const now = new Date();
+            const jalali = getCurrentJalaliDate();
+            const correctJalaliDate = jalali[0] + '/' + 
+                                     String(jalali[1]).padStart(2, '0') + '/' + 
+                                     String(jalali[2]).padStart(2, '0') + ' ' +
+                                     String(now.getHours()).padStart(2, '0') + ':' +
+                                     String(now.getMinutes()).padStart(2, '0');
+            
+            // Set correct Jalali date only if field is empty
+            dueDateInput.value = correctJalaliDate;
+          }
+        })();
+        {% else %}
+        // Gregorian Date Picker
+        (function() {
+          flatpickr(dueDateInput, {
+            enableTime: true,
+            dateFormat: "Y-m-d H:i",
+            time_24hr: true,
+            minDate: "today",
+            locale: {
+              firstDayOfWeek: 1
+            }
+          });
+        })();
+        {% endif %}
+      }
   });
 </script>
 {% endblock %}

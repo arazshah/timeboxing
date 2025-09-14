@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load jalali_filters %}
 <!DOCTYPE html>
 <html>
 <head>
@@ -109,7 +110,7 @@
                 <div class="task-meta">
                     <span class="priority {{ task.get_priority_display|lower }}">{{ task.get_priority_display }}</span>
                     {% trans "Category" %}: {{ task.category.name }} | 
-                    {% trans "Due" %}: {{ task.due_date|date:"F j, Y, g:i a" }}
+                    {% trans "Due" %}: {{ task.due_date|jalali_datetime_full }}
                     {% if task.description %}
                     <br><strong>{% trans "Description" %}:</strong> {{ task.description }}
                     {% endif %}

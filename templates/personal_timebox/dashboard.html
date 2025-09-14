@@ -146,7 +146,12 @@
           new Chart(priorityCtx, {
               type: 'pie',
               data: {
-                  labels: ['Critical', 'High', 'Medium', 'Low'],
+                  labels: [
+                    '{% trans "Critical" %}', 
+                    '{% trans "High" %}', 
+                    '{% trans "Medium" %}', 
+                    '{% trans "Low" %}'
+                  ],
                   datasets: [{
                       data: [
                         Number('{{ stats.priority_critical|default:0 }}'),
@@ -179,7 +184,7 @@
               data: {
                   labels: weekdayLabels,
                   datasets: [{
-                      label: 'Time Spent (minutes)',
+                      label: '{% trans "Time Spent (minutes)" %}',
                       data: weeklyMinutes,
                       backgroundColor: '#667eea'
                   }]

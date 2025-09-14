@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Personal Timebox\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-09-13 18:48+0000\n"
+"POT-Creation-Date: 2025-09-14 17:11+0000\n"
 "PO-Revision-Date: 2025-09-13 15:30+0330\n"
 "Last-Translator: Araz Shahkarami <araz@example.com>\n"
 "Language-Team: Persian <fa@li.org>\n"
@@ -16,6 +16,271 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+#: personal_timebox/forms.py:8
+#, fuzzy
+#| msgid "Optional: Used for password reset and notifications."
+msgid "Optional: for password reset"
+msgstr "اختیاری: برای بازنشانی رمز عبور و اعلان‌ها استفاده می‌شود."
+
+#: personal_timebox/forms.py:25
+msgid "Choose a unique username"
+msgstr ""
+
+#: personal_timebox/forms.py:29
+#, fuzzy
+#| msgid "Email (optional)"
+msgid "your@email.com (optional)"
+msgstr "ایمیل (اختیاری)"
+
+#: personal_timebox/forms.py:32
+#, fuzzy
+#| msgid "First Name"
+msgid "First name"
+msgstr "نام"
+
+#: personal_timebox/forms.py:33
+#, fuzzy
+#| msgid "Add Category"
+msgid "Last name"
+msgstr "افزودن دسته\fبندی"
+
+#: personal_timebox/forms.py:35
+#, fuzzy
+#| msgid "Cannot be a commonly used password"
+msgid "Create a strong password"
+msgstr "نباید یک رمز عبور رایج باشد"
+
+#: personal_timebox/forms.py:39
+#, fuzzy
+#| msgid "Confirm Password"
+msgid "Confirm your password"
+msgstr "تأیید رمز عبور"
+
+#: personal_timebox/forms.py:48
+msgid "What do you need to work on?"
+msgstr "روی چه چیزی می‌خواهی کار کنی؟"
+
+#: personal_timebox/forms.py:49
+msgid "Add more details about this task..."
+msgstr "جزئیات بیشتری درباره این وظیفه اضافه کن..."
+
+#: personal_timebox/forms.py:66
+msgid "No specific goal"
+msgstr "هدف خاصی نیست"
+
+#: personal_timebox/forms.py:82
+#, fuzzy
+#| msgid "Add Category"
+msgid "Category name"
+msgstr "افزودن دسته\fبندی"
+
+#: personal_timebox/forms.py:84
+#, fuzzy
+#| msgid "Title or description..."
+msgid "Brief description..."
+msgstr "عنوان یا توضیحات..."
+
+#: personal_timebox/forms.py:86
+msgid "📋 (emoji or icon class)"
+msgstr ""
+
+#: personal_timebox/forms.py:99
+msgid "You already have a category with this name."
+msgstr ""
+
+#: personal_timebox/forms.py:107
+#, fuzzy
+#| msgid "When you want to achieve the goal"
+msgid "What do you want to achieve?"
+msgstr "زمانی که می‌خواهید به هدف برسید"
+
+#: personal_timebox/forms.py:108
+msgid "Describe your goal in detail..."
+msgstr ""
+
+#: personal_timebox/forms.py:134
+msgid "What went well today?"
+msgstr ""
+
+#: personal_timebox/forms.py:135
+msgid "What were the main challenges?"
+msgstr ""
+
+#: personal_timebox/forms.py:136
+msgid "What could be improved?"
+msgstr ""
+
+#: personal_timebox/forms.py:137
+msgid "Top 3 priorities for tomorrow"
+msgstr ""
+
+#: personal_timebox/forms.py:138
+msgid "What are you grateful for?"
+msgstr ""
+
+#: personal_timebox/forms.py:172
+msgid "Habit name"
+msgstr ""
+
+#: personal_timebox/forms.py:173
+msgid "Describe this habit..."
+msgstr ""
+
+#: personal_timebox/models.py:11 templates/personal_timebox/docs.html:133
+msgid "Work & Career"
+msgstr "کار و شغل"
+
+#: personal_timebox/models.py:12 templates/personal_timebox/docs.html:134
+msgid "Health & Fitness"
+msgstr "سلامت و تناسب اندام"
+
+#: personal_timebox/models.py:13 templates/personal_timebox/docs.html:135
+msgid "Learning & Development"
+msgstr "یادگیری و توسعه"
+
+#: personal_timebox/models.py:14 templates/personal_timebox/docs.html:136
+#, fuzzy
+#| msgid "Personal Timebox"
+msgid "Personal Life"
+msgstr "زندگی شخصی"
+
+#: personal_timebox/models.py:15 templates/personal_timebox/docs.html:137
+msgid "Hobbies & Interests"
+msgstr "سرگرمی‌ها و علایق"
+
+#: personal_timebox/models.py:16
+msgid "Finance & Money"
+msgstr ""
+
+#: personal_timebox/models.py:17
+msgid "Relationships"
+msgstr ""
+
+#: personal_timebox/models.py:18
+msgid "Spirituality & Mindfulness"
+msgstr ""
+
+#: personal_timebox/models.py:19
+msgid "Travel & Adventure"
+msgstr ""
+
+#: personal_timebox/models.py:20
+msgid "Other"
+msgstr ""
+
+#: personal_timebox/models.py:57
+msgid "Daily"
+msgstr "روزانه"
+
+#: personal_timebox/models.py:58
+msgid "Weekly"
+msgstr "هفتگی"
+
+#: personal_timebox/models.py:59
+msgid "Monthly"
+msgstr "ماهانه"
+
+#: personal_timebox/models.py:60
+msgid "Quarterly"
+msgstr "سه‌ماهه"
+
+#: personal_timebox/models.py:61
+msgid "Yearly"
+msgstr "سالیانه"
+
+#: personal_timebox/models.py:65
+#: templates/personal_timebox/add_category.html:384
+#: templates/personal_timebox/category_list.html:443
+#: templates/personal_timebox/category_list.html:482
+#: templates/personal_timebox/edit_category.html:392
+#: templates/personal_timebox/manage_categories.html:22
+#: templates/personal_timebox/task_detail.html:598
+msgid "Active"
+msgstr "فعال"
+
+#: personal_timebox/models.py:66
+msgid "Paused"
+msgstr "متوقف شده"
+
+#: personal_timebox/models.py:67 personal_timebox/models.py:193
+#: templates/personal_timebox/docs.html:68
+#: templates/personal_timebox/docs.html:103
+#: templates/personal_timebox/edit_task.html:367
+#: templates/personal_timebox/task_detail.html:624
+#: templates/personal_timebox/task_list.html:462
+#: templates/personal_timebox/task_list.html:813
+msgid "Completed"
+msgstr "تکمیل شده"
+
+#: personal_timebox/models.py:68 personal_timebox/models.py:205
+msgid "Abandoned"
+msgstr "رها شده"
+
+#: personal_timebox/models.py:120 templates/personal_timebox/dashboard.html:150
+#: templates/personal_timebox/task_list.html:471
+msgid "Critical"
+msgstr "بحرانی"
+
+#: personal_timebox/models.py:121 templates/personal_timebox/add_task.html:651
+#: templates/personal_timebox/dashboard.html:151
+#: templates/personal_timebox/task_list.html:472
+msgid "High"
+msgstr "بالا"
+
+#: personal_timebox/models.py:122 templates/personal_timebox/add_task.html:645
+#: templates/personal_timebox/dashboard.html:152
+#: templates/personal_timebox/task_list.html:473
+msgid "Medium"
+msgstr "متوسط"
+
+#: personal_timebox/models.py:123 templates/personal_timebox/add_task.html:639
+#: templates/personal_timebox/dashboard.html:153
+#: templates/personal_timebox/task_list.html:474
+msgid "Low"
+msgstr "پایین"
+
+#: personal_timebox/models.py:127 templates/personal_timebox/edit_task.html:675
+msgid "Low Energy"
+msgstr "انرژی کم"
+
+#: personal_timebox/models.py:128 templates/personal_timebox/edit_task.html:679
+msgid "Medium Energy"
+msgstr "انرژی متوسط"
+
+#: personal_timebox/models.py:129 templates/personal_timebox/edit_task.html:683
+msgid "High Energy"
+msgstr "انرژی بالا"
+
+#: personal_timebox/models.py:194
+msgid "Overdue"
+msgstr "سررسیده"
+
+#: personal_timebox/models.py:195 templates/personal_timebox/docs.html:67
+#: templates/personal_timebox/task_detail.html:616
+#: templates/personal_timebox/task_detail.html:629
+#: templates/personal_timebox/task_list.html:461
+#: templates/personal_timebox/task_list.html:813
+msgid "In Progress"
+msgstr "در حال انجام"
+
+#: personal_timebox/models.py:196 personal_timebox/models.py:198
+#: templates/personal_timebox/edit_task.html:367
+#: templates/personal_timebox/task_list.html:460
+msgid "Pending"
+msgstr "در انتظار"
+
+#: personal_timebox/models.py:202
+msgid "Completed Successfully"
+msgstr "با موفقیت تکمیل شد"
+
+#: personal_timebox/models.py:203
+msgid "Partially Completed"
+msgstr "تا حدی تکمیل شد"
+
+#: personal_timebox/models.py:204 templates/personal_timebox/docs.html:106
+msgid "Interrupted"
+msgstr "مختل شده"
 
 #: templates/base.html:7 templates/base.html:54 templates/base.html:193
 #: templates/personal_timebox/add_category.html:1
@@ -326,15 +591,6 @@ msgstr "مثال: fas fa-book, fas fa-work, fas fa-home"
 msgid "Settings"
 msgstr "تنظیمات"
 
-#: templates/personal_timebox/add_category.html:384
-#: templates/personal_timebox/category_list.html:443
-#: templates/personal_timebox/category_list.html:482
-#: templates/personal_timebox/edit_category.html:392
-#: templates/personal_timebox/manage_categories.html:22
-#: templates/personal_timebox/task_detail.html:598
-msgid "Active"
-msgstr "فعال"
-
 #: templates/personal_timebox/add_category.html:386
 #: templates/personal_timebox/edit_category.html:394
 msgid "Inactive categories won't appear in task creation"
@@ -465,7 +721,7 @@ msgstr "جزئیات در مورد کاری که باید انجام شود اض
 #, fuzzy
 #| msgid "Add Category"
 msgid "Category"
-msgstr "افزودن دسته\fبندی"
+msgstr "دسته‌بندی"
 
 #: templates/personal_timebox/add_task.html:463
 msgid "Select a category for better organization"
@@ -530,20 +786,9 @@ msgstr "انصراف"
 msgid "Create Task"
 msgstr "ایجاد وظیفه"
 
-#: templates/personal_timebox/add_task.html:639
-#: templates/personal_timebox/task_list.html:474
-msgid "Low"
-msgstr "پایین"
-
-#: templates/personal_timebox/add_task.html:645
-#: templates/personal_timebox/task_list.html:473
-msgid "Medium"
-msgstr "متوسط"
-
-#: templates/personal_timebox/add_task.html:651
-#: templates/personal_timebox/task_list.html:472
-msgid "High"
-msgstr "بالا"
+#: templates/personal_timebox/add_task.html:632
+msgid "-"
+msgstr ""
 
 #: templates/personal_timebox/add_task.html:694
 msgid "This field is required"
@@ -579,6 +824,10 @@ msgid "Are you sure you want to cancel? Unsaved changes will be lost."
 msgstr ""
 "آیا مطمئن هستید که می‌خواهید انصراف دهید؟ تغییرات ذخیره نشده از بین خواهند "
 "رفت."
+
+#: templates/personal_timebox/add_task.html:849
+msgid "characters"
+msgstr ""
 
 #: templates/personal_timebox/analytics.html:9
 #, fuzzy
@@ -676,6 +925,7 @@ msgid "sessions"
 msgstr "جلسات"
 
 #: templates/personal_timebox/analytics.html:199
+#: templates/personal_timebox/analytics.html:440
 #: templates/personal_timebox/task_detail.html:595
 #: templates/personal_timebox/task_detail.html:700
 #: templates/personal_timebox/task_list.html:524
@@ -830,6 +1080,12 @@ msgstr "ویرایش"
 msgid "No tasks found. Create a new one!"
 msgstr "وظیفه‌ای یافت نشد. یک وظیفه جدید ایجاد کنید!"
 
+#: templates/personal_timebox/dashboard.html:187
+#, fuzzy
+#| msgid "Estimated Duration (minutes)"
+msgid "Time Spent (minutes)"
+msgstr "مدت زمان تخمینی (دقیقه)"
+
 #: templates/personal_timebox/docs.html:4
 #: templates/personal_timebox/docs.html:16
 msgid "Documentation"
@@ -935,25 +1191,8 @@ msgid "New tasks that haven't been worked on"
 msgstr "وظایف جدیدی که روی آنها کار نشده است"
 
 #: templates/personal_timebox/docs.html:67
-#: templates/personal_timebox/task_detail.html:616
-#: templates/personal_timebox/task_detail.html:629
-#: templates/personal_timebox/task_list.html:461
-#: templates/personal_timebox/task_list.html:813
-msgid "In Progress"
-msgstr "در حال انجام"
-
-#: templates/personal_timebox/docs.html:67
 msgid "Tasks currently being worked on"
 msgstr "وظایفی که در حال حاضر روی آنها کار می‌شود"
-
-#: templates/personal_timebox/docs.html:68
-#: templates/personal_timebox/docs.html:103
-#: templates/personal_timebox/edit_task.html:367
-#: templates/personal_timebox/task_detail.html:624
-#: templates/personal_timebox/task_list.html:462
-#: templates/personal_timebox/task_list.html:813
-msgid "Completed"
-msgstr "تکمیل شده"
 
 #: templates/personal_timebox/docs.html:68
 msgid "Finished tasks"
@@ -1036,10 +1275,6 @@ msgid "Encountered obstacles preventing progress"
 msgstr "با موانعی که مانع پیشرفت می‌شوند مواجه شدید"
 
 #: templates/personal_timebox/docs.html:106
-msgid "Interrupted"
-msgstr "مختل شده"
-
-#: templates/personal_timebox/docs.html:106
 msgid "Session was interrupted"
 msgstr "جلسه مختل شد"
 
@@ -1092,28 +1327,6 @@ msgid "When you first sign up, these default categories are created for you:"
 msgstr ""
 "وقتی برای اولین بار ثبت‌نام می‌کنید، این دسته‌بندی‌های پیش‌فرض برای شما ایجاد "
 "می‌شوند:"
-
-#: templates/personal_timebox/docs.html:133
-msgid "Work & Career"
-msgstr "کار و شغل"
-
-#: templates/personal_timebox/docs.html:134
-msgid "Health & Fitness"
-msgstr "سلامت و تناسب اندام"
-
-#: templates/personal_timebox/docs.html:135
-msgid "Learning & Development"
-msgstr "یادگیری و توسعه"
-
-#: templates/personal_timebox/docs.html:136
-#, fuzzy
-#| msgid "Personal Timebox"
-msgid "Personal Life"
-msgstr "زندگی شخصی"
-
-#: templates/personal_timebox/docs.html:137
-msgid "Hobbies & Interests"
-msgstr "سرگرمی‌ها و علایق"
 
 #: templates/personal_timebox/docs.html:152
 msgid "Setting Goals"
@@ -1298,11 +1511,6 @@ msgstr "در"
 msgid "Completed:"
 msgstr "تکمیل شده:"
 
-#: templates/personal_timebox/edit_task.html:367
-#: templates/personal_timebox/task_list.html:460
-msgid "Pending"
-msgstr "در انتظار"
-
 #: templates/personal_timebox/edit_task.html:440
 msgid "Related Goal"
 msgstr "هدف مرتبط"
@@ -1347,18 +1555,6 @@ msgstr "این عمل قابل بازگشت نیست. تمام داده‌های
 #: templates/personal_timebox/edit_task.html:671
 msgid "Very Low Energy"
 msgstr "انرژی بسیار کم"
-
-#: templates/personal_timebox/edit_task.html:675
-msgid "Low Energy"
-msgstr "انرژی کم"
-
-#: templates/personal_timebox/edit_task.html:679
-msgid "Medium Energy"
-msgstr "انرژی متوسط"
-
-#: templates/personal_timebox/edit_task.html:683
-msgid "High Energy"
-msgstr "انرژی بالا"
 
 #: templates/personal_timebox/edit_task.html:687
 msgid "Very High Energy"
@@ -2091,10 +2287,6 @@ msgstr "وضعیت"
 #: templates/personal_timebox/task_list.html:482
 msgid "All"
 msgstr "همه"
-
-#: templates/personal_timebox/task_list.html:471
-msgid "Critical"
-msgstr "بحرانی"
 
 #: templates/personal_timebox/task_list.html:492
 msgid "Clear Filters"

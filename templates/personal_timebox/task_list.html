@@ -1,6 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 {% load i18n %}
+{% load jalali_filters %}
 
 {% block title %}{% trans "Task List" %} - {% trans "Personal Timebox" %}{% endblock %}
 
@@ -524,7 +525,7 @@
                   <i class="fas fa-clock me-1"></i>{{ task.estimated_minutes }} {% trans "min" %}
                 </span>
                 <span class="meta-item {% if task.is_overdue %}due-overdue{% else %}due-normal{% endif %}">
-                  <i class="fas fa-calendar-alt me-1"></i>{{ task.due_date|date:"Y-m-d" }}
+                  <i class="fas fa-calendar-alt me-1"></i>{{ task.due_date|jalali_date }}
                 </span>
                 <span class="meta-item">
                   {% with s=task.status %}

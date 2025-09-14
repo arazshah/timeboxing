@@ -2,21 +2,22 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from datetime import datetime, timedelta
 import uuid
 
 class PersonalCategory(models.Model):
     CATEGORY_TYPES = [
-        ('work', 'Work & Career'),
-        ('health', 'Health & Fitness'),
-        ('learning', 'Learning & Development'),
-        ('personal', 'Personal Life'),
-        ('hobbies', 'Hobbies & Interests'),
-        ('finance', 'Finance & Money'),
-        ('relationships', 'Relationships'),
-        ('spirituality', 'Spirituality & Mindfulness'),
-        ('travel', 'Travel & Adventure'),
-        ('other', 'Other'),
+        ('work', _('Work & Career')),
+        ('health', _('Health & Fitness')),
+        ('learning', _('Learning & Development')),
+        ('personal', _('Personal Life')),
+        ('hobbies', _('Hobbies & Interests')),
+        ('finance', _('Finance & Money')),
+        ('relationships', _('Relationships')),
+        ('spirituality', _('Spirituality & Mindfulness')),
+        ('travel', _('Travel & Adventure')),
+        ('other', _('Other')),
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -53,18 +54,18 @@ class PersonalCategory(models.Model):
 
 class PersonalGoal(models.Model):
     PERIOD_CHOICES = [
-        ('daily', 'Daily'),
-        ('weekly', 'Weekly'),
-        ('monthly', 'Monthly'),
-        ('quarterly', 'Quarterly'),
-        ('yearly', 'Yearly'),
+        ('daily', _('Daily')),
+        ('weekly', _('Weekly')),
+        ('monthly', _('Monthly')),
+        ('quarterly', _('Quarterly')),
+        ('yearly', _('Yearly')),
     ]
     
     STATUS_CHOICES = [
-        ('active', 'Active'),
-        ('paused', 'Paused'),
-        ('completed', 'Completed'),
-        ('abandoned', 'Abandoned'),
+        ('active', _('Active')),
+        ('paused', _('Paused')),
+        ('completed', _('Completed')),
+        ('abandoned', _('Abandoned')),
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -116,16 +117,16 @@ class PersonalGoal(models.Model):
 
 class PersonalTask(models.Model):
     PRIORITY_CHOICES = [
-        (1, 'Critical'),
-        (2, 'High'),
-        (3, 'Medium'),
-        (4, 'Low'),
+        (1, _('Critical')),
+        (2, _('High')),
+        (3, _('Medium')),
+        (4, _('Low')),
     ]
     
     ENERGY_LEVELS = [
-        ('low', 'Low Energy'),
-        ('medium', 'Medium Energy'),
-        ('high', 'High Energy'),
+        ('low', _('Low Energy')),
+        ('medium', _('Medium Energy')),
+        ('high', _('High Energy')),
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -189,19 +190,19 @@ class PersonalTask(models.Model):
 
     def get_status_display(self):
         mapping = {
-            'completed': 'Completed',
-            'overdue': 'Overdue',
-            'in_progress': 'In Progress',
-            'pending': 'Pending',
+            'completed': _('Completed'),
+            'overdue': _('Overdue'),
+            'in_progress': _('In Progress'),
+            'pending': _('Pending'),
         }
-        return mapping.get(self.status, 'Pending')
+        return mapping.get(self.status, _('Pending'))
 
 class PersonalTimeboxSession(models.Model):
     OUTCOME_CHOICES = [
-        ('completed', 'Completed Successfully'),
-        ('partial', 'Partially Completed'),
-        ('interrupted', 'Interrupted'),
-        ('abandoned', 'Abandoned'),
+        ('completed', _('Completed Successfully')),
+        ('partial', _('Partially Completed')),
+        ('interrupted', _('Interrupted')),
+        ('abandoned', _('Abandoned')),
     ]
     
     user = models.ForeignKey(User, on_delete=models.CASCADE)

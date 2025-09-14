@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 {% load i18n %}
+{% load jalali_filters %}
 
 {% block title %}{{ task.title }} - {% trans "Task Detail" %}{% endblock %}
 
@@ -375,7 +376,7 @@
           <span class="d-flex align-items-center gap-2">
             <i class="fas fa-calendar"></i>
             <span class="{% if task.is_overdue %}text-danger fw-bold{% else %}text-white{% endif %}">
-              {{ task.due_date|date:"Y-m-d H:i"|default:_("No due date") }}
+              {{ task.due_date|jalali_datetime|default:_("No due date") }}
             </span>
           </span>
         </div>
@@ -499,7 +500,7 @@
                 {% trans "Due Date" %}
               </span>
               <span class="overview-value {% if task.is_overdue %}text-danger fw-bold{% else %}text-muted{% endif %}">
-                {{ task.due_date|date:"Y-m-d H:i"|default:_("No due date") }}
+                {{ task.due_date|jalali_datetime|default:_("No due date") }}
               </span>
             </div>
           </div>
@@ -587,7 +588,7 @@
                 <td>
                   <div class="d-flex align-items-center gap-2">
                     <i class="fas fa-calendar-day text-muted"></i>
-                    <span>{{ s.start_time|date:"Y-m-d H:i" }}</span>
+                    <span>{{ s.start_time|jalali_datetime }}</span>
                   </div>
                 </td>
                 <td>
